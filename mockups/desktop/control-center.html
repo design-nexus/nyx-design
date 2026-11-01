@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" data-screens="dashboard,volume,wifi,edit">
+<head>
+<meta charset="utf-8">
+<title>Control Center — Nyx desktop mockup</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="desktop.css">
+<script src="mock.js"></script>
+<script src="desktop.js"></script>
+<script>
+  addEventListener("load", () => {
+    const scr = document.documentElement.dataset.screen;
+    const cc = document.querySelector(".cc");
+    if (scr === "volume") document.getElementById("vol-ic").classList.add("hov");
+    if (scr === "edit") {
+      cc.classList.add("editing");
+      cc.querySelectorAll(".grid .w").forEach((w) => {
+        w.insertAdjacentHTML("beforeend", '<span class="rm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span>');
+        if (!w.classList.contains("fixed")) w.insertAdjacentHTML("beforeend", '<span class="rz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M20 13v7h-7M20 20l-7-7"/></svg></span>');
+      });
+    }
+    // Anchored popover: below its anchor, tail on the anchor's centre.
+    document.querySelectorAll("[data-below]").forEach((p) => {
+      const a = document.getElementById(p.dataset.below).getBoundingClientRect();
+      const cx = a.left + a.width / 2;
+      const left = Math.min(innerWidth - p.offsetWidth - 16, cx - 28);
+      p.style.left = left + "px";
+      p.style.top = a.bottom + 10 + "px";
+      p.querySelector(".tail").style.left = cx - left - 6 + "px";
+    });
+  });
+</script>
+</head>
+<body>
+<div class="desk">
+  <div class="topbar">
+    <div class="ws"><b>1</b><span>2</span><span>3</span><span>4</span><span>5</span></div>
+    <div class="mid tnum">Saturday 14:32</div>
+    <div class="right"><i data-i="wifi" class="on"></i><i data-i="bluetooth" class="on"></i><i data-i="volume" class="on"></i><i data-x="battery" class="on"></i></div>
+  </div>
+
+  <div class="fwin idle" style="left:10px;top:36px;width:1470px;height:1034px;--w:var(--sw-violet)">
+    <div class="h"></div><div class="s"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="c lines"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="cc">
+    <!-- Dashboard, volume and edit share the dashboard; Wi-Fi replaces it. -->
+    <div data-scr="dashboard,volume,edit">
+      <div class="cc-head">
+        <span class="avatar">K</span>
+        <div class="who"><div class="t500">ken</div><div class="small dim tnum">Battery 82% · 3 h 10 min left</div></div>
+        <div class="acts" data-scr="dashboard,volume">
+          <span class="ibtn"><i data-i="pen"></i></span>
+          <span class="ibtn"><i data-i="sliders"></i></span>
+          <span class="ibtn"><i data-i="power"></i></span>
+        </div>
+        <div class="acts" data-scr="edit">
+          <span class="ibtn hov"><i data-i="refresh"></i></span>
+          <span class="ibtn primary"><i data-i="check"></i></span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="w c2 split on">
+          <div class="main"><span class="chip st"><i data-i="wifi"></i></span><div><div class="tt">Wi-Fi</div><div class="st">Home-5G</div></div></div>
+          <div class="more"><i data-i="chev-r"></i></div>
+        </div>
+        <div class="w c2 split on">
+          <div class="main"><span class="chip st"><i data-i="bluetooth"></i></span><div><div class="tt">Bluetooth</div><div class="st">WH-1000XM5</div></div></div>
+          <div class="more"><i data-i="chev-r"></i></div>
+        </div>
+        <div class="w c2 split">
+          <div class="main"><span class="chip"><i data-x="vpn"></i></span><div><div class="tt">VPN</div><div class="st">Off</div></div></div>
+          <div class="more"><i data-i="chev-r"></i></div>
+        </div>
+        <div class="w t1"><span class="chip"><i data-i="moon"></i></span><div class="tt">Do not disturb</div></div>
+        <div class="w t1 on"><span class="chip"><i data-x="tiles"></i></span><div class="tt">Tiling</div></div>
+
+        <div class="w c4 sliders fixed">
+          <div class="sl"><span class="ic" id="vol-ic"><i data-i="volume"></i></span><div class="bar knob" style="--p:64%"><b></b></div><span class="v">64%</span><span class="ibtn sm dev"><i data-x="headphones"></i></span></div>
+          <div class="sl"><span class="ic"><i data-i="sun"></i></span><div class="bar knob" style="--p:80%"><b></b></div><span class="v">80%</span><span class="ibtn sm dev"><i data-i="monitor"></i></span></div>
+        </div>
+
+        <div class="w c2 r2 home">
+          <div class="wh"><i data-i="home"></i><span class="tt">Living room</span><i data-i="chev-d" style="color:var(--dim-text)"></i></div>
+          <div class="lights">
+            <div class="lt on"><i data-x="bulb"></i><div><div class="n">Ceiling</div><div class="p">70%</div></div></div>
+            <div class="lt on" style="--lc:var(--sw-violet)"><i data-x="bulb"></i><div><div class="n">Lamp</div><div class="p">40%</div></div></div>
+            <div class="lt"><i data-x="bulb"></i><div><div class="n">Strip</div><div class="p">Off</div></div></div>
+            <div class="lt"><i data-x="thermo"></i><div><div class="n">Heating</div><div class="p">21.5 °C</div></div></div>
+          </div>
+          <div class="scenes"><span class="on">Evening</span><span>Movie</span><span>Bright</span></div>
+        </div>
+
+        <div class="w c2 media">
+          <div class="cover art g1" style="width:56px;height:56px"></div>
+          <div class="meta">
+            <div class="tt">Midnight Arcade</div>
+            <div class="st">Neon Harbor</div>
+            <div class="mini"><span class="ibtn sm"><i data-i="prev"></i></span><span class="ibtn sm" style="color:var(--text)"><i data-i="pause"></i></span><span class="ibtn sm"><i data-i="next"></i></span></div>
+          </div>
+        </div>
+
+        <div class="w c2 power">
+          <div class="tt">Power mode</div>
+          <span class="seg"><span><i data-x="leaf"></i></span><span class="on"><i data-x="gauge"></i></span><span><i data-x="bolt"></i></span></span>
+        </div>
+
+        <div class="w t1 on"><span class="chip"><i data-i="eye"></i></span><div class="tt">Night light</div></div>
+        <div class="w t1"><span class="chip"><i data-x="coffee"></i></span><div class="tt">Keep awake</div></div>
+        <div class="w t1"><span class="chip"><i data-i="keyboard"></i></span><div class="tt">Key light</div></div>
+        <div class="w t1"><span class="chip"><i data-x="shot"></i></span><div class="tt">Capture</div></div>
+      </div>
+
+      <div data-scr="edit" class="tray">
+        <span class="glabel">Add widgets</span>
+        <div class="trayrow">
+          <div class="tw"><span class="chip" style="color:var(--sw-amber)"><i data-x="cloudsun"></i></span><div class="tt">Weather</div><div class="sz">1×1 · 2×1 · 2×2</div><span class="add"><i data-i="plus"></i></span></div>
+          <div class="tw"><span class="chip" style="color:var(--sw-red)"><i data-i="calendar"></i></span><div class="tt">Up next</div><div class="sz">2×1 · 2×2</div><span class="add"><i data-i="plus"></i></span></div>
+          <div class="tw"><span class="chip" style="color:var(--sw-teal)"><i data-x="box"></i></span><div class="tt">Containers</div><div class="sz">2×1 · 2×2</div><span class="add"><i data-i="plus"></i></span></div>
+          <div class="tw"><span class="chip" style="color:var(--sw-green)"><i data-x="battery"></i></span><div class="tt">Battery</div><div class="sz">1×1 · 2×1</div><span class="add"><i data-i="plus"></i></span></div>
+          <div class="tw"><span class="chip" style="color:var(--sw-amber)"><i data-x="sticky"></i></span><div class="tt">Notes</div><div class="sz">2×1 · 2×2</div><span class="add"><i data-i="plus"></i></span></div>
+          <div class="tw"><span class="chip" style="color:var(--sw-pink)"><i data-x="pin"></i></span><div class="tt">Pinned</div><div class="sz">2×2</div><span class="add"><i data-i="plus"></i></span></div>
+        </div>
+      </div>
+
+      <div class="dots"><span class="on"></span><span></span><span data-scr="edit" class="add"><i data-i="plus"></i></span></div>
+    </div>
+
+    <!-- Wi-Fi detail view. -->
+    <div data-scr="wifi">
+      <div class="dhead">
+        <span class="ibtn hov"><i data-i="chev-l"></i></span>
+        <span class="title">Wi-Fi</span>
+        <span class="switch on"></span>
+      </div>
+      <div class="card">
+        <div class="row tall sel">
+          <i data-i="wifi"></i>
+          <div class="grow"><div class="t500">Home-5G</div><div class="small dim">Connected · WPA3 · 5 GHz</div></div>
+          <span class="ibtn sm"><i data-i="info"></i></span>
+        </div>
+        <div class="optrow">
+          <div class="grow"><div class="t500">Metered connection</div><div>Pause large downloads and updates on this network</div></div>
+          <span class="switch"></span>
+        </div>
+      </div>
+      <span class="glabel pad">Known networks</span>
+      <div class="card">
+        <div class="row"><span class="str"><span class="f" style="height:4px"></span><span class="f" style="height:7px"></span><span class="f" style="height:10px"></span><span style="height:12px"></span></span><span class="grow">Office</span><i data-i="lock" class="lockic"></i></div>
+        <div class="row"><span class="str"><span class="f" style="height:4px"></span><span class="f" style="height:7px"></span><span style="height:10px"></span><span style="height:12px"></span></span><span class="grow">Pixel hotspot</span><i data-i="lock" class="lockic"></i></div>
+      </div>
+      <span class="glabel pad">Other networks</span>
+      <div class="card">
+        <div class="row"><span class="str"><span class="f" style="height:4px"></span><span class="f" style="height:7px"></span><span class="f" style="height:10px"></span><span style="height:12px"></span></span><span class="grow">NETGEAR-72</span><i data-i="lock" class="lockic"></i></div>
+        <div class="row"><span class="str"><span class="f" style="height:4px"></span><span class="f" style="height:7px"></span><span style="height:10px"></span><span style="height:12px"></span></span><span class="grow">Cafe Lumen</span></div>
+        <div class="row"><span class="str"><span class="f" style="height:4px"></span><span style="height:7px"></span><span style="height:10px"></span><span style="height:12px"></span></span><span class="grow">Apt 4B</span><i data-i="lock" class="lockic"></i></div>
+      </div>
+      <div class="popfoot" style="border-top:0;margin-top:4px">
+        <span class="ibtn"><i data-i="refresh"></i></span>
+        <span class="ibtn"><i data-i="plus"></i></span>
+        <span class="ibtn"><i data-i="sliders"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Volume popover anchored to the volume icon. -->
+  <div class="pop ccpop" data-scr="volume" data-below="vol-ic">
+    <span class="glabel pad" style="padding-top:4px">Output</span>
+    <div class="row sel"><i data-x="headphones"></i><span class="grow ellipsis">WH-1000XM5</span><i data-i="check" class="chk"></i></div>
+    <div class="row"><i data-x="speaker"></i><span class="grow ellipsis">Speakers</span></div>
+    <div class="row"><i data-x="hdmi"></i><span class="grow ellipsis">LG UltraFine · HDMI</span></div>
+    <span class="glabel pad">Apps</span>
+    <div class="applvl"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Music.svg" alt=""><div class="bar" style="--p:72%"><b></b></div><span class="v">72%</span></div>
+    <div class="applvl"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Theater.svg" alt=""><div class="bar" style="--p:100%"><b></b></div><span class="v">100%</span></div>
+    <div class="applvl"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt=""><div class="bar" style="--p:45%"><b></b></div><span class="v">45%</span></div>
+    <div class="popfoot"><span class="ibtn"><i data-i="sliders"></i></span></div>
+    <span class="tail"></span>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" data-screens="default,preview,quick,stack,fan,hidden">
+<head>
+<meta charset="utf-8">
+<title>Dock — Nyx desktop mockup</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="desktop.css">
+<script src="mock.js"></script>
+<script src="desktop.js"></script>
+<script>
+  // Place popovers above their dock item, the tail on the item's centre.
+  addEventListener("load", () => {
+    const scr = document.documentElement.dataset.screen;
+    const hov = { default: "d-notes", preview: "d-files", quick: "d-music", stack: "d-dl", fan: "d-dl" }[scr];
+    if (hov) document.getElementById(hov).classList.add("hov");
+    if (scr === "hidden") document.querySelector("[data-dock]").classList.add("hidden");
+    document.querySelectorAll("[data-at]").forEach((p) => {
+      const a = document.getElementById(p.dataset.at).getBoundingClientRect();
+      const cx = a.left + a.width / 2;
+      const w = p.offsetWidth;
+      const left = Math.max(12, Math.min(innerWidth - w - 12, cx - w / 2 + (+p.dataset.dx || 0)));
+      p.style.left = left + "px";
+      p.style.bottom = innerHeight - a.top + (+p.dataset.gap || 16) + "px";
+      const t = p.querySelector(".tail");
+      if (t) t.style.left = cx - left - 6 + "px";
+    });
+  });
+</script>
+</head>
+<body>
+<div class="desk">
+  <div class="topbar">
+    <div class="ws"><b>1</b><span>2</span><span>3</span><span>4</span><span>5</span></div>
+    <div class="mid tnum">Saturday 14:32</div>
+    <div class="right"><i data-i="wifi"></i><i data-i="bluetooth"></i><i data-i="volume"></i><i data-x="battery"></i></div>
+  </div>
+
+  <!-- Hidden screen: two tiled windows overlap the dock's footprint. -->
+  <div data-scr="hidden">
+    <div class="fwin" style="left:10px;top:36px;width:1081px;height:1034px;--w:var(--sw-blue)">
+      <div class="h"></div><div class="s"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="c"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+    <div class="fwin idle" style="left:1101px;top:36px;width:809px;height:1034px;--w:var(--sw-amber)">
+      <div class="h"></div><div class="s"><span></span><span></span><span></span></div>
+      <div class="c lines"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+    <div class="edgehint"></div>
+  </div>
+
+  <div class="dock" data-dock>
+    <div class="it focus" id="d-files"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Files.svg" alt=""><div class="ind"><span></span><span></span></div></div>
+    <div class="it" id="d-mail"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Mail.svg" alt=""><span class="badge">3</span><div class="ind"><span></span></div></div>
+    <div class="it" id="d-cal"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Calendar.svg" alt=""></div>
+    <div class="it" id="d-notes"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Notes.svg" alt=""></div>
+    <div class="it" id="d-music"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Music.svg" alt=""><div class="ind"><span></span></div></div>
+    <div class="it" id="d-chat"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt=""><div class="ind"><span></span></div></div>
+    <div class="it" id="d-transfer"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Transfer.svg" alt=""><div class="ring" style="--p:62%"><b></b></div><div class="ind"><span></span></div></div>
+    <div class="it" id="d-settings"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Settings.svg" alt=""></div>
+    <div class="sep"></div>
+    <div class="it" id="d-dl"><div class="stackic"><span class="g4"></span><span class="g9"></span><span class="g2"></span><b class="n">24</b></div></div>
+    <div class="it" id="d-trash"><div class="tile"><i data-x="trash"></i></div></div>
+  </div>
+
+  <!-- Default: tooltip for an app without running windows. -->
+  <div class="tip" data-scr="default" data-at="d-notes" data-gap="10">Notes</div>
+
+  <!-- Hover preview: Files has three windows, one on another workspace. -->
+  <div class="pop" data-scr="preview" data-at="d-files" data-dx="160">
+    <div class="prev">
+      <div class="pv hov">
+        <div class="thumb"><div class="fwin" style="--w:var(--sw-blue)"><div class="h"></div><div class="s"><span></span><span></span><span></span><span></span></div><div class="c"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+          <span class="x"><i data-i="x"></i></span></div>
+        <div class="cap"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Files.svg" alt=""><span class="ellipsis">Projects</span><span class="ws">1</span></div>
+      </div>
+      <div class="pv">
+        <div class="thumb"><div class="fwin" style="--w:var(--sw-blue)"><div class="h"></div><div class="s"><span></span><span></span><span></span></div><div class="c lines"><span></span><span></span><span></span><span></span><span></span><span></span></div></div></div>
+        <div class="cap"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Files.svg" alt=""><span class="ellipsis">Downloads</span><span class="ws">1</span></div>
+      </div>
+      <div class="pv">
+        <div class="thumb"><div class="fwin" style="--w:var(--sw-blue)"><div class="h"></div><div class="s"><span></span><span></span><span></span><span></span><span></span></div><div class="c"><span class="g5" style="background:var(--g)"></span><span class="g7" style="background:var(--g)"></span><span class="g3" style="background:var(--g)"></span><span class="g11" style="background:var(--g)"></span><span></span><span></span></div></div></div>
+        <div class="cap"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Files.svg" alt=""><span class="ellipsis">Pictures</span><span class="ws">4</span></div>
+      </div>
+    </div>
+    <span class="tail"></span>
+  </div>
+
+  <!-- Quick Panel: right-click on Music. -->
+  <div class="pop" data-scr="quick" data-at="d-music" style="width:288px">
+    <div style="display:flex;gap:12px;padding:12px 12px 10px;align-items:center">
+      <div class="cover art g1" style="width:56px;height:56px"></div>
+      <div class="grow">
+        <div class="t500 ellipsis">Midnight Arcade</div>
+        <div class="small dim ellipsis">Neon Harbor · Low Tide</div>
+      </div>
+      <span class="ibtn sm"><i data-i="heart"></i></span>
+    </div>
+    <div style="padding:0 14px">
+      <div class="bar" style="--p:38%"><b></b></div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px" class="xs ter tnum"><span>1:24</span><span>3:41</span></div>
+    </div>
+    <div class="transport" style="padding:4px 0 10px">
+      <span class="ibtn"><i data-i="shuffle"></i></span>
+      <span class="ibtn"><i data-i="prev"></i></span>
+      <span class="play"><i data-i="pause"></i></span>
+      <span class="ibtn"><i data-i="next"></i></span>
+      <span class="ibtn"><i data-i="repeat"></i></span>
+    </div>
+    <div class="msep" style="margin:0 10px"></div>
+    <div class="menu">
+      <div class="mi hov"><i data-x="newwin"></i>New window<span class="key">Ctrl N</span></div>
+      <div class="mi"><i data-i="queue"></i>Show queue</div>
+      <div class="msep"></div>
+      <div class="mi"><i data-x="unpin"></i>Unpin from dock</div>
+      <div class="mi"><i data-i="x"></i>Quit<span class="key">Ctrl Q</span></div>
+    </div>
+    <span class="tail"></span>
+  </div>
+
+  <!-- Downloads stack, grid view. -->
+  <div class="pop" data-scr="stack" data-at="d-dl" style="width:392px">
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 10px 6px 14px">
+      <i data-i="download" style="color:var(--sw-blue)"></i>
+      <span class="t600">Downloads</span><span class="small ter">24 items</span>
+      <span class="grow"></span>
+      <span class="seg"><span class="on"><i data-i="clock"></i></span><span><i data-i="sort"></i></span><span><i data-i="tag"></i></span></span>
+      <span class="ibtn sm"><i data-i="external"></i></span>
+    </div>
+    <div class="sgrid">
+      <div class="sf hov"><div class="th g4"></div><div class="nm">IMG_2041.jpg</div><div class="mt">2 min ago</div></div>
+      <div class="sf"><div class="th"><i data-x="pdf"></i></div><div class="nm">invoice-oct.pdf</div><div class="mt">1 h ago</div></div>
+      <div class="sf"><div class="th"><i data-x="zip"></i></div><div class="nm">nyx-fonts-2.0.zip</div><div class="mt">Today</div></div>
+      <div class="sf"><div class="th g9"></div><div class="nm">wallpaper-ultrawide.png</div><div class="mt">Today</div></div>
+      <div class="sf"><div class="th g2"></div><div class="nm">screenshot-1432.png</div><div class="mt">Yesterday</div></div>
+      <div class="sf"><div class="th"><i data-i="file-text"></i></div><div class="nm">meeting-notes.md</div><div class="mt">Yesterday</div></div>
+      <div class="sf"><div class="th"><i data-i="music"></i></div><div class="nm">demo-mix.flac</div><div class="mt">Thu</div></div>
+      <div class="sf"><div class="th g13"></div><div class="nm">poster-draft.webp</div><div class="mt">Thu</div></div>
+    </div>
+    <span class="tail"></span>
+  </div>
+
+  <!-- Downloads stack, fan view. -->
+  <div class="fan" data-scr="fan" data-at="d-dl" data-gap="6" style="width:260px;height:430px" data-dx="6">
+    <div class="fi hov" style="right:110px;bottom:0;transform:rotate(-1deg)"><span class="lbl">IMG_2041.jpg</span><span class="th g4"></span></div>
+    <div class="fi" style="right:104px;bottom:62px;transform:rotate(-2.5deg)"><span class="lbl">invoice-oct.pdf</span><span class="th"><i data-x="pdf"></i></span></div>
+    <div class="fi" style="right:92px;bottom:124px;transform:rotate(-4deg)"><span class="lbl">nyx-fonts-2.0.zip</span><span class="th"><i data-x="zip"></i></span></div>
+    <div class="fi" style="right:74px;bottom:186px;transform:rotate(-5.5deg)"><span class="lbl">wallpaper-ultrawide.png</span><span class="th g9"></span></div>
+    <div class="fi" style="right:50px;bottom:248px;transform:rotate(-7deg)"><span class="lbl">screenshot-1432.png</span><span class="th g2"></span></div>
+    <div class="fi" style="right:20px;bottom:310px;transform:rotate(-8.5deg)"><span class="lbl">meeting-notes.md</span><span class="th"><i data-i="file-text"></i></span></div>
+    <div class="fi" style="right:-14px;bottom:372px;transform:rotate(-10deg)"><span class="lbl">Open in Files · 24 items</span><span class="th" style="background:var(--popover)"><i data-i="folder"></i></span></div>
+  </div>
+</div>
+</body>
+</html>
