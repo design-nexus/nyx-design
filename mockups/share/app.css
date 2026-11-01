@@ -1,0 +1,88 @@
+/* Share app mockup: a compact floating window (560 px), like the Share Sheet.
+ * Uses ../polish/tokens.css, mock.css, nyx-after.css and share.css (desk, sheet, tiles). */
+
+.app.sheet { width: 560px; overflow: hidden; }
+.app .sh-hdr .seg { margin: 0 auto; }
+.app .sh-body { padding: 0 16px 0; }
+
+/* Send tray */
+.tray { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; }
+.tray.idle { background: color-mix(in srgb, var(--text) 2.5%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--text) 9%, transparent); }
+[data-theme="dark"] .app .tray.idle.card { background: color-mix(in srgb, var(--text) 2.5%, var(--popover)); }
+.tray .drop { width: 40px; height: 40px; border-radius: 9px; flex: none; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); background: var(--field); }
+.tray .drop i { width: 20px; height: 20px; }
+.tray .pt { font-weight: 500; }
+.tray .ps { font-size: 0.923em; color: var(--dim-text); margin-top: 1px; }
+.tray .thumbs { display: flex; gap: 6px; flex: none; }
+.tray .thumbs > * { width: 40px; height: 40px; border-radius: 7px; box-shadow: var(--art-shadow); }
+.tray .doc { background: color-mix(in srgb, var(--text) 9%, var(--raised)); display: flex; align-items: center; justify-content: center; color: var(--dim-text); }
+.tray .doc i { width: 18px; height: 18px; }
+
+/* Device list */
+.devs .opt { min-height: 56px; padding: 8px 10px 8px 12px; gap: 12px; }
+.app .card.devs .opt { --inset: 60px; }
+.dev-ic {
+  width: 36px; height: 36px; border-radius: 9px; flex: none; display: flex; align-items: center; justify-content: center; position: relative;
+  background: linear-gradient(135deg, #26262a, #121214); color: #6fd3de;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #6fd3de 30%, transparent), var(--art-shadow);
+}
+.dev-ic i { width: 18px; height: 18px; }
+.dev-ic .dot { position: absolute; right: -2px; bottom: -2px; width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 2px var(--card); }
+[data-theme="dark"] .app .dev-ic .dot { box-shadow: 0 0 0 2px color-mix(in srgb, var(--text) 4%, var(--popover)); }
+.devs .nm { font-weight: 500; }
+.devs .sub { font-size: 0.923em; color: var(--dim-text); margin-top: 1px; display: flex; gap: 6px; align-items: center; }
+.devs .sub .key { color: var(--text-tertiary); font-feature-settings: "tnum"; }
+.devs .bar { height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; margin-top: 6px; }
+.devs .bar span { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+.devs .ok { color: var(--success); display: inline-flex; align-items: center; gap: 5px; }
+.devs .ok i { width: 13px; height: 13px; }
+.devs .opt.hover { background: var(--row-hover); }
+.btn[disabled] { opacity: .45; }
+
+/* Footer: visibility */
+.app .foot { display: flex; align-items: center; gap: 10px; padding: 10px 16px; margin-top: 14px; border-top: 1px solid var(--hair); }
+.app .foot .t { font-weight: 500; }
+.app .foot .d { font-size: 0.923em; color: var(--dim-text); flex: 1; }
+.app .foot .live { display: inline-flex; align-items: center; gap: 6px; }
+.app .foot .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 22%, transparent); }
+.app .switch { transform: scale(.9); }
+
+/* Transfers */
+.tx .opt { min-height: 50px; padding: 7px 12px; gap: 12px; }
+.app .card.tx .opt { --inset: 56px; }
+.tx .dir { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex: none; }
+.tx .dir i { width: 15px; height: 15px; }
+.tx .dir.out { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+.tx .dir.in { background: color-mix(in srgb, var(--success) 14%, transparent); color: var(--success); }
+.tx .dir.bad { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+.tx .t { font-weight: 500; }
+.tx .right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex: none; }
+.tx .st { font-size: 0.923em; color: var(--dim-text); white-space: nowrap; }
+.tx .st.bad { color: var(--danger); }
+.tx .when { font-size: 0.846em; color: var(--text-tertiary); font-feature-settings: "tnum"; }
+.tx .mini-bar { width: 90px; height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; margin-top: 3px; }
+.tx .mini-bar span { display: block; height: 100%; background: var(--accent); }
+
+/* Incoming offer, inside the window */
+.app .veil { position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; border-radius: var(--r-dialog);
+  background: color-mix(in srgb, var(--shadow) 55%, transparent); backdrop-filter: blur(2px); }
+[data-theme="light"] .app .veil { background: color-mix(in srgb, #000 18%, transparent); }
+.offer { width: 470px; padding: 18px; display: flex; flex-direction: column; gap: 12px; background: var(--popover); border-radius: var(--r-dialog); box-shadow: var(--lift-shadow); }
+[data-theme="light"] .offer { background: var(--bg); }
+[data-theme="dark"] .offer .card { background: color-mix(in srgb, var(--text) 5%, var(--popover)); }
+.offer .who { display: flex; gap: 12px; align-items: center; }
+.offer .who .dev-ic { width: 40px; height: 40px; }
+.offer .t { font-weight: 600; }
+.offer .d { color: var(--dim-text); font-size: 0.923em; margin-top: 1px; }
+.offer .files .opt { min-height: 34px; padding: 5px 12px; }
+.offer .sz { color: var(--dim-text); font-size: 0.923em; font-feature-settings: "tnum"; }
+.offer .note { font-size: 0.846em; color: var(--text-tertiary); }
+.offer .buttons { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* Settings page */
+.entry { height: 28px; padding: 0 10px; min-width: 150px; border-radius: var(--r-small); background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); display: inline-flex; align-items: center; }
+.switch.locked { opacity: .55; }
+.app .gtitle { margin: 16px 4px 8px; }
+.app .gtitle.first { margin-top: 2px; }
+.app .opt .d { font-size: 0.923em; }
+.app .empty-list { padding: 30px 20px 28px; }

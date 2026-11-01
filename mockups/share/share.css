@@ -1,0 +1,109 @@
+/* Share Sheet mockup. Uses ../polish/tokens.css and the 2.0 rules in ../polish/nyx-after.css. */
+
+.desk { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+[data-theme="dark"] .desk {
+  background:
+    radial-gradient(ellipse at 18% 12%, #1c2b47 0, transparent 55%),
+    radial-gradient(ellipse at 85% 88%, #2b1a3d 0, transparent 50%),
+    #0b0c10;
+}
+[data-theme="light"] .desk {
+  background:
+    radial-gradient(ellipse at 18% 12%, #cdd9ef 0, transparent 55%),
+    radial-gradient(ellipse at 85% 88%, #e6d6ef 0, transparent 50%),
+    #e4e6eb;
+}
+
+/* The sheet: a floating window, so it keeps window controls and the dialog radius. */
+.sheet {
+  width: 560px; position: relative; display: flex; flex-direction: column;
+  background: var(--popover); border-radius: var(--r-dialog); box-shadow: var(--lift-shadow);
+}
+[data-theme="light"] .sheet { background: var(--bg); }
+[data-theme="dark"] .sheet .card { background: color-mix(in srgb, var(--text) 4%, var(--popover)); }
+.sh-hdr { height: 46px; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 16px; flex: none; }
+.sh-hdr .grow { display: flex; align-items: center; min-width: 0; }
+.sh-body { padding: 0 16px 16px; }
+
+/* Content preview */
+.preview { display: flex; align-items: center; gap: 14px; padding: 12px 14px; }
+.preview .pt { font-weight: 500; }
+.preview .ps { font-size: 0.923em; color: var(--dim-text); margin-top: 2px; }
+.stack { display: flex; gap: 6px; flex: none; }
+.stack > * { width: 40px; height: 40px; border-radius: 7px; flex: none; box-shadow: var(--art-shadow); }
+.stack .doc { background: color-mix(in srgb, var(--text) 9%, var(--raised)); display: flex; align-items: center; justify-content: center; color: var(--dim-text); box-shadow: 0 0 0 1px var(--edge), var(--art-shadow); }
+.stack .doc i { width: 18px; height: 18px; }
+.thumb { width: 46px; height: 46px; border-radius: 7px; flex: none; box-shadow: var(--art-shadow); }
+.thumb.link { display: flex; align-items: center; justify-content: center; background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); color: var(--accent); }
+.thumb.link i { width: 22px; height: 22px; }
+
+/* Sections */
+.sec { margin-top: 14px; }
+.sec-h { display: flex; align-items: center; gap: 8px; height: 18px; margin: 0 6px 6px; font-size: 0.846em; font-weight: 600; color: var(--text-tertiary); }
+.sec-h .live { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
+.sec-h .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px; }
+
+/* Destination: a 44 px satin tile (the app-icon shape) over a two-line label. */
+.dest { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 2px 7px; border-radius: var(--r-small); text-align: center; }
+.dest.hover { background: var(--row-hover); }
+.dest.focus { box-shadow: var(--ring); }
+.dest .ic {
+  position: relative; width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #26262a, #121214); color: var(--tc);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tc) 30%, transparent), var(--art-shadow);
+}
+.dest .ic i { width: 22px; height: 22px; }
+.dest .ic i svg { stroke-width: 1.7; }
+.dest .ic.app { background: none; box-shadow: none; }
+.dest .ic.app img { width: 50px; height: 50px; margin: -3px; filter: drop-shadow(0 2px 4px color-mix(in srgb, var(--shadow) 35%, transparent)); }
+.dest .nm { font-size: 0.923em; font-weight: 500; line-height: 1.25; max-width: 100%; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.dest .via { font-size: 0.846em; color: var(--text-tertiary); margin-top: -4px; white-space: nowrap; }
+.dest .dot { position: absolute; right: -2px; bottom: -2px; width: 9px; height: 9px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 2px var(--popover); }
+[data-theme="light"] .dest .dot { box-shadow: 0 0 0 2.5px var(--bg); }
+.dest.off .ic { opacity: .45; }
+.dest.off .nm { color: var(--dim-text); }
+.dest.failed .via { color: var(--danger); }
+.dest.busy .via { color: var(--accent); font-feature-settings: "tnum"; }
+.dest .ring { position: absolute; inset: -5px; }
+.dest .ring circle { fill: none; stroke-width: 2.5; }
+.dest .ring .bg { stroke: var(--track); }
+.dest .ring .fg { stroke: var(--accent); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
+.dest .pin { position: absolute; left: -3px; top: -3px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--raised); color: var(--dim-text); box-shadow: 0 0 0 1px var(--edge); }
+.dest .pin i { width: 10px; height: 10px; }
+
+/* Context menu on a destination */
+.menu { position: absolute; z-index: 5; top: calc(100% - 4px); left: 50%; width: 208px; padding: 5px; text-align: left; }
+.menu .mi { height: 32px; padding: 0 9px; border-radius: var(--r-small); display: flex; align-items: center; gap: 10px; }
+.menu .mi i { width: 15px; height: 15px; color: var(--dim-text); }
+.menu .mi.hover { background: var(--row-hover); }
+.menu .mi .key { margin-left: auto; font-size: 0.846em; color: var(--text-tertiary); }
+.menu hr { border: 0; height: 1px; background: var(--hair); margin: 4px 9px; }
+
+/* Transfers */
+.jobs .opt { align-items: flex-start; padding: 11px 10px 11px 14px; }
+.jobs .jt { font-weight: 500; }
+.jobs .js { font-size: 0.923em; color: var(--dim-text); margin-top: 2px; font-feature-settings: "tnum"; }
+.jobs .bar { height: 4px; border-radius: 2px; background: var(--track); margin-top: 9px; overflow: hidden; }
+.jobs .bar span { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+.jobs .mini { width: 28px; height: 28px; border-radius: 7px; flex: none; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #26262a, #121214); color: var(--tc); margin-top: 1px; }
+.jobs .mini i { width: 15px; height: 15px; }
+.jobs .mini.err { background: color-mix(in srgb, var(--danger) 16%, transparent); color: var(--danger); }
+.jobs .acts { display: flex; gap: 4px; align-items: center; margin-top: -2px; }
+.foot-note { margin: 10px 6px 0; font-size: 0.923em; color: var(--dim-text); display: flex; align-items: center; gap: 8px; }
+.foot-note i { width: 14px; height: 14px; color: var(--text-tertiary); }
+
+/* QR code */
+.qr-wrap { display: flex; flex-direction: column; align-items: center; padding: 18px 0 6px; gap: 14px; }
+.qr { width: 216px; height: 216px; padding: 14px; background: #fff; border-radius: var(--r-card); box-shadow: 0 0 0 1px var(--hair), var(--art-shadow); }
+.qr svg { width: 100%; height: 100%; display: block; }
+.qr-cap { text-align: center; }
+.qr-cap .ps { font-size: 0.923em; color: var(--dim-text); margin-top: 2px; }
+.qr-acts { display: flex; gap: 8px; }
+
+/* Tooltip */
+.tip {
+  position: absolute; z-index: 6; padding: 5px 9px; border-radius: var(--r-small); white-space: nowrap; font-size: 0.923em;
+  background: var(--popover); box-shadow: var(--lift-shadow); color: var(--text);
+}
+[data-theme="light"] .tip { background: var(--raised); }
