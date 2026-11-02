@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en" data-screens="inbox,group,pinned,history,settings">
+<head>
+<meta charset="utf-8">
+<title>Notification Center — Nyx desktop mockup</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="desktop.css">
+<script src="mock.js"></script>
+<script src="desktop.js"></script>
+</head>
+<body>
+<div class="desk">
+  <div class="topbar">
+    <div class="ws"><b>1</b><span>2</span><span>3</span><span>4</span><span>5</span></div>
+    <div class="mid tnum">Saturday 14:32</div>
+    <div class="right"><i data-i="wifi" class="on"></i><i data-i="bluetooth" class="on"></i><i data-i="volume" class="on"></i><i data-x="battery" class="on"></i><i data-i="bell" class="on"></i></div>
+  </div>
+
+  <div class="fwin idle" style="left:10px;top:36px;width:1470px;height:1034px;--w:var(--sw-blue)">
+    <div class="h"></div><div class="s"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="c lines"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="nc">
+    <!-- Header: the three views, Do not disturb, settings, clear. -->
+    <div data-scr="inbox,group,pinned,history">
+      <div class="nc-head">
+        <span class="seg">
+          <span data-scr="inbox,group" class="on"><i data-i="inbox"></i></span><span data-scr="pinned,history"><i data-i="inbox"></i></span>
+          <span data-scr="pinned" class="on"><i data-x="pin"></i></span><span data-scr="inbox,group,history"><i data-x="pin"></i></span>
+          <span data-scr="history" class="on"><i data-i="clock"></i></span><span data-scr="inbox,group,pinned"><i data-i="clock"></i></span>
+        </span>
+        <div class="acts">
+          <span class="ibtn" data-scr="inbox,group,history,pinned"><i data-i="moon"></i></span>
+          <span class="ibtn"><i data-i="sliders"></i></span>
+          <span class="ibtn" data-scr="inbox,group"><i data-x="broom"></i></span>
+        </div>
+      </div>
+
+      <!-- Inbox: pinned strip, then groups by app, newest group first. -->
+      <div class="scroll" data-scr="inbox">
+        <div class="sect"><span class="glabel">Pinned</span><span class="ibtn"><i data-i="chev-r"></i></span></div>
+        <div class="n pinned">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Mail.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Mail</span><i data-x="pin" class="pinmark"></i><span class="when">Tue</span></div>
+            <div class="ti">Flight confirmation · NYC → LIS</div><div class="tx">Booking ref K7QX2P. Check-in opens 24 hours before departure.</div></div>
+        </div>
+        <div class="sect"><span class="glabel">Today</span></div>
+        <div class="grp">
+          <div class="n unread">
+            <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt="">
+            <div class="bd"><div class="top"><span class="app">Chat</span><span>· Maya</span><span class="when">2 min</span></div>
+              <div class="ti">Are we still on for 4?</div><div class="tx">I can bring the prototype boards if you want to try the new hinge.</div>
+              <div class="acts"><span>Reply</span><span>Mark as read</span></div></div>
+          </div>
+          <span class="count">3</span>
+        </div>
+        <div class="n unread">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Calendar.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Calendar</span><span class="when">14:15</span></div>
+            <div class="ti">Design review in 15 minutes</div><div class="tx">15:00–15:45 · Studio B</div>
+            <div class="acts"><span>Join</span><span>Snooze</span></div></div>
+        </div>
+        <div class="grp">
+          <div class="n">
+            <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Transfer.svg" alt="">
+            <div class="bd"><div class="top"><span class="app">Transfer</span><span class="when">13:02</span></div>
+              <div class="ti">Download finished</div><div class="tx">omarchy-4.5.iso · 3.1 GB</div></div>
+          </div>
+          <span class="count">2</span>
+        </div>
+        <div class="n">
+          <span class="ai g"><i data-i="app"></i></span>
+          <div class="bd"><div class="top"><span class="app">System</span><span class="when">11:40</span></div>
+            <div class="ti">Updates available</div><div class="tx">12 packages can be updated.</div></div>
+        </div>
+      </div>
+
+      <!-- A group opened: every card, newest first; hover shows pin and dismiss. -->
+      <div class="scroll" data-scr="group">
+        <div class="sect"><span class="glabel">Pinned</span><span class="ibtn"><i data-i="chev-r"></i></span></div>
+        <div class="n pinned">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Mail.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Mail</span><i data-x="pin" class="pinmark"></i><span class="when">Tue</span></div>
+            <div class="ti">Flight confirmation · NYC → LIS</div><div class="tx">Booking ref K7QX2P. Check-in opens 24 hours before departure.</div></div>
+        </div>
+        <div class="ghead"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt=""><span class="grow">Chat</span><span class="ibtn"><i data-x="broom"></i></span><span class="ibtn"><i data-i="chev-u"></i></span></div>
+        <div class="stack">
+          <div class="n unread hov">
+            <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt="">
+            <div class="bd"><div class="top"><span class="app">Maya</span><span class="when">2 min</span></div>
+              <div class="ti">Are we still on for 4?</div><div class="tx">I can bring the prototype boards if you want to try the new hinge.</div>
+              <div class="acts"><span>Reply</span><span>Mark as read</span></div></div>
+            <div class="hv"><span class="ibtn"><i data-x="pin"></i></span><span class="ibtn"><i data-i="x"></i></span></div>
+          </div>
+          <div class="n unread">
+            <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt="">
+            <div class="bd"><div class="top"><span class="app">Maya</span><span class="when">9 min</span></div>
+              <div class="ti">Sent you the measurements</div><div class="tx">hinge-v3.pdf · 2 pages</div></div>
+          </div>
+          <div class="n">
+            <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt="">
+            <div class="bd"><div class="top"><span class="app">Studio team</span><span class="when">12:20</span></div>
+              <div class="ti">Leo: lunch at the usual?</div><div class="tx">Booking for six at 12:45.</div></div>
+          </div>
+        </div>
+        <div class="n unread">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Calendar.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Calendar</span><span class="when">14:15</span></div>
+            <div class="ti">Design review in 15 minutes</div><div class="tx">15:00–15:45 · Studio B</div></div>
+        </div>
+      </div>
+
+      <!-- Pinned: kept until unpinned, whatever happens to the original. -->
+      <div class="scroll" data-scr="pinned">
+        <div class="n pinned">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Mail.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Mail</span><span>· Atlantic Air</span><span class="when">Tue 09:12</span></div>
+            <div class="ti">Flight confirmation · NYC → LIS</div><div class="tx">Booking ref K7QX2P. Check-in opens 24 hours before departure.</div></div>
+        </div>
+        <div class="n pinned hov">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Passwords.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Passwords</span><span class="when">Oct 28</span></div>
+            <div class="ti">Recovery codes saved</div><div class="tx">GitHub · 10 codes stored in the Personal vault.</div></div>
+          <div class="hv"><span class="ibtn"><i data-x="unpin"></i></span><span class="ibtn"><i data-x="trash"></i></span></div>
+        </div>
+        <div class="n pinned">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Reminders.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Reminders</span><span class="when">Oct 24</span></div>
+            <div class="ti">Renew passport</div><div class="tx">Appointment Nov 12, 10:30 · bring two photos.</div></div>
+        </div>
+      </div>
+
+      <!-- History: search, filters, by day. -->
+      <div class="scroll" data-scr="history">
+        <div class="searchf"><i data-i="search"></i><span class="q">hinge</span></div>
+        <div class="filters"><span class="on">All apps<i data-i="chev-d"></i></span><span>Last 30 days<i data-i="chev-d"></i></span></div>
+        <div class="day">Today</div>
+        <div class="n">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Chat</span><span>· Maya</span><span class="when">14:30</span></div>
+            <div class="ti">Are we still on for 4?</div><div class="tx">I can bring the prototype boards if you want to try the new <mark>hinge</mark>.</div></div>
+        </div>
+        <div class="n">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Chat</span><span>· Maya</span><span class="when">14:23</span></div>
+            <div class="ti">Sent you the measurements</div><div class="tx"><mark>hinge</mark>-v3.pdf · 2 pages</div></div>
+        </div>
+        <div class="day">Oct 29</div>
+        <div class="n">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Mail.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Mail</span><span>· Supplier</span><span class="when">16:04</span></div>
+            <div class="ti">Quote for <mark>hinge</mark> tooling</div><div class="tx">Attached is the revised quote with the second cavity.</div></div>
+        </div>
+        <div class="day">Oct 21</div>
+        <div class="n">
+          <img class="ai" src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Notes.svg" alt="">
+          <div class="bd"><div class="top"><span class="app">Notes</span><span class="when">10:47</span></div>
+            <div class="ti">Shared note updated</div><div class="tx">Leo edited "<mark>Hinge</mark> tests".</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings: a detail view, like the Control Center's. -->
+    <div data-scr="settings">
+      <div class="dhead"><span class="ibtn hov"><i data-i="chev-l"></i></span><span class="title">Notifications</span></div>
+      <div class="card">
+        <div class="optrow"><div class="grow"><div class="t500">Do not disturb</div><div>Pop-ups stay quiet; everything still arrives here</div></div><span class="switch"></span></div>
+        <div class="optrow"><div class="grow"><div class="t500">On a schedule</div><div class="timepair"><span>22:00</span>to<span>07:00</span></div></div><span class="switch on"></span></div>
+      </div>
+      <span class="glabel pad">History</span>
+      <div class="card">
+        <div class="optrow"><div class="grow"><div class="t500">Keep for</div><div>Pinned notifications are always kept</div></div><span class="seg w3"><span>7 d</span><span class="on">30 d</span><span>90 d</span></span></div>
+        <div class="optrow"><div class="grow"><div class="t500">Delete history</div><div>Everything except pinned</div></div><span class="ibtn"><i data-x="trash"></i></span></div>
+      </div>
+      <span class="glabel pad">Privacy</span>
+      <div class="card">
+        <div class="optrow"><div class="grow"><div class="t500">Hide content when locked</div><div>Show only the app and time</div></div><span class="switch on"></span></div>
+      </div>
+      <span class="glabel pad">Apps</span>
+      <div class="card">
+        <div class="row"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Chat.svg" alt="" style="width:20px;height:20px"><span class="grow">Chat</span><span class="small dim">History</span><span class="switch on"></span></div>
+        <div class="row"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Passwords.svg" alt="" style="width:20px;height:20px"><span class="grow">Passwords</span><span class="small dim">History</span><span class="switch"></span></div>
+        <div class="row"><img src="../../crates/nyx-icons/apps/io.github.design_nexus.nyx.Transfer.svg" alt="" style="width:20px;height:20px"><span class="grow">Transfer</span><span class="small dim">History</span><span class="switch on"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

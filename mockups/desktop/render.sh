@@ -11,7 +11,7 @@ if [[ ! -f wallpaper.webp ]]; then
   [[ -n $bg ]] && magick "$bg" wallpaper.webp
 fi
 browser=$(command -v chromium || command -v google-chrome-stable || command -v chrome)
-pages=(dock:default,preview,quick,stack,fan,hidden control-center:dashboard,volume,wifi,edit)
+pages=(dock:default,preview,quick,stack,fan,hidden control-center:dashboard,volume,wifi,edit notification-center:inbox,group,pinned,history,settings)
 want=("$@")
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT

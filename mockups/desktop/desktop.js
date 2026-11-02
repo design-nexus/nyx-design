@@ -33,6 +33,8 @@
     battery: '<rect x="3" y="7.5" width="16" height="9" rx="2"/><path d="M21.5 10.5v3"/><path d="M5.5 10h8v4h-8z" fill="currentColor" stroke="none"/>',
     cloudsun: '<path d="M7 18a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.5 2 3 3 0 0 1-.5 6z"/>',
     sticky: '<path d="M5 4h14v10l-6 6H5z"/><path d="M13 20v-6h6"/>',
+    broom: '<path d="M14 4 9.5 13.5M6 14h9l1.5 6.5h-12z"/><path d="M9 17v3.5M12 17v3.5"/>',
+    belloff: '<path d="M9 18a3 3 0 0 0 6 0M6 9a6 6 0 0 1 9.4-5M18 9c0 6 2 7 2 8H6.5M4 4l16 16"/><path d="M6 9c0 4-1 6-2 8"/>',
     box: '<path d="M12 3 4 7v10l8 4 8-4V7z"/><path d="m4 7 8 4 8-4M12 11v10"/>',
   };
   const svg = (n) =>
