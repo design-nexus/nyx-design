@@ -332,6 +332,13 @@ noted in its shortcuts list.
   are never recoloured. The opt-in `nyx icons` launcher set may use curated
   geometric interpretations of recognized third-party marks, in the theme's nearest
   swatch; fallback logos retain their original colors on the theme's tile.
+- **Umbra** (design-nexus/umbra-icons) is the suite's icon theme for everything that
+  isn't an app: folders, file types, devices, status and the symbolic set, drawn in the
+  theme's colours. Three looks: **Tile** (the default: the app-icon tile holding a
+  folder or page outline with its mark), **Solid** (satin folder and page shapes, a
+  coloured type badge) and **Line** (coloured outlines, thinner at large sizes). Code
+  files carry their language's mark; cloud-drive folders their brand's, in its colours.
+  Settings → Theme → Icons picks Umbra and its look.
 
 ---
 

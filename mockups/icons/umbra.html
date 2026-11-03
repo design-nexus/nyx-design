@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umbra Styles</title>
+<link rel="stylesheet" href="../desktop/tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.4 Inter, system-ui, sans-serif;
+  }
+  header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 22px 32px 6px;
+  }
+  h1 { font-size: 20px; font-weight: 600; margin: 0; }
+  header p { margin: 0; color: var(--dim-text); flex: 1; }
+  .toggle {
+    width: 32px; height: 32px; border-radius: var(--r-small);
+    border: none; background: transparent; color: var(--dim-text); cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .toggle:hover { background: color-mix(in srgb, var(--text) var(--hover), transparent); color: var(--text); }
+  main { padding: 10px 32px 40px; display: grid; gap: 22px; }
+  .style {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--r-dialog);
+    padding: 18px 20px 20px;
+  }
+  .style > h2 { margin: 0 0 2px; font-size: 16px; font-weight: 600; }
+  .style > h2 span { color: var(--theme-accent); margin-right: 8px; }
+  .style > p { margin: 0 0 14px; color: var(--dim-text); }
+  .cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px; }
+  h3 { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+       color: var(--text-tertiary); margin: 6px 0 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px 4px; }
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 2px; border-radius: var(--r-small); }
+  .cell:hover { background: color-mix(in srgb, var(--theme-accent) 14%, transparent); }
+  .cell svg { width: 64px; height: 64px; display: block; }
+  .cell span { font-size: 11.5px; color: var(--text); text-align: center; white-space: nowrap; }
+  .sizes { display: flex; align-items: flex-end; gap: 18px; margin-top: 4px; flex-wrap: wrap; }
+  .sizes div { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .sizes small { color: var(--text-tertiary); font-size: 10.5px; }
+  .list { margin-top: 10px; border-top: 1px solid var(--divider); }
+  .row { display: flex; align-items: center; gap: 10px; padding: 5px 6px; border-bottom: 1px solid var(--divider); font-size: 13px; }
+  .row svg { width: 20px; height: 20px; flex: none; }
+  .row em { margin-left: auto; color: var(--text-tertiary); font-style: normal; font-size: 12px; }
+  .symbolic { display: flex; flex-wrap: wrap; gap: 6px; }
+  .symbolic div { width: 36px; height: 36px; display: grid; place-items: center; border-radius: var(--r-small); color: var(--dim-text); }
+  .symbolic div:hover { background: color-mix(in srgb, var(--text) var(--hover), transparent); color: var(--text); }
+  .symbolic svg { width: 20px; height: 20px; }
+  .shared { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-dialog); padding: 16px 20px; }
+  .shared p { margin: 0 0 10px; color: var(--dim-text); }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } header, main { padding-left: 16px; padding-right: 16px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Umbra · three looks</h1>
+  <p>Special folders, cloud drives and file types in each style. The symbolic set at the end is the same for all three.</p>
+  <button class="toggle" id="theme" title="Light or dark (T)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5A6.5 6.5 0 0 1 12 3.5z"/></svg>
+  </button>
+</header>
+<main id="main"></main>
+<script>
+const params = new URLSearchParams(location.search);
+document.documentElement.dataset.theme = params.get('theme') || 'dark';
+const toggle = () => {
+  const r = document.documentElement;
+  r.dataset.theme = r.dataset.theme === 'light' ? 'dark' : 'light';
+  render();
+};
+document.getElementById('theme').onclick = toggle;
+addEventListener('keydown', e => { if (e.key === 't' || e.key === 'T') toggle(); });
+
+const SW = { blue: '#5b9cff', violet: '#9d7bff', pink: '#ff6fae', red: '#ff6b6b', coral: '#ff7a59',
+             amber: '#f2b545', green: '#46d08a', teal: '#4cc9d6', graphite: '#a3a3ab' };
+
+// 24 px glyphs, 1.6 px round strokes (STYLE.md §9).
+const G = {
+  folder: 'M3 7.5a2.5 2.5 0 0 1 2.5-2.5H9l2 2.2h7.5A2.5 2.5 0 0 1 21 9.7v7.8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z',
+  page: 'M7 3.5h7l4 4V19a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 19V5A1.5 1.5 0 0 1 7.5 3.5 M14 3.5V7.5h4',
+  home: 'M4.5 10.5L12 4.5l7.5 6V19a1 1 0 0 1-1 1H14v-5h-4v5H5.5a1 1 0 0 1-1-1z',
+  desktop: 'M4 5h16v11H4z M9 20h6 M12 16v4',
+  pictures: 'M4.5 5.5h15v13h-15z M4.5 15.5l4.5-4.5 3.5 3.5 2-2 4.5 4.5 M15.5 9a1.4 1.4 0 1 0 0 .01',
+  videos: 'M4.5 6h15v12h-15z M10.5 9.3v5.4l4.5-2.7z',
+  documents: 'M8 8.5h8 M8 12h8 M8 15.5h5',
+  downloads: 'M12 4.5v10 M7.5 10.5L12 15l4.5-4.5 M5.5 19.5h13',
+  games: 'M8 8.5h8a4 4 0 0 1 4 4v2a2.5 2.5 0 0 1-4.5 1.5L14.5 15h-5l-1 1A2.5 2.5 0 0 1 4 14.5v-2a4 4 0 0 1 4-4z M8 10.8v3.4 M6.3 12.5h3.4 M15.5 11.5h.01 M17.5 13.5h.01',
+  music: 'M9.5 17V6.5l9-2V15 M9.5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0z M18.5 15a2 2 0 1 1-4 0 2 2 0 0 1 4 0z',
+  private: 'M4 4l16 16 M10.5 6.2A9 9 0 0 1 12 6c5 0 8.5 6 8.5 6a14 14 0 0 1-2.4 3 M7 7.2C4.8 8.7 3.5 12 3.5 12s3.5 6 8.5 6a8.5 8.5 0 0 0 4-1 M10 10a2.8 2.8 0 0 0 4 4',
+  projects: 'M9 8l-4 4 4 4 M15 8l4 4-4 4 M13.2 6.5l-2.4 11',
+  wallpapers: 'M4 5h16v11H4z M9 20h6 M12 16v4 M6.5 13.5l3.5-3.5 2.5 2.5 1.5-1.5 3.5 3',
+  work: 'M4 8.5h16v10.5H4z M9 8.5V6.5A1.5 1.5 0 0 1 10.5 5h3A1.5 1.5 0 0 1 15 6.5v2 M4 13h16',
+  // file types (drawn inside pages and tiles)
+  doc: 'M8 9h8 M8 12.5h8 M8 16h5',
+  image: 'M6.5 17l3.5-4 3 3 2-2 2.5 3 M14.8 9.2a1.3 1.3 0 1 0 0 .01',
+  video: 'M10 8.5v7l6-3.5z',
+  audio: 'M10.5 16V8.5l6-1.5v7 M10.5 16a1.7 1.7 0 1 1-3.4 0 1.7 1.7 0 0 1 3.4 0z M16.5 14a1.7 1.7 0 1 1-3.4 0 1.7 1.7 0 0 1 3.4 0z',
+  archive: 'M12 5v1.6 M12 8.6v1.6 M12 12.2v1.6 M10.4 15h3.2v3.3h-3.2z',
+  code: 'M9.5 9L6.5 12l3 3 M14.5 9l3 3-3 3',
+  sheet: 'M6.5 7h11v10h-11z M6.5 12h11 M11 7v10',
+  slides: 'M6 7h12v8H6z M12 15v3 M9.5 18h5',
+  text: 'M8 9h8 M8 12.5h8 M8 16h8',
+  exec: 'M7.5 9l3 3-3 3 M12.5 15h4',
+};
+
+// Cloud drives: geometric interpretations in each brand's own colours (never recoloured).
+const BRAND = {
+  dropbox: `<g fill="#0061fe"><path d="M7 4.6l4.6 2.9L7 10.4 2.4 7.5z"/><path d="M17 4.6l4.6 2.9-4.6 2.9-4.6-2.9z"/><path d="M7 10.9l4.6 2.9L7 16.7l-4.6-2.9z"/><path d="M17 10.9l4.6 2.9-4.6 2.9-4.6-2.9z"/><path d="M12 15.4l4.4 2.8-4.4 2.6-4.4-2.6z"/></g>`,
+  gdrive: `<path fill="#34a853" d="M8.6 3.8L2 15.2l3.3 5.6L12 9.5z"/><path fill="#fbbc04" d="M8.6 3.8h6.8l6.6 11.4h-6.8z"/><path fill="#4285f4" d="M5.3 20.8h13.4l3.3-5.6H8.7z"/>`,
+  onedrive: `<path fill="#0078d4" d="M7 18.5a4.4 4.4 0 0 1-.7-8.8 6 6 0 0 1 11.4 1.7 3.6 3.6 0 0 1 .3 7.1z"/>`,
+  nextcloud: `<g fill="none" stroke="#0082c9" stroke-width="2"><circle cx="12" cy="12" r="3.6"/><circle cx="4.8" cy="12" r="2"/><circle cx="19.2" cy="12" r="2"/></g>`,
+  mega: `<circle cx="12" cy="12" r="8.6" fill="#d9272e"/><path d="M8.2 15.6V9l3.8 3.9L15.8 9v6.6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+  proton: `<rect x="4" y="4" width="16" height="16" rx="5" fill="#6d4aff"/><path d="M10 16.5V8h3a2.6 2.6 0 0 1 0 5.2h-3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+};
+
+const FOLDERS = [
+  ['Folder', null, 'accent'], ['Home', 'home', 'accent'], ['Desktop', 'desktop', 'accent'],
+  ['Documents', 'documents', 'blue'], ['Downloads', 'downloads', 'teal'], ['Pictures', 'pictures', 'green'],
+  ['Videos', 'videos', 'violet'], ['Music', 'music', 'pink'], ['Games', 'games', 'coral'],
+  ['Projects', 'projects', 'amber'], ['Wallpapers', 'wallpapers', 'teal'], ['Work', 'work', 'graphite'],
+  ['Porn', 'private', 'red'],
+];
+const CLOUDS = [['Dropbox', 'dropbox'], ['Google Drive', 'gdrive'], ['OneDrive', 'onedrive'],
+                ['Nextcloud', 'nextcloud'], ['MEGA', 'mega'], ['Proton Drive', 'proton']];
+const FILES = [
+  ['report.pdf', 'doc', 'red', 'PDF'], ['letter.docx', 'doc', 'blue', 'DOCX'], ['photo.png', 'image', 'green', 'PNG'],
+  ['clip.mp4', 'video', 'violet', 'MP4'], ['song.flac', 'audio', 'pink', 'FLAC'], ['backup.zip', 'archive', 'amber', 'ZIP'],
+  ['main.rs', 'code', 'coral', 'RS'], ['budget.xlsx', 'sheet', 'green', 'XLSX'], ['talk.pptx', 'slides', 'coral', 'PPTX'],
+  ['notes.txt', 'text', 'graphite', 'TXT'], ['setup.sh', 'exec', 'teal', 'SH'],
+];
+
+let uid = 0;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const light = () => document.documentElement.dataset.theme === 'light';
+const colour = c => c === 'accent' ? css('--theme-accent') : SW[c];
+const stroke = (d, c, w = 1.6) =>
+  `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+// A 24 px glyph placed at (x, y) and `s` times its size, keeping a given stroke on the canvas.
+const placed = (inner, x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})">${inner}</g>`;
+const svg = (body, defs = '') => `<svg viewBox="0 0 128 128"><defs>${defs}</defs>${body}</svg>`;
+
+function satinDefs(id, accent) {
+  const [a, b] = light() ? ['#fbfbfc', '#e6e6ea'] : ['#26262a', '#121214'];
+  return `<linearGradient id="s${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>
+          <radialGradient id="g${id}" cx=".18" cy=".1" r=".75"><stop offset="0" stop-color="${accent}" stop-opacity="${light() ? .14 : .2}"/><stop offset="1" stop-color="${accent}" stop-opacity="0"/></radialGradient>`;
+}
+
+// ---------- A: satin tile + glyph ----------
+function tile(inner, accent) {
+  const id = ++uid;
+  return svg(`<rect x="8" y="8" width="112" height="112" rx="28" fill="url(#s${id})"/>
+    <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#g${id})"/>
+    <rect x="8.5" y="8.5" width="111" height="111" rx="27.5" fill="none" stroke="${accent}" stroke-opacity=".3"/>
+    ${inner}`, satinDefs(id, accent));
+}
+const A = {
+  folder: (glyph, c) => {
+    const col = colour(c);
+    let inner = placed(stroke(G.folder, col, 1.7), 22, 20, 3.5);
+    if (glyph) inner += placed(stroke(G[glyph], col, 2.6), 47, 52, 1.42);
+    return tile(inner, col);
+  },
+  cloud: brand => tile(placed(stroke(G.folder, css('--dim-text'), 1.7), 22, 20, 3.5) + placed(BRAND[brand], 46, 51, 1.5), css('--theme-accent')),
+  file: (glyph, c) => {
+    const col = colour(c);
+    return tile(placed(stroke(G.page, col, 1.6), 21, 18, 3.6) + placed(stroke(G[glyph], col, 2.4), 44, 50, 1.6), col);
+  },
+};
+
+// ---------- B: folder and page shapes ----------
+const B = {
+  folder: (glyph, c, brand) => {
+    const id = ++uid, col = brand ? css('--theme-accent') : colour(c);
+    const [back, a, b, emb] = light()
+      ? ['#d7d7dd', '#fbfbfc', '#e9e9ee', '#0000']
+      : ['#2a2a2f', '#3b3b42', '#222226', '#0000'];
+    const mark = brand ? placed(BRAND[brand], 46, 54, 1.5)
+      : glyph ? placed(stroke(G[glyph], col, 2.2), 44, 52, 1.65) : '';
+    return svg(`<path d="M10 30a10 10 0 0 1 10-10h28a6 6 0 0 1 4.6 2.2l5 5.6a6 6 0 0 0 4.6 2.2H108a10 10 0 0 1 10 10v56a10 10 0 0 1-10 10H20a10 10 0 0 1-10-10z" fill="${back}"/>
+      <path d="M8 46a9 9 0 0 1 9-9h94a9 9 0 0 1 9 9v52a10 10 0 0 1-10 10H18a10 10 0 0 1-10-10z" fill="url(#s${id})"/>
+      <path d="M8 46a9 9 0 0 1 9-9h94a9 9 0 0 1 9 9v52a10 10 0 0 1-10 10H18a10 10 0 0 1-10-10z" fill="url(#g${id})"/>
+      <path d="M17 37.5h94a8.5 8.5 0 0 1 8.5 8.5" fill="none" stroke="${col}" stroke-opacity=".8" stroke-width="1.5" stroke-linecap="round"/>
+      ${mark}`,
+      `<linearGradient id="s${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>
+       <radialGradient id="g${id}" cx=".15" cy="0" r=".8"><stop offset="0" stop-color="${col}" stop-opacity="${light() ? .14 : .28}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>`);
+  },
+  cloud: brand => B.folder(null, null, brand),
+  file: (glyph, c, ext) => {
+    const id = ++uid, col = colour(c);
+    const [a, b, fold] = light() ? ['#ffffff', '#ececf0', '#d9d9df'] : ['#3b3b42', '#222226', '#52525a'];
+    const w = Math.max(40, ext.length * 13 + 16);
+    return svg(`<path d="M32 10h44l28 28v74a8 8 0 0 1-8 8H32a8 8 0 0 1-8-8V18a8 8 0 0 1 8-8z" fill="url(#s${id})"/>
+      <path d="M32 10.5h44" stroke="${col}" stroke-opacity=".45"/>
+      <path d="M76 10v20a8 8 0 0 0 8 8h20z" fill="${fold}"/>
+      ${placed(stroke(G[glyph], col, 2.2), 38, 30, 1.55)}
+      <rect x="${64 - w / 2}" y="86" width="${w}" height="22" rx="6" fill="${col}"/>
+      <text x="64" y="101.5" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="${light() ? '#fff' : '#09090a'}">${ext}</text>`,
+      `<linearGradient id="s${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`);
+  },
+};
+
+// ---------- C: outline only ----------
+const C = {
+  folder: (glyph, c) => {
+    const col = colour(c);
+    let inner = placed(stroke(G.folder, col, 1.6), 4, 4, 5);
+    if (glyph) inner += placed(stroke(G[glyph], col, 2.2), 43, 51, 1.75);
+    return svg(inner);
+  },
+  cloud: brand => svg(placed(stroke(G.folder, css('--dim-text'), 1.6), 4, 4, 5) + placed(BRAND[brand], 45, 51, 1.6)),
+  file: (glyph, c) => {
+    const col = colour(c);
+    return svg(placed(stroke(G.page, col, 1.6), 4, 4, 5) + placed(stroke(G[glyph], col, 2.2), 42, 50, 1.8));
+  },
+};
+
+const STYLES = [
+  ['A', 'Satin tile + glyph', 'The app-icon tile (satin, accent glow and hairline) holding a folder or page outline with its mark. Folders, files and apps all read as one family.', A],
+  ['B', 'Folder & page shapes', 'Solid satin folders with the mark on the front and an accent edge; files are satin pages with a folded corner and a coloured type badge. The most "folder-like" at small sizes.', B],
+  ['C', 'Outline only', 'Everything is a 1.6 px line glyph, tinted per type: the symbolic set, just bigger and in colour. Lightest look; less solid in a grid.', C],
+];
+
+const cell = (s, name) => `<div class="cell">${s}<span>${name}</span></div>`;
+const sized = (s, px) => `<div>${s.replace('<svg ', `<svg style="width:${px}px;height:${px}px" `)}<small>${px}</small></div>`;
+
+function render() {
+  uid = 0;
+  const main = document.getElementById('main');
+  main.innerHTML = STYLES.map(([key, title, blurb, S]) => {
+    const folders = FOLDERS.map(([n, g, c]) => cell(S.folder(g, c), n)).join('');
+    const clouds = CLOUDS.map(([n, b]) => cell(S.cloud(b), n)).join('');
+    const files = FILES.map(([n, g, c, e]) => cell(S.file(g, c, e), n)).join('');
+    const sizes = [16, 24, 32, 48, 96].map(px => sized(S.folder('pictures', 'green'), px)).join('')
+      + [16, 24, 32, 48, 96].map(px => sized(S.file('doc', 'red', 'PDF'), px)).join('');
+    const rows = [['Downloads', S.folder('downloads', 'teal'), '12 items'], ['Dropbox', S.cloud('dropbox'), '48 items'],
+                  ['report.pdf', S.file('doc', 'red', 'PDF'), '2.4 MB'], ['photo.png', S.file('image', 'green', 'PNG'), '840 KB'],
+                  ['main.rs', S.file('code', 'coral', 'RS'), '6 KB']]
+      .map(([n, s, m]) => `<div class="row">${s}<span>${n}</span><em>${m}</em></div>`).join('');
+    return `<section class="style">
+      <h2><span>${key}</span>${title}</h2><p>${blurb}</p>
+      <div class="cols">
+        <div><h3>Special folders</h3><div class="grid">${folders}</div>
+             <h3>Cloud drives</h3><div class="grid">${clouds}</div></div>
+        <div><h3>File types</h3><div class="grid">${files}</div>
+             <h3>Small sizes</h3><div class="sizes">${sizes}</div>
+             <h3>In a list (20 px)</h3><div class="list">${rows}</div></div>
+      </div></section>`;
+  }).join('') + `<section class="shared"><h3>Symbolic set · all styles</h3>
+    <p>Header and toolbar icons: 24 px grid, 1.6 px round strokes, currentColor.</p>
+    <div class="symbolic">${SYMBOLIC.map(([d, t]) => `<div title="${t}"><svg viewBox="0 0 24 24">${stroke(d, 'currentColor')}</svg></div>`).join('')}</div></section>`;
+}
+
+const SYMBOLIC = [
+  ['M11 4.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13z M20 20l-4.4-4.4', 'Search'],
+  [G.folder + ' M12 10.5v5 M9.5 13h5', 'New folder'],
+  ['M4 7h10 M18 7h2 M4 17h4 M12 17h8 M14 5v4 M8 15v4', 'Settings'],
+  ['M5 7h14 M10 7V5h4v2 M6.5 7l1 12.5h9l1-12.5 M10.5 11v5 M13.5 11v5', 'Trash'],
+  ['M6 6l12 12 M18 6L6 18', 'Close'],
+  ['M6 12h12', 'Minimize'],
+  ['M6.5 6.5h11v11h-11z', 'Maximize'],
+  ['M5 7h14 M5 12h14 M5 17h14', 'Menu'],
+  ['M12 4v11 M8 8l4-4 4 4 M5.5 13v5.5h13V13', 'Share'],
+  ['M12 4.5l2.3 4.7 5.2.8-3.8 3.6.9 5.2-4.6-2.4-4.6 2.4.9-5.2-3.8-3.6 5.2-.8z', 'Star'],
+  [G.downloads, 'Download'],
+  ['M8 5.5v13l10-6.5z', 'Play'],
+  ['M8.5 5.5v13 M15.5 5.5v13', 'Pause'],
+  ['M5 9.5h3l4.5-4v13L8 14.5H5z M16 9a4 4 0 0 1 0 6 M18.5 6.5a7.5 7.5 0 0 1 0 11', 'Volume'],
+  ['M3.5 9.5a12 12 0 0 1 17 0 M6.5 12.5a8 8 0 0 1 11 0 M9.5 15.5a3.6 3.6 0 0 1 5 0 M12 18.5h.01', 'Wi-Fi'],
+  ['M7.5 8l9 8-4.5 4V4l4.5 4-9 8', 'Bluetooth'],
+  ['M4 8h14.5v8H4z M20.5 10.5v3 M6.5 10.5h6v3h-6z', 'Battery'],
+  ['M4.5 8.5h15v9h-15z M4.5 12.5h15 M7.5 15h2', 'Drive'],
+  ['M9 3.5h6v5H9z M7 8.5h10v8a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3z M10.5 12.5h3', 'USB stick'],
+  ['M12 8v4.5l3 2 M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z', 'Recent'],
+];
+
+render();
+</script>
+</body>
+</html>
