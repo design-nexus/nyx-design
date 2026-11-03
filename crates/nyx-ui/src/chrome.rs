@@ -201,35 +201,79 @@ impl AppHeader {
 /// config gives windows with it no Omarchy titlebar on floating workspaces.
 pub const OWN_CONTROLS_TAG: &str = "nyx-own-controls";
 
-/// Minimize, maximize and close, shown while the window floats. Minimize goes to
-/// the dock the way Omarchy's titlebar does, so it shows only on a floating
-/// workspace, where the dock brings windows back.
-fn window_controls(window: &gtk::Window) -> gtk::Box {
-    let root = gtk::Box::new(gtk::Orientation::Horizontal, 2);
-    root.add_css_class("window-controls");
-    root.set_valign(gtk::Align::Center);
-    let minimize = widgets::bar_button("window-minimize-symbolic", "Minimize");
-    let maximize = widgets::bar_button("window-maximize-symbolic", "Maximize");
-    let close = widgets::bar_button("window-close-symbolic", "Close");
-    for b in [&minimize, &maximize, &close] {
-        root.append(b);
-    }
-    let address: Rc<RefCell<Option<String>>> = Rc::default();
-    let a = address.clone();
-    minimize.connect_clicked(move |_| {
-        if let Some(a) = a.borrow().clone() {
+/// Where the compositor has a window, as far as window controls care.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Placement {
+    /// Floating and not fullscreen: the window shows its own controls.
+    pub floating: bool,
+    /// On one of Omarchy's floating workspaces, where a minimized window waits in
+    /// the dock.
+    pub can_minimize: bool,
+    address: Option<String>,
+}
+
+/// Call `changed` with `window`'s placement now and whenever it changes. Under
+/// Hyprland the window is also tagged [`OWN_CONTROLS_TAG`], so it gets no Omarchy
+/// titlebar. Hyprland reports every window as tiled, floating or not, so GTK's
+/// tiled states only decide outside it.
+pub fn follow_placement(window: &impl IsA<gtk::Window>, changed: impl Fn(&Placement) + 'static) {
+    let t = tracked(window.upcast_ref());
+    changed(&t.placement.borrow());
+    t.listeners.borrow_mut().push(Rc::new(changed));
+}
+
+/// The window's placement as last seen (not floating until it is known).
+pub fn placement(window: &impl IsA<gtk::Window>) -> Placement {
+    tracked(window.upcast_ref()).placement.borrow().clone()
+}
+
+/// Minimize to the dock the way Omarchy's titlebar does, or ask the compositor
+/// outside Hyprland.
+pub fn minimize(window: &impl IsA<gtk::Window>) {
+    match placement(window).address {
+        Some(a) => {
             actions::minimize(&a);
         }
-    });
-    let (a, w) = (address.clone(), window.downgrade());
-    maximize.connect_clicked(move |_| match a.borrow().clone() {
+        None => window.as_ref().minimize(),
+    }
+}
+
+/// Maximize, or bring back to its own size. Omarchy ignores a window's own
+/// request, so under Hyprland this asks Hyprland.
+pub fn toggle_maximized(window: &impl IsA<gtk::Window>) {
+    match placement(window).address {
         Some(a) => {
             std::thread::spawn(move || actions::toggle_maximized(&a).run());
         }
         None => {
-            if let Some(w) = w.upgrade() {
-                if w.is_maximized() { w.unmaximize() } else { w.maximize() }
-            }
+            let w = window.as_ref();
+            if w.is_maximized() { w.unmaximize() } else { w.maximize() }
+        }
+    }
+}
+
+/// Minimize, maximize and close, shown while the window floats. Minimize shows
+/// only where the dock can bring the window back.
+fn window_controls(window: &gtk::Window) -> gtk::Box {
+    let root = gtk::Box::new(gtk::Orientation::Horizontal, 2);
+    root.add_css_class("window-controls");
+    root.set_valign(gtk::Align::Center);
+    let minimize_button = widgets::bar_button("window-minimize-symbolic", "Minimize");
+    let maximize = widgets::bar_button("window-maximize-symbolic", "Maximize");
+    let close = widgets::bar_button("window-close-symbolic", "Close");
+    for b in [&minimize_button, &maximize, &close] {
+        root.append(b);
+    }
+    let w = window.downgrade();
+    minimize_button.connect_clicked(move |_| {
+        if let Some(w) = w.upgrade() {
+            minimize(&w);
+        }
+    });
+    let w = window.downgrade();
+    maximize.connect_clicked(move |_| {
+        if let Some(w) = w.upgrade() {
+            toggle_maximized(&w);
         }
     });
     let w = window.downgrade();
@@ -238,53 +282,76 @@ fn window_controls(window: &gtk::Window) -> gtk::Box {
             w.close();
         }
     });
-    root.set_visible(false);
-    if nyx_desktop::hypr::Instance::find().is_ok() {
-        track(Rc::new(Tracked {
-            window: window.downgrade(),
-            root: root.downgrade(),
-            minimize: minimize.downgrade(),
-            address,
-            tagged: RefCell::default(),
-        }));
-    } else {
-        minimize.set_visible(false);
-        show_controls_when_floating(window, &root);
-    }
+    let (r, m) = (root.downgrade(), minimize_button.downgrade());
+    follow_placement(window, move |p| {
+        if let Some(r) = r.upgrade() {
+            r.set_visible(p.floating);
+        }
+        if let Some(m) = m.upgrade() {
+            m.set_visible(p.can_minimize);
+        }
+    });
     root
 }
 
-/// A window with controls, matched to its Hyprland window.
+type Listener = Rc<dyn Fn(&Placement)>;
+
+/// A window whose placement is followed, matched to its Hyprland window.
 struct Tracked {
     window: glib::WeakRef<gtk::Window>,
-    root: glib::WeakRef<gtk::Box>,
-    minimize: glib::WeakRef<gtk::Button>,
-    address: Rc<RefCell<Option<String>>>,
+    placement: RefCell<Placement>,
+    listeners: RefCell<Vec<Listener>>,
     tagged: RefCell<Option<String>>,
+}
+
+impl Tracked {
+    fn set(&self, p: Placement) {
+        if *self.placement.borrow() == p {
+            return;
+        }
+        *self.placement.borrow_mut() = p.clone();
+        let listeners = self.listeners.borrow().clone();
+        for l in listeners {
+            l(&p);
+        }
+    }
 }
 
 thread_local! {
     static TRACKED: RefCell<Vec<Rc<Tracked>>> = RefCell::default();
+    static HYPRLAND: bool = nyx_desktop::hypr::Instance::find().is_ok();
     static WATCHER: RefCell<Option<nyx_desktop::watch::Watcher>> = const { RefCell::new(None) };
     static LAST: RefCell<Option<Arc<Desktop>>> = const { RefCell::new(None) };
 }
 
-/// One Hyprland watcher per process follows every window that has controls.
-fn track(t: Rc<Tracked>) {
-    if let Some(w) = t.window.upgrade() {
-        w.connect_map(|_| refresh());
-        w.connect_title_notify(|_| refresh());
+fn tracked(window: &gtk::Window) -> Rc<Tracked> {
+    let found = TRACKED.with(|l| l.borrow().iter().find(|t| t.window.upgrade().as_ref() == Some(window)).cloned());
+    if let Some(t) = found {
+        return t;
     }
-    TRACKED.with(|list| list.borrow_mut().push(t));
-    WATCHER.with(|w| {
-        if w.borrow().is_none() {
-            *w.borrow_mut() = Some(nyx_desktop::watch::watch_local(|u| {
-                LAST.with(|l| *l.borrow_mut() = Some(u.desktop.clone()));
-                refresh();
-            }));
-        }
+    let t = Rc::new(Tracked {
+        window: window.downgrade(),
+        placement: RefCell::default(),
+        listeners: RefCell::default(),
+        tagged: RefCell::default(),
     });
-    refresh();
+    TRACKED.with(|l| l.borrow_mut().push(t.clone()));
+    if HYPRLAND.with(|h| *h) {
+        window.connect_map(|_| refresh());
+        window.connect_title_notify(|_| refresh());
+        WATCHER.with(|w| {
+            if w.borrow().is_none() {
+                *w.borrow_mut() = Some(nyx_desktop::watch::watch_local(|u| {
+                    LAST.with(|l| *l.borrow_mut() = Some(u.desktop.clone()));
+                    refresh();
+                }));
+            }
+        });
+        refresh();
+    } else {
+        follow_toplevel_state(window, &t);
+    }
+    t
 }
 
 fn refresh() {
@@ -293,7 +360,7 @@ fn refresh() {
     let mine: Vec<&nyx_desktop::Window> = desktop.windows.iter().filter(|w| w.pid == pid).collect();
     let list: Vec<Rc<Tracked>> = TRACKED.with(|l| {
         let mut l = l.borrow_mut();
-        l.retain(|t| t.window.upgrade().is_some() && t.root.upgrade().is_some());
+        l.retain(|t| t.window.upgrade().is_some());
         l.clone()
     });
     let single = mine.len() == 1 && list.len() == 1;
@@ -303,7 +370,7 @@ fn refresh() {
             mine.first().copied()
         } else {
             let title = window.title().unwrap_or_default();
-            let previous = t.address.borrow().clone();
+            let previous = t.placement.borrow().address.clone();
             mine.iter()
                 .find(|h| h.title == title.as_str())
                 .or_else(|| previous.and_then(|a| mine.iter().find(|h| h.address == a)))
@@ -315,17 +382,20 @@ fn refresh() {
 
 impl Tracked {
     fn apply(&self, found: Option<&nyx_desktop::Window>, desktop: &Desktop) {
-        *self.address.borrow_mut() = found.map(|h| h.address.clone());
-        // Maximized (1) keeps them, so the window can be brought back; fullscreen (2) hides them.
-        let show = desktop.connected && found.is_some_and(|h| h.floating && h.fullscreen & 2 == 0);
-        if let Some(root) = self.root.upgrade() {
-            root.set_visible(show);
-        }
-        let Some(h) = found else { return };
+        let Some(h) = found else {
+            self.set(Placement::default());
+            return;
+        };
         let layout = desktop.workspaces.iter().find(|w| w.id == h.workspace).map_or("", |w| w.tiled_layout.as_str());
-        if let Some(m) = self.minimize.upgrade() {
-            m.set_visible(nyx_desktop::omarchy::workspace_mode(h.workspace, layout) == nyx_desktop::omarchy::Mode::Floating);
-        }
+        let floating_workspace =
+            nyx_desktop::omarchy::workspace_mode(h.workspace, layout) == nyx_desktop::omarchy::Mode::Floating;
+        // Maximized (1) keeps the controls, so the window can be brought back;
+        // fullscreen (2) hides them.
+        self.set(Placement {
+            floating: desktop.connected && h.floating && h.fullscreen & 2 == 0,
+            can_minimize: floating_workspace,
+            address: Some(h.address.clone()),
+        });
         if self.tagged.borrow().as_deref() != Some(h.address.as_str()) {
             *self.tagged.borrow_mut() = Some(h.address.clone());
             let a = h.address.clone();
@@ -336,20 +406,24 @@ impl Tracked {
 
 /// Outside Hyprland: a tiled, maximized or fullscreen window, as GTK reports it, is
 /// placed by the compositor and gets no controls.
-fn show_controls_when_floating(window: &gtk::Window, controls: &gtk::Box) {
-    let update = {
-        let controls = controls.clone();
-        move |surface: &gtk::gdk::Toplevel| {
-            use gtk::gdk::ToplevelState as S;
-            let placed =
-                S::TILED | S::TOP_TILED | S::RIGHT_TILED | S::BOTTOM_TILED | S::LEFT_TILED | S::MAXIMIZED | S::FULLSCREEN;
-            controls.set_visible(!surface.state().intersects(placed));
+fn follow_toplevel_state(window: &gtk::Window, t: &Rc<Tracked>) {
+    let tw = Rc::downgrade(t);
+    let update = move |surface: &gtk::gdk::Toplevel| {
+        use gtk::gdk::ToplevelState as S;
+        let placed = S::TILED | S::TOP_TILED | S::RIGHT_TILED | S::BOTTOM_TILED | S::LEFT_TILED | S::MAXIMIZED | S::FULLSCREEN;
+        if let Some(t) = tw.upgrade() {
+            t.set(Placement { floating: !surface.state().intersects(placed), ..Default::default() });
         }
     };
-    window.connect_realize(move |w| {
+    let watch = move |w: &gtk::Window| {
         let Some(toplevel) = w.surface().and_downcast::<gtk::gdk::Toplevel>() else { return };
         update(&toplevel);
         let update = update.clone();
         toplevel.connect_state_notify(move |t| update(t));
-    });
+    };
+    if window.is_realized() {
+        watch(window);
+    } else {
+        window.connect_realize(watch);
+    }
 }
