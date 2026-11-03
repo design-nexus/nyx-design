@@ -277,6 +277,13 @@ first, then three every app ends with, built by the card from the app's `Standar
 An app never repeats these in its own groups; options that only its window has go in a
 group named for what they're about (Editor, Playback), not "This window".
 
+**Shared widgets:** use these rather than an app's own copy:
+- `nyx_ui::tabs::TabRow` for tabs, under the header or inside it
+- `nyx_ui::pathbar::PathBar` for breadcrumbs that turn into an entry on click or Ctrl+L
+- `nyx_ui::sidebar` for `Sidebar`, `nav_item`, `group_label` and the icon rail below 980 px
+- `nyx_ui::menu` for context and button menus with icons, key hints, check items and submenus
+- `nyx_ui::toast` for `show`, `show_undo` and `show_action`
+
 **Popover, dialog, preview window:** `@theme_popover`, `radius_dialog`, a soft shadow.
 Dialogs keep their text confirm/cancel pair, safe choice first.
 

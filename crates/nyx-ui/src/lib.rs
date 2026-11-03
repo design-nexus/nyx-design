@@ -5,8 +5,13 @@ pub mod clamp;
 pub mod commandbar;
 pub mod inspector;
 pub mod keys;
+pub mod menu;
 pub mod palette;
+pub mod pathbar;
 pub mod settings_card;
+pub mod sidebar;
+pub mod tabs;
+pub mod toast;
 pub mod widgets;
 
 pub mod media;
