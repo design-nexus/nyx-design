@@ -500,7 +500,7 @@ dependencies = [
 [[package]]
 name = "nyx-core"
 version = "0.1.0"
-source = "git+https://github.com/design-nexus/nyx-core.git?rev=394ddf8193797cd1f420fac98b097d04fa75f0e2#394ddf8193797cd1f420fac98b097d04fa75f0e2"
+source = "git+https://github.com/design-nexus/nyx-core.git?rev=e478d834d7d3c482cba6af4a3fd1c60f7390ae89#e478d834d7d3c482cba6af4a3fd1c60f7390ae89"
 dependencies = [
  "anyhow",
  "gtk4",
@@ -512,7 +512,7 @@ dependencies = [
 [[package]]
 name = "nyx-desktop"
 version = "0.1.0"
-source = "git+https://github.com/design-nexus/nyx-core.git?rev=394ddf8193797cd1f420fac98b097d04fa75f0e2#394ddf8193797cd1f420fac98b097d04fa75f0e2"
+source = "git+https://github.com/design-nexus/nyx-core.git?rev=e478d834d7d3c482cba6af4a3fd1c60f7390ae89#e478d834d7d3c482cba6af4a3fd1c60f7390ae89"
 dependencies = [
  "anyhow",
  "async-channel",
@@ -536,6 +536,25 @@ dependencies = [
  "gtk4",
  "nyx-core",
  "nyx-ui",
+ "serde_json",
+]
+
+[[package]]
+name = "nyx-plugin-protocol"
+version = "0.1.0"
+source = "git+https://github.com/design-nexus/nyx-core.git?rev=e478d834d7d3c482cba6af4a3fd1c60f7390ae89#e478d834d7d3c482cba6af4a3fd1c60f7390ae89"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "nyx-plugin-view"
+version = "0.1.0"
+dependencies = [
+ "gtk4",
+ "nyx-plugin-protocol",
+ "nyx-theme",
  "serde_json",
 ]
 

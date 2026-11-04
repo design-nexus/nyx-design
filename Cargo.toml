@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/nyx-theme", "crates/nyx-ui", "crates/nyx-icons", "crates/nyx-playback"]
+members = ["crates/nyx-theme", "crates/nyx-ui", "crates/nyx-icons", "crates/nyx-playback", "crates/nyx-plugin-view"]
 
 [workspace.package]
 edition = "2024"
