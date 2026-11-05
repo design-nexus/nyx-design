@@ -9,8 +9,46 @@ pub enum Entry {
     Item { icon: Option<String>, label: String, key: Option<String>, danger: bool, enabled: bool, run: Box<dyn Fn()> },
     Check { label: String, key: Option<String>, active: bool, run: Box<dyn Fn(bool)> },
     Sub { icon: Option<String>, label: String, entries: Vec<Entry> },
+    /// A row of icon-only buttons at the top of a menu (Cut, Copy, Paste…).
+    Icons(Vec<IconButton>),
     Heading(String),
     Separator,
+}
+
+pub struct IconButton {
+    icon: String,
+    label: String,
+    key: Option<String>,
+    danger: bool,
+    enabled: bool,
+    run: Box<dyn Fn()>,
+}
+
+impl IconButton {
+    /// The key hint shown in the tooltip after the label.
+    pub fn key(mut self, keys: &str) -> Self {
+        self.key = Some(keys.into());
+        self
+    }
+
+    pub fn enabled(mut self, on: bool) -> Self {
+        self.enabled = on;
+        self
+    }
+
+    pub fn danger(mut self) -> Self {
+        self.danger = true;
+        self
+    }
+}
+
+/// An icon-only button for [`icons`]; `label` is its tooltip and accessible name.
+pub fn icon_button(icon: &str, label: &str, run: impl Fn() + 'static) -> IconButton {
+    IconButton { icon: icon.into(), label: label.into(), key: None, danger: false, enabled: true, run: Box::new(run) }
+}
+
+pub fn icons(buttons: Vec<IconButton>) -> Entry {
+    Entry::Icons(buttons)
 }
 
 impl Entry {
@@ -118,6 +156,37 @@ fn page(popover: &gtk::Popover, pages: &gtk::Stack, entries: Vec<Entry>, back: O
     for entry in entries {
         match entry {
             Entry::Separator => list.append(&gtk::Separator::new(gtk::Orientation::Horizontal)),
+            Entry::Icons(buttons) => {
+                if buttons.is_empty() {
+                    continue;
+                }
+                let bar = gtk::Box::new(gtk::Orientation::Horizontal, 2);
+                bar.add_css_class("menu-icons");
+                bar.set_homogeneous(true);
+                for b in buttons {
+                    let button = gtk::Button::from_icon_name(&b.icon);
+                    button.add_css_class("flat");
+                    button.add_css_class("menu-icon-button");
+                    if b.danger {
+                        button.add_css_class("danger");
+                    }
+                    let tip = match &b.key {
+                        Some(key) => format!("{} ({key})", b.label),
+                        None => b.label.clone(),
+                    };
+                    button.set_tooltip_text(Some(&tip));
+                    button.update_property(&[gtk::accessible::Property::Label(&b.label)]);
+                    button.set_sensitive(b.enabled);
+                    let (p, run) = (popover.clone(), b.run);
+                    button.connect_clicked(move |_| {
+                        p.popdown();
+                        run();
+                    });
+                    bar.append(&button);
+                }
+                list.append(&bar);
+                list.append(&gtk::Separator::new(gtk::Orientation::Horizontal));
+            }
             Entry::Heading(text) => {
                 let l = gtk::Label::new(Some(&text));
                 l.set_xalign(0.0);
@@ -200,8 +269,43 @@ pub fn popup_at(anchor: &impl IsA<gtk::Widget>, x: f64, y: f64, entries: Vec<Ent
     let popover = popover(anchor, entries);
     popover.set_position(gtk::PositionType::Bottom);
     popover.set_halign(gtk::Align::Start);
+    let (x, y) = inside_window(anchor.as_ref(), &popover, x, y);
     popover.set_pointing_to(Some(&gtk::gdk::Rectangle::new(x as i32, y as i32, 1, 1)));
     popover.popup();
+}
+
+/// Moves the point a menu opens at up and left, as far as the window allows,
+/// so the whole menu fits inside the window. A Wayland client can't see where
+/// its window is on screen, and the compositor can only flip a popup, so a
+/// tall menu near an edge would otherwise be cut off.
+fn inside_window(anchor: &gtk::Widget, popover: &gtk::Popover, x: f64, y: f64) -> (f64, f64) {
+    let Some(root) = anchor.root() else { return (x, y) };
+    let root: gtk::Widget = root.upcast();
+    let Some(at) = anchor.compute_point(&root, &gtk::graphene::Point::new(x as f32, y as f32)) else {
+        return (x, y);
+    };
+    let (width, height) = menu_size(popover);
+    let (at_x, at_y) = (at.x() as f64, at.y() as f64);
+    let over_x = (at_x + width as f64 - root.width() as f64).clamp(0.0, at_x.max(0.0));
+    let over_y = (at_y + height as f64 - root.height() as f64).clamp(0.0, at_y.max(0.0));
+    (x - over_x, y - over_y)
+}
+
+/// The menu's natural size with its tallest and widest page showing, so
+/// opening a submenu doesn't push it past the window either.
+fn menu_size(popover: &gtk::Popover) -> (i32, i32) {
+    let pages = popover.child().and_downcast::<gtk::Stack>();
+    if let Some(pages) = &pages {
+        pages.set_vhomogeneous(true);
+        pages.set_hhomogeneous(true);
+    }
+    let (_, width, _, _) = popover.measure(gtk::Orientation::Horizontal, -1);
+    let (_, height, _, _) = popover.measure(gtk::Orientation::Vertical, width);
+    if let Some(pages) = &pages {
+        pages.set_vhomogeneous(false);
+        pages.set_hhomogeneous(false);
+    }
+    (width, height)
 }
 
 /// Shows a menu under `anchor` (a header button), built fresh on each open.

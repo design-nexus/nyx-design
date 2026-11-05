@@ -716,6 +716,20 @@ window.@APP@ button.menu-item:hover {
   background: alpha(@theme_accent, 0.18);
 }
 
+window.@APP@ .menu-icons button.menu-icon-button {
+  min-height: 32px;
+  padding: 0;
+  border-radius: 5px;
+}
+
+window.@APP@ .menu-icons button.menu-icon-button:hover {
+  background: alpha(@theme_accent, 0.18);
+}
+
+window.@APP@ .menu-icons button.menu-icon-button.danger {
+  color: @theme_danger;
+}
+
 window.@APP@ popover separator {
   margin: 4px 6px;
   background: alpha(@theme_border, 0.7);
