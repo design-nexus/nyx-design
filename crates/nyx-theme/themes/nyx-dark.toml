@@ -1,30 +1,30 @@
-# Nyx Dark: neutral near-black, accents only where you are and what is on.
+# Nyx Dark: cool slate near-black, accents only where you are and what is on.
 # Copy to ~/.config/nyx/themes/nyx-dark.toml and keep only the keys to change.
 name = "Nyx Dark"
 light = false
 
 # Core colours
-bg = "#09090a"
-surface = "#1a1a1c"
-text = "#e8e8ea"
-dim_text = "#9a9aa1"
-accent = "#5b9cff"
-border = "#2a2a2d"
-muted = "#2a2a2d"
-highlight = "#1d1d1f"
-danger = "#ff6b6b"
-glow = "#5b9cff"
-shadow = "#030303"
+bg = "#0d0e12"
+surface = "#1d1e26"
+text = "#e7e8ee"
+dim_text = "#a2a5ba"
+accent = "#3d8ae8"
+border = "#2b2d37"
+muted = "#2b2d37"
+highlight = "#1f2028"
+danger = "#f2655f"
+glow = "#3d8ae8"
+shadow = "#060609"
 
 # Surfaces and text
-panel = "#0e0e0f"
-card = "#161617"
-raised = "#1d1d1f"
-popover = "#1a1a1c"
-text_tertiary = "#7b7b83"
-divider = "#1a1a1c"
-warning = "#e0a63a"
-success = "#46d08a"
+panel = "#121318"
+card = "#191a21"
+raised = "#1f2028"
+popover = "#1d1e26"
+text_tertiary = "#8a8ea8"
+divider = "#1d1e26"
+warning = "#eeb43f"
+success = "#59d45b"
 
 # How strongly the accent tints hovered and selected rows (0 to 1)
 hover = 0.06
@@ -43,15 +43,15 @@ home = "green"
 
 # Accent choices offered in each app's settings (same names in every theme)
 [swatches]
-blue = "#5b9cff"
-violet = "#9d7bff"
-pink = "#ff6fae"
-red = "#ff6b6b"
-coral = "#ff7a59"
-amber = "#f2b545"
-green = "#46d08a"
-teal = "#4cc9d6"
-graphite = "#a3a3ab"
+blue = "#3d8ae8"
+violet = "#8b6cf0"
+pink = "#c95fc6"
+red = "#f2655f"
+coral = "#f5875a"
+amber = "#eeb43f"
+green = "#59d45b"
+teal = "#3cc4c9"
+graphite = "#9ea2bf"
 
 [sections.settings]
 home = "teal"

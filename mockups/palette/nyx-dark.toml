@@ -1,0 +1,95 @@
+# Nyx Dark: cool slate near-black, accents only where you are and what is on.
+# Copy to ~/.config/nyx/themes/nyx-dark.toml and keep only the keys to change.
+name = "Nyx Dark"
+light = false
+
+# Core colours
+bg = "#0d0e12"
+surface = "#1d1e26"
+text = "#e7e8ee"
+dim_text = "#a2a5ba"
+accent = "#3d8ae8"
+border = "#2b2d37"
+muted = "#2b2d37"
+highlight = "#1f2028"
+danger = "#f2655f"
+glow = "#3d8ae8"
+shadow = "#060609"
+
+# Surfaces and text
+panel = "#121318"
+card = "#191a21"
+raised = "#1f2028"
+popover = "#1d1e26"
+text_tertiary = "#8a8ea8"
+divider = "#1d1e26"
+warning = "#eeb43f"
+success = "#59d45b"
+
+# How strongly the accent tints hovered and selected rows (0 to 1)
+hover = 0.06
+selection = 0.16
+
+# Default accent per app and per section: a swatch name or a colour.
+# Placeholders; each app's Accent row lets the user pick
+[accents]
+files = "blue"
+notes = "amber"
+photos = "coral"
+mail = "violet"
+calendar = "red"
+music = "pink"
+home = "green"
+
+# Accent choices offered in each app's settings (same names in every theme)
+[swatches]
+blue = "#3d8ae8"
+violet = "#8b6cf0"
+pink = "#c95fc6"
+red = "#f2655f"
+coral = "#f5875a"
+amber = "#eeb43f"
+green = "#59d45b"
+teal = "#3cc4c9"
+graphite = "#9ea2bf"
+
+[sections.settings]
+home = "teal"
+connections = "blue"
+hardware = "amber"
+personalization = "violet"
+desktop = "pink"
+input = "coral"
+accounts = "green"
+assistant = "teal"
+system = "red"
+
+# Font names, preferred first: Inter goes by different names depending on how it was installed
+[font]
+ui = "Inter, Inter Variable, Inter 18pt"
+mono = "JetBrains Mono"
+weight = 400
+heading_weight = 600
+
+[shape]
+radius_small = 7
+radius_card = 11
+radius_dialog = 15
+
+[material]
+surface = "solid"
+see_through = false
+blended = true
+
+[icons]
+pack = "nyx-icons"
+# File-type icons keep their brand colours ("brand") or take the theme's ("theme")
+file_colors = "brand"
+
+# Code colours: swatch names or colours
+[syntax]
+keyword = "violet"
+string = "green"
+constant = "amber"
+type = "teal"
+preprocessor = "coral"

@@ -128,9 +128,9 @@ pub const SWATCH_NAMES: &[&str] = &["blue", "violet", "pink", "red", "coral", "a
 
 /// Swatches for themes that don't define their own, for dark and light backgrounds.
 const DARK_SWATCHES: [&str; 9] =
-    ["#5b9cff", "#9d7bff", "#ff6fae", "#ff6b6b", "#ff7a59", "#f2b545", "#46d08a", "#4cc9d6", "#a3a3ab"];
+    ["#3d8ae8", "#8b6cf0", "#c95fc6", "#f2655f", "#f5875a", "#eeb43f", "#59d45b", "#3cc4c9", "#9ea2bf"];
 const LIGHT_SWATCHES: [&str; 9] =
-    ["#2f6fea", "#6f4de0", "#c93a7b", "#d93a3a", "#d4532f", "#b7791f", "#1f9e5c", "#1a8fa0", "#5a5a64"];
+    ["#136dcd", "#6a4fd0", "#aa41a8", "#cf3434", "#c9532a", "#a87012", "#2f9a33", "#14869a", "#6a6e90"];
 
 /// The themes Nyx ships. They are the same TOML a user writes, kept as files in
 /// `themes/` and built in, so they never go missing.
@@ -851,7 +851,7 @@ mod tests {
             assert_eq!(names, SWATCH_NAMES, "{}", theme.id);
         }
         let light = bundled().into_iter().find(|t| t.id == "nyx-light").unwrap();
-        assert_eq!(light.look.swatches[0], ("blue".to_string(), "#2f6fea".to_string()));
+        assert_eq!(light.look.swatches[0], ("blue".to_string(), "#136dcd".to_string()));
     }
 
     #[test]
