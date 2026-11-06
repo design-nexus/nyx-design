@@ -101,7 +101,7 @@ pub fn banner(text: &str, warning: bool) -> gtk::Box {
     let icon = gtk::Image::from_icon_name(if warning { "dialog-warning-symbolic" } else { "dialog-information-symbolic" });
     icon.set_valign(gtk::Align::Start);
     let l = gtk::Label::new(None);
-    l.set_markup(text);
+    set_markup_or_text(&l, text);
     l.set_wrap(true);
     l.set_xalign(0.0);
     l.set_hexpand(true);
@@ -216,7 +216,7 @@ pub fn empty_state(icon: &str, title: &str, desc: &str, action: Action<'_>) -> g
     b.append(&t);
     if !desc.is_empty() {
         let d = gtk::Label::new(None);
-        d.set_markup(desc);
+        set_markup_or_text(&d, desc);
         d.add_css_class("dim");
         d.set_wrap(true);
         d.set_justify(gtk::Justification::Center);
@@ -350,7 +350,7 @@ pub fn row(title: &str, desc: &str, control: Option<&gtk::Widget>) -> gtk::Box {
     text.append(&t);
     if !desc.is_empty() {
         let d = gtk::Label::new(None);
-        d.set_markup(desc);
+        set_markup_or_text(&d, desc);
         d.add_css_class("settings-option-description");
         d.set_xalign(0.0);
         d.set_wrap(true);
@@ -540,4 +540,14 @@ pub fn accent_row(app: &'static str) -> gtk::Box {
     row.append(&strip);
     nyx_theme::subscribe(&row, refresh);
     row
+}
+
+/// `text` as Pango markup, or as it is when it isn't valid markup (a bare `&`, say),
+/// so a description never goes blank.
+pub fn set_markup_or_text(l: &gtk::Label, text: &str) {
+    if gtk::pango::parse_markup(text, '\0').is_ok() {
+        l.set_markup(text);
+    } else {
+        l.set_text(text);
+    }
 }
