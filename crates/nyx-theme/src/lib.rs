@@ -234,6 +234,38 @@ pub fn sheet_for_check(window_class: &str, theme: &Theme, v2: bool) -> String {
     css
 }
 
+/// Colours `css` uses but never defines with `@define-color`. GTK draws an
+/// undefined colour as its initial value (usually white) without any error.
+pub fn undefined_colors(css: &str) -> Vec<String> {
+    let mut code = String::with_capacity(css.len());
+    let mut rest = css;
+    while let Some(open) = rest.find("/*") {
+        code.push_str(&rest[..open]);
+        rest = rest[open..].find("*/").map_or("", |close| &rest[open + close + 2..]);
+    }
+    code.push_str(rest);
+    let css = code.as_str();
+    let mut defined = std::collections::BTreeSet::new();
+    let mut used = std::collections::BTreeSet::new();
+    let bytes = css.as_bytes();
+    let mut i = 0;
+    while let Some(at) = css[i..].find('@').map(|o| i + o) {
+        let start = at + 1;
+        let end = start
+            + css[start..].find(|c: char| !(c.is_ascii_alphanumeric() || c == '_' || c == '-')).unwrap_or(css.len() - start);
+        let name = &css[start..end];
+        if name == "define-color" {
+            let rest = css[end..].trim_start();
+            let len = rest.find(|c: char| !(c.is_ascii_alphanumeric() || c == '_' || c == '-')).unwrap_or(rest.len());
+            defined.insert(rest[..len].to_string());
+        } else if !name.is_empty() && !matches!(name, "import" | "keyframes" | "media" | "APP") && bytes.get(end) != Some(&b'@') {
+            used.insert(name.to_string());
+        }
+        i = end.max(at + 1);
+    }
+    used.difference(&defined).cloned().collect()
+}
+
 /// The shared v1 sheet without its colour definitions, which 2.0 replaces.
 fn without_defines(css: &str) -> String {
     css.lines().filter(|l| !l.trim_start().starts_with("@define-color")).collect::<Vec<_>>().join("\n")
@@ -679,6 +711,10 @@ pub fn apply() {
             }
         }
     });
+    #[cfg(debug_assertions)]
+    for name in undefined_colors(&css) {
+        eprintln!("nyx-theme: the stylesheet uses @{name}, which no theme defines; GTK draws it white");
+    }
     PROVIDER.with(|p| {
         if let Some(provider) = p.borrow().as_ref() {
             provider.load_from_string(&css);
@@ -882,6 +918,22 @@ mod tests {
         let used = ["@field", "@track", "@theme_panel", "@theme_card", "@theme_raised", "@theme_popover", "@theme_text_tertiary"];
         for name in used {
             assert!(BASE2_CSS.contains(name), "2.0 sheet uses {name}");
+        }
+    }
+
+    #[test]
+    fn finds_undefined_colours() {
+        let css = "@define-color theme_text #fff;\n.a { color: @theme_text; border-color: @border; }\n@keyframes x {}\n";
+        assert_eq!(undefined_colors(css), ["border"]);
+    }
+
+    #[test]
+    fn shared_sheets_define_every_colour_they_use() {
+        for theme in bundled() {
+            for v2 in [false, true] {
+                let sheet = sheet_for_check("files-window", &theme, v2);
+                assert_eq!(undefined_colors(&sheet), Vec::<String>::new(), "{} (2.0: {v2})", theme.id);
+            }
         }
     }
 
