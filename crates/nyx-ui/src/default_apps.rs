@@ -164,12 +164,14 @@ pub const CATEGORIES: &[Category] = &[
 
 /// The apps a category offers as (desktop ID, name), and the current default's ID
 /// (empty for none). The current default is offered even if it doesn't list the type.
+/// Only apps that list a type themselves are offered: text/html and application/rtf
+/// are subtypes of text/plain, so every text editor would otherwise be a browser.
 pub fn options(c: &Category) -> (Vec<(String, String)>, String) {
     let info = |a: &gio::AppInfo| (a.id().map(|s| s.to_string()).unwrap_or_default(), a.name().to_string());
     let apps: Vec<(String, String, bool)> = c
         .types
         .iter()
-        .flat_map(|t| gio::AppInfo::all_for_type(t))
+        .flat_map(|t| gio::AppInfo::recommended_for_type(t))
         .filter(|a| a.id().is_some())
         .map(|a| {
             let (id, name) = info(&a);
