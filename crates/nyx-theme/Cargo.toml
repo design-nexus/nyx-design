@@ -1,6 +1,7 @@
 [package]
 name = "nyx-theme"
 version = "0.1.0"
+description = "The GTK4 adapter of Nyx Theme Engine 2.0: the resolved theme as one live stylesheet"
 edition.workspace = true
 license.workspace = true
 authors.workspace = true
@@ -8,6 +9,6 @@ repository.workspace = true
 
 [dependencies]
 gtk = { version = "0.11", package = "gtk4", features = ["v4_18"] }
-nyx-core = { git = "https://github.com/design-nexus/nyx-core.git", rev = "0b511a6e338f4c2c818bad6ebd351ae406578c00" }
-serde = { version = "1", features = ["derive"] }
+nyx-core = { git = "https://github.com/design-nexus/nyx-core.git", rev = "4378e243aeb09733843996663cd9a5a7f0cbb821" }
+nyx-theme-core = { path = "../nyx-theme-core", default-features = false }
 toml = "1"

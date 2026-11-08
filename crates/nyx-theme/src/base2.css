@@ -111,7 +111,7 @@ window.@APP@ .app-header .window-controls button {
   border-radius: var(--nyx-radius-small);
   color: @theme_dim_text;
   font-weight: 400;
-  transition: background 120ms ease-out, color 120ms ease-out, box-shadow 120ms ease-out;
+  transition: background var(--nyx-motion-normal, 120ms) var(--nyx-easing-standard, ease-out), color var(--nyx-motion-normal, 120ms) var(--nyx-easing-standard, ease-out), box-shadow var(--nyx-motion-normal, 120ms) var(--nyx-easing-standard, ease-out);
 }
 
 .settings-navigation button.nav-item:hover {
@@ -281,7 +281,7 @@ window.@APP@ button {
   border-radius: var(--nyx-radius-small);
   border: 1px solid transparent;
   background: @field;
-  transition: background 120ms ease-out, color 120ms ease-out;
+  transition: background var(--nyx-motion-normal, 120ms) var(--nyx-easing-standard, ease-out), color var(--nyx-motion-normal, 120ms) var(--nyx-easing-standard, ease-out);
 }
 
 window.@APP@ button:hover {
@@ -597,7 +597,7 @@ window.@APP@ button.dialog-nav.active {
   margin: 3px 0;
   padding: 0 2px 0 0;
   border-radius: var(--nyx-radius-small);
-  transition: background 120ms ease-out;
+  transition: background var(--nyx-motion-normal, 120ms) var(--nyx-easing-standard, ease-out);
 }
 
 .tab-row .tab:hover {
@@ -639,7 +639,7 @@ window.@APP@ .tab-row .tab button.tab-close {
   background: transparent;
   color: @theme_dim_text;
   opacity: 0;
-  transition: opacity 120ms ease-out;
+  transition: opacity var(--nyx-motion-normal, 120ms) var(--nyx-easing-standard, ease-out);
 }
 
 window.@APP@ .tab-row .tab:hover button.tab-close,

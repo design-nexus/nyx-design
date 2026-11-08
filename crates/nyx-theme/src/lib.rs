@@ -1,31 +1,26 @@
-//! Theming for Nyx apps. Every stylesheet is written against the semantic
-//! colour tokens (`@theme_bg`, `@theme_accent`, …); a theme is just a value
-//! for each. An app hands [`install`] its stylesheet and a way to read its
-//! theme preferences, and gets live restyling, including Follow Omarchy.
+//! Theming for Nyx GTK4 apps: the GTK adapter of Nyx Theme Engine 2.0. The theme
+//! itself (format, resolution, choices, installing) is `nyx-theme-core`; this
+//! crate turns the resolved theme into one stylesheet and keeps it live.
+//!
+//! Every stylesheet is written against colour names (`@theme_bg`, `@theme_accent`,
+//! …, and the semantic `@nyx_surface_primary`, …). An app hands [`install`] its
+//! stylesheet and a way to read its preferences, and gets live restyling: it
+//! follows the system theme, or the theme chosen for it alone, and changes the
+//! moment the theme does (the theme service's `ThemeChanged`, or the choices file
+//! changing when the service isn't running).
 
 use gtk::prelude::*;
-use gtk::{gdk, glib};
-use nyx_core::paths;
-use serde::{Deserialize, Serialize};
-use std::cell::RefCell;
-use std::time::SystemTime;
+use gtk::{gdk, gio, glib};
+use nyx_theme_core::{self as core, Registry, Scope};
+use std::cell::{Cell, RefCell};
 
-mod themes;
-use themes::themes_stamp;
-pub use themes::{
-    FileIconColors, Font, Look, Material, SWATCH_NAMES, Shape, Surface, Syntax, all, bundled, current_id, custom, edit_copy,
-    look_css, theme_dirs,
+mod css;
+pub use css::{adwaita_css, font_stack, look_css, token_name, tokens_css};
+pub use nyx_theme_core as engine;
+pub use nyx_theme_core::{
+    A11y, AppChoice, AppMode, DEFAULT_THEME, FileIconColors, Font, Issue, Look, Material, Meta, Palette, Resolved, SWATCH_NAMES,
+    Shape, Suite, Surface, Syntax, Theme, ThemeMode, Tokens, current_id, from_omarchy_colors,
 };
-
-/// Where the colours come from.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "kebab-case")]
-pub enum ThemeMode {
-    /// Follow the active Omarchy theme live.
-    Omarchy,
-    /// Use a bundled or custom theme.
-    Theme,
-}
 
 /// The theme-related part of an app's preferences.
 #[derive(Debug, Clone)]
@@ -50,66 +45,11 @@ pub struct Style {
     pub no_glow_css: &'static str,
     /// Extra `@define-color` lines derived from the palette, if the app needs any.
     pub extra_colors: Option<fn(&Palette) -> String>,
-    /// Reads the app's current theme preferences.
+    /// Reads the app's current preferences (Glow and Reduce motion; its theme
+    /// fields are only read once, to carry an old choice over).
     pub prefs: fn() -> ThemePrefs,
-    /// Stores a theme chosen in another Nyx app in this app's preferences.
+    /// Records a theme chosen for this app in its own preferences, as well.
     pub set_theme: Option<fn(ThemeMode, String)>,
-}
-
-#[derive(Debug, Clone, Deserialize, PartialEq)]
-pub struct Palette {
-    pub bg: String,
-    pub surface: String,
-    pub text: String,
-    pub dim_text: String,
-    pub accent: String,
-    pub border: String,
-    pub muted: String,
-    pub highlight: String,
-    pub danger: String,
-    pub glow: String,
-    pub shadow: String,
-    #[serde(default)]
-    pub light: bool,
-}
-
-#[derive(Debug, Clone)]
-pub struct Theme {
-    pub id: String,
-    pub name: String,
-    pub palette: Palette,
-    /// Everything beyond the core colours: accents, fonts, radii, material.
-    pub look: Look,
-}
-
-/// Settings every Nyx app shares (`~/.config/nyx/theme.toml`): the theme,
-/// and how dense and large the interface is.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(default)]
-pub struct Suite {
-    pub mode: ThemeMode,
-    pub theme: String,
-    /// `comfortable` or `compact`.
-    pub density: String,
-    /// Text size as a multiple of the normal size, 0.9 to 1.25.
-    pub text_scale: f64,
-    /// Where apps open: `home` (their start page) or `last` (the page shown last).
-    pub start: String,
-    /// The accent each app was given in its settings, by swatch name (`files = "violet"`).
-    pub app_accents: std::collections::BTreeMap<String, String>,
-}
-
-impl Default for Suite {
-    fn default() -> Self {
-        Self {
-            mode: ThemeMode::Omarchy,
-            theme: "tokyo-night".into(),
-            density: "comfortable".into(),
-            text_scale: 1.0,
-            start: "home".into(),
-            app_accents: Default::default(),
-        }
-    }
 }
 
 /// The page an app opens on: `home` (its start page), or `last` (the one it
@@ -221,6 +161,10 @@ pub fn sheet_for_check(window_class: &str, theme: &Theme, v2: bool) -> String {
     let mut css = palette_css(&theme.palette);
     css.push_str(&look_css(window_class, &theme.palette.accent, &theme.look));
     if v2 {
+        let tokens = core::resolver::resolve_id(&Registry::builtin(), &theme.id, None, &A11y::default())
+            .map(|r| r.tokens)
+            .unwrap_or_else(|| core::resolver::resolve_id(&Registry::builtin(), DEFAULT_THEME, None, &A11y::default()).unwrap().tokens);
+        css.push_str(&tokens_css(window_class, &tokens));
         css.push_str(&defines2(&theme.look));
         css.push_str(&without_defines(&base_css(window_class, &[])));
         css.push('\n');
@@ -272,97 +216,71 @@ fn without_defines(css: &str) -> String {
 }
 
 pub fn suite_file() -> std::path::PathBuf {
-    paths::suite_dir().join("theme.toml")
+    core::paths::suite_file()
 }
 
-/// The shared settings, if any app has written them yet.
+/// The shared settings, if they have been written.
 pub fn read_suite() -> Option<Suite> {
-    let mut suite: Suite = toml::from_str(&std::fs::read_to_string(suite_file()).ok()?).ok()?;
-    suite.theme = themes::current_id(&suite.theme).to_owned();
-    Some(suite)
+    core::read_suite()
 }
 
-/// Change the shared settings; every open Nyx app follows within a second.
+/// Change the shared settings; every open Nyx app follows at once.
 pub fn update_suite(change: impl FnOnce(&mut Suite)) {
-    let mut suite = read_suite().unwrap_or_default();
-    change(&mut suite);
-    if let Ok(text) = toml::to_string_pretty(&suite) {
-        let _ = nyx_core::cmd::atomic_write(&suite_file(), text);
+    if let Err(e) = core::update_suite(change) {
+        eprintln!("nyx-theme: {e}");
     }
 }
 
-/// Map Omarchy Quattro's `colors.toml` onto the semantic tokens.
-pub fn from_omarchy_colors(text: &str) -> Option<Palette> {
-    let table: toml::Table = toml::from_str(text).ok()?;
-    let get = |key: &str| table.get(key).and_then(|v| v.as_str()).map(str::to_string);
-    let background = get("background")?;
-    let foreground = get("foreground")?;
-    let accent = get("accent").or_else(|| get("blue"))?;
-    let light = table.get("mode").and_then(|v| v.as_str()) == Some("light");
-    Some(Palette {
-        surface: get("dark_background").unwrap_or_else(|| background.clone()),
-        dim_text: get("dark_foreground").or_else(|| get("muted")).unwrap_or_else(|| foreground.clone()),
-        border: get("lighter_background").or_else(|| get("selection")).unwrap_or_else(|| foreground.clone()),
-        muted: get("muted").or_else(|| get("lighter_background")).unwrap_or_else(|| background.clone()),
-        highlight: get("selection").or_else(|| get("lighter_background")).unwrap_or_else(|| background.clone()),
-        danger: get("red").unwrap_or_else(|| "#e06c75".into()),
-        shadow: get("darker_background").unwrap_or_else(|| "#000000".into()),
-        glow: accent.clone(),
-        bg: background,
-        text: foreground,
-        accent,
-        light,
-    })
+/// Where user theme files live: `~/.config/nyx/themes/` for every app, then
+/// `~/.config/<app>/themes/` for this one.
+pub fn theme_dirs() -> [std::path::PathBuf; 2] {
+    core::paths::theme_dirs()
 }
 
+/// The palette of the active Omarchy theme, if this is Omarchy.
 pub fn omarchy_palette() -> Option<Palette> {
-    from_omarchy_colors(&std::fs::read_to_string(paths::omarchy_colors()).ok()?)
+    from_omarchy_colors(&std::fs::read_to_string(core::paths::omarchy_colors()).ok()?)
 }
 
 pub fn omarchy_available() -> bool {
     omarchy_palette().is_some()
 }
 
-/// The theme that should be showing right now according to the prefs. Follow
-/// Omarchy takes Omarchy's colours and gives each app an accent from them.
-pub fn current_theme() -> Theme {
-    let prefs = config_prefs();
-    theme_for(&prefs.mode, &prefs.theme)
+/// Every built-in theme, resolved.
+pub fn bundled() -> Vec<Theme> {
+    core::bundled()
 }
 
-/// The theme `mode` and `id` name: Omarchy's colours when following it (and it
-/// has a theme), else the theme with that id, else Tokyo Night.
-fn theme_for(mode: &ThemeMode, id: &str) -> Theme {
-    if *mode == ThemeMode::Omarchy
-        && let Ok(text) = std::fs::read_to_string(paths::omarchy_colors())
-        && let Some(palette) = from_omarchy_colors(&text)
+/// Every theme on offer, resolved: built in, system, installed and the user's own.
+pub fn all() -> Vec<Theme> {
+    core::all()
+}
+
+/// The user's own theme files (not overrides of other themes), sorted by name.
+pub fn custom() -> Vec<Theme> {
+    all().into_iter().filter(|t| t.id.starts_with("custom:")).collect()
+}
+
+/// The file to edit for theme `id`, written out in full first if the user
+/// has none yet, so a theme can be tuned without touching the app. Saving it
+/// restyles every open Nyx app.
+pub fn edit_copy(id: &str) -> Option<std::path::PathBuf> {
+    let stem = id.strip_prefix("custom:").unwrap_or(id);
+    let reg = Registry::load();
+    if let Some(e) = reg.get(id)
+        && let Some(path) = &e.meta.path
+        && e.meta.origin == core::Origin::User
     {
-        let table = toml::from_str::<toml::Table>(&text).unwrap_or_default();
-        let look = themes::omarchy_look(&palette, &table);
-        return Theme { id: "omarchy".into(), name: "Omarchy".into(), palette, look };
+        return Some(path.clone());
     }
-    let mut themes = all();
-    let id = themes::current_id(id);
-    let pick = themes.iter().position(|t| t.id == id).or_else(|| themes.iter().position(|t| t.id == "tokyo-night"));
-    themes.swap_remove(pick.expect("bundled themes are never empty"))
-}
-
-/// The suite's theme as app `app` shows it in 2.0: the shared choice from
-/// `~/.config/nyx/theme.toml`, with the app's accent (its picked swatch, else
-/// the theme's default for it) as the palette's accent. For apps that run their
-/// own stylesheet machinery instead of [`install`]; poll it to follow changes.
-pub fn suite_theme(app: &str) -> Theme {
-    let suite = read_suite().unwrap_or_default();
-    let mut theme = theme_for(&suite.mode, &suite.theme);
-    let accent = resolve_app_accent(app, &theme.palette, &theme.look, &suite);
-    theme.palette.glow = accent.clone();
-    theme.palette.accent = accent;
-    theme
-}
-
-/// The palette that should be showing right now according to the prefs.
-pub fn current_palette() -> Palette {
-    current_theme().palette
+    let theme = core::resolver::resolve_id(&reg, id, None, &A11y::default())?.theme;
+    let path = core::paths::theme_dirs()[0].join(format!("{stem}.toml"));
+    if path.exists() {
+        return Some(path);
+    }
+    let text = toml::to_string_pretty(&core::v1::ThemeFile::of(&theme)).ok()?;
+    nyx_core::cmd::atomic_write(&path, text).ok()?;
+    Some(path)
 }
 
 pub fn palette_css(p: &Palette) -> String {
@@ -452,74 +370,277 @@ type Listener = Box<dyn Fn()>;
 thread_local! {
     static STYLE: RefCell<Option<Style>> = const { RefCell::new(None) };
     static PROVIDER: RefCell<Option<gtk::CssProvider>> = const { RefCell::new(None) };
-    static ACTIVE: RefCell<Option<Palette>> = const { RefCell::new(None) };
-    static ACTIVE_LOOK: RefCell<Option<Look>> = const { RefCell::new(None) };
+    /// The theme on screen (palette and look with this app's accent), cached.
+    static ACTIVE: RefCell<Option<(Palette, Look)>> = const { RefCell::new(None) };
+    /// The resolved theme behind it.
+    static RESOLVED: RefCell<Option<Resolved>> = const { RefCell::new(None) };
     /// Whether this app has moved to Nyx 2.0.
-    static DESIGN_2: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+    static DESIGN_2: Cell<bool> = const { Cell::new(false) };
+    /// A shell component: always the system theme, no choice of its own.
+    static SHELL: Cell<bool> = const { Cell::new(false) };
+    /// libadwaita's named colours in the sheet too.
+    static ADWAITA: Cell<bool> = const { Cell::new(false) };
+    /// One set theme, whatever anyone chose (the login screen's).
+    static FIXED: RefCell<Option<String>> = const { RefCell::new(None) };
     /// The section of the app on screen, for section accents (2.0).
     static SECTION: RefCell<Option<String>> = const { RefCell::new(None) };
     static LISTENERS: RefCell<Vec<(glib::WeakRef<gtk::Widget>, Listener)>> = const { RefCell::new(Vec::new()) };
     static GLOBAL: RefCell<Vec<Listener>> = const { RefCell::new(Vec::new()) };
-    /// The theme this app and the suite file last agreed on.
-    static SYNCED: RefCell<Option<(ThemeMode, String)>> = const { RefCell::new(None) };
+    /// The sheet last loaded, to skip reloading an identical one.
+    static LAST_CSS: RefCell<String> = const { RefCell::new(String::new()) };
+    /// The newest theme generation applied; older announcements are ignored.
+    static GENERATION: Cell<u64> = const { Cell::new(0) };
+    static PENDING: Cell<bool> = const { Cell::new(false) };
+    /// File monitors, the bus subscription and settings kept alive.
+    static KEEP: RefCell<Vec<glib::Object>> = const { RefCell::new(Vec::new()) };
+    static BUS: RefCell<Option<(gio::DBusConnection, gio::SignalSubscription)>> = const { RefCell::new(None) };
 }
 
-fn config_prefs() -> ThemePrefs {
-    let prefs = STYLE.with(|s| s.borrow().as_ref().map(|s| (s.prefs)())).unwrap_or(ThemePrefs {
+/// Make this app a shell component (bar, dock, panels): it always shows the
+/// system theme and offers no theme choice. Call before [`install`].
+pub fn use_shell_scope() {
+    SHELL.with(|s| s.set(true));
+}
+
+/// Always show theme `id`, whatever the system theme or anyone's choice (the login
+/// screen shows the system's login theme). Falls back to the default theme if `id`
+/// isn't installed. Call before [`install`].
+pub fn use_fixed_theme(id: &str) {
+    FIXED.with(|f| *f.borrow_mut() = Some(current_id(id).to_owned()));
+}
+
+/// Put libadwaita's named colours in the sheet too, for apps that use
+/// libadwaita widgets. Call before [`install`].
+pub fn use_adwaita() {
+    ADWAITA.with(|a| a.set(true));
+}
+
+fn is_shell() -> bool {
+    SHELL.with(Cell::get)
+}
+
+fn installed() -> bool {
+    STYLE.with(|s| s.borrow().is_some())
+}
+
+/// This app's id for per-app choices (`nyx-files`).
+pub fn app_id() -> &'static str {
+    nyx_core::app::slug()
+}
+
+fn scope() -> Scope<'static> {
+    if is_shell() {
+        Scope::Shell
+    } else if installed() {
+        Scope::App(app_id())
+    } else {
+        Scope::System
+    }
+}
+
+fn style_prefs() -> ThemePrefs {
+    STYLE.with(|s| s.borrow().as_ref().map(|s| (s.prefs)())).unwrap_or(ThemePrefs {
         mode: ThemeMode::Omarchy,
-        theme: "tokyo-night".into(),
+        theme: DEFAULT_THEME.into(),
         glow: true,
         reduce_motion: false,
-    });
-    effective_prefs(prefs, read_suite().as_ref(), shares_theme())
+    })
 }
 
-/// Whether this app stores the suite's theme in its own preferences, and so
-/// may also change it for every app.
-fn shares_theme() -> bool {
-    STYLE.with(|s| s.borrow().as_ref().is_some_and(|s| s.set_theme.is_some()))
+thread_local! {
+    static A11Y_SETTINGS: RefCell<Option<(Option<gio::Settings>, Option<gio::Settings>)>> = const { RefCell::new(None) };
 }
 
-/// This app's theme preferences as they apply now (the suite's theme when the app
-/// shares it), for the settings card's Appearance group.
+fn gsettings(schema: &str) -> Option<gio::Settings> {
+    let source = gio::SettingsSchemaSource::default()?;
+    source.lookup(schema, true)?;
+    Some(gio::Settings::new(schema))
+}
+
+/// The desktop's accessibility settings, read through GSettings and followed live.
+fn system_a11y() -> A11y {
+    A11Y_SETTINGS.with(|cell| {
+        let mut cell = cell.borrow_mut();
+        let (interface, a11y) = cell.get_or_insert_with(|| {
+            let interface = gsettings("org.gnome.desktop.interface");
+            let a11y = gsettings("org.gnome.desktop.a11y.interface");
+            if let Some(s) = &interface {
+                s.connect_changed(Some("enable-animations"), |_, _| schedule());
+            }
+            if let Some(s) = &a11y {
+                s.connect_changed(Some("high-contrast"), |_, _| schedule());
+            }
+            (interface, a11y)
+        });
+        let env = |k: &str| std::env::var(k).ok().map(|v| v == "1" || v == "true");
+        let has = |s: &Option<gio::Settings>, key: &str| s.as_ref().is_some_and(|s| s.settings_schema().is_some_and(|x| x.has_key(key)));
+        A11y {
+            reduce_motion: env("NYX_REDUCE_MOTION")
+                .unwrap_or_else(|| has(interface, "enable-animations") && !interface.as_ref().unwrap().boolean("enable-animations")),
+            high_contrast: env("NYX_HIGH_CONTRAST")
+                .unwrap_or_else(|| has(a11y, "high-contrast") && a11y.as_ref().unwrap().boolean("high-contrast")),
+        }
+    })
+}
+
+/// Resolve the theme this app shows now, from the files.
+fn resolve_now() -> Resolved {
+    let prefs = style_prefs();
+    let mut a11y = if installed() { system_a11y() } else { A11y::default() };
+    a11y.reduce_motion |= prefs.reduce_motion;
+    let registry = Registry::load();
+    if let Some(id) = FIXED.with(|f| f.borrow().clone()) {
+        return core::resolver::resolve_id(&registry, &id, None, &a11y)
+            .or_else(|| core::resolver::resolve_id(&registry, DEFAULT_THEME, None, &a11y))
+            .expect("the default theme is built in");
+    }
+    core::resolver::resolve(&registry, &core::suite(), scope(), &a11y)
+}
+
+/// The theme this app shows (the system theme, or the one chosen for it).
+pub fn current_theme() -> Theme {
+    resolve_now().theme
+}
+
+/// The resolved theme on screen: tokens, metadata and any problems found.
+pub fn resolved() -> Resolved {
+    RESOLVED.with(|r| r.borrow_mut().get_or_insert_with(resolve_now).clone())
+}
+
+/// The semantic tokens on screen.
+pub fn tokens() -> Tokens {
+    resolved().tokens
+}
+
+/// The suite's theme as app `app` (`files`) shows it in 2.0: its theme (its own
+/// choice, else the system's), with its accent as the palette's accent. For apps
+/// that run their own stylesheet machinery instead of [`install`].
+pub fn suite_theme(app: &str) -> Theme {
+    let suite = core::suite();
+    let slug = format!("nyx-{app}");
+    let mut theme = core::resolver::resolve(&Registry::load(), &suite, Scope::App(&slug), &A11y::default()).theme;
+    let accent = resolve_app_accent(app, &theme.palette, &theme.look, &suite);
+    theme.palette.glow = accent.clone();
+    theme.palette.accent = accent;
+    theme
+}
+
+/// The palette this app shows now, from the files.
+pub fn current_palette() -> Palette {
+    current_theme().palette
+}
+
+/// This app's theme preferences as they apply now, for the settings card:
+/// `mode` is `Theme` when the app has its own theme, else the system's mode.
 pub fn app_prefs() -> ThemePrefs {
-    config_prefs()
-}
-
-/// Whether this app can choose the theme (it stores a theme choice, see
-/// [`Style::set_theme`]); otherwise it only follows the suite's.
-pub fn can_choose_theme() -> bool {
-    shares_theme()
-}
-
-/// Store a theme choice through the app's own preferences (and so for the suite),
-/// then restyle.
-pub fn choose_theme(mode: ThemeMode, theme: &str) {
-    if let Some(set) = STYLE.with(|s| s.borrow().as_ref().and_then(|s| s.set_theme)) {
-        set(mode, theme.to_owned());
-    }
-    apply();
-}
-
-/// The theme an app shows. An app that can't store a theme choice shows the
-/// suite's, whatever its own preferences say.
-fn effective_prefs(mut prefs: ThemePrefs, suite: Option<&Suite>, shares: bool) -> ThemePrefs {
-    if !shares && let Some(suite) = suite {
-        prefs.mode = suite.mode.clone();
-        prefs.theme = suite.theme.clone();
-    }
-    prefs.theme = themes::current_id(&prefs.theme).to_owned();
+    let suite = core::suite();
+    let mut prefs = style_prefs();
+    let (mode, theme, _) = suite.selection(scope());
+    prefs.mode = mode;
+    prefs.theme = theme;
     prefs
+}
+
+/// The theme chosen for this app alone, if any (`None` follows the system).
+pub fn app_override() -> Option<String> {
+    if is_shell() {
+        return None;
+    }
+    let choice = core::suite().app(app_id());
+    (choice.mode == AppMode::Override).then_some(choice.theme).flatten()
+}
+
+/// Whether this app can have a theme of its own (shell components can't).
+pub fn can_choose_theme() -> bool {
+    installed() && !is_shell() && FIXED.with(|f| f.borrow().is_none())
+}
+
+/// Choose this app's theme: `Some(id)` for its own, `None` to follow the system.
+/// The system theme is untouched. A theme with errors is refused.
+pub fn set_app_theme(theme: Option<&str>) -> Result<(), String> {
+    if !can_choose_theme() {
+        return Err("this part of the desktop always shows the system theme".into());
+    }
+    choose_app_theme_for(app_id(), theme)?;
+    if let Some(set) = STYLE.with(|s| s.borrow().as_ref().and_then(|s| s.set_theme)) {
+        match theme {
+            Some(id) => set(ThemeMode::Theme, id.to_string()),
+            None => set(ThemeMode::Omarchy, String::new()),
+        }
+    }
+    Ok(())
+}
+
+/// The settings card's theme choice: [`ThemeMode::Omarchy`] follows the system,
+/// [`ThemeMode::Theme`] gives this app `theme`.
+pub fn choose_theme(mode: ThemeMode, theme: &str) {
+    let result = match mode {
+        ThemeMode::Omarchy => set_app_theme(None),
+        ThemeMode::Theme => set_app_theme(Some(theme)),
+    };
+    if let Err(e) = result {
+        eprintln!("nyx-theme: {e}");
+    }
+}
+
+/// Tell every running client about a change made here: publish the snapshot and
+/// emit `ThemeChanged` (the theme service does the same when it is running).
+pub fn announce(scope: &str, reason: &str) {
+    let generation = core::notify_changed(scope, reason);
+    let system = core::get_active_theme();
+    if let Some(conn) = BUS.with(|b| b.borrow().as_ref().map(|(c, _)| c.clone())).or_else(|| gio::bus_get_sync(gio::BusType::Session, gio::Cancellable::NONE).ok()) {
+        let body = (generation, system, scope.to_string(), reason.to_string(), core::SCHEMA_VERSION).to_variant();
+        let _ = conn.emit_signal(None, core::dbus::PATH, core::dbus::INTERFACE, core::dbus::SIGNAL, Some(&body));
+        // A short-lived caller (the Omarchy theme hook) exits right after this.
+        let _ = conn.flush_sync(gio::Cancellable::NONE);
+    }
+}
+
+/// Choose the system theme (`omarchy` follows Omarchy's), tell every client, and
+/// restyle. A theme with errors is refused and the current one stays.
+pub fn choose_system_theme(theme_id: &str) -> Result<(), String> {
+    core::set_system_theme(theme_id)?;
+    announce("system", "theme-selected");
+    apply();
+    Ok(())
+}
+
+/// Give app `app_id` (`nyx-files`) its own theme, or `None` to follow the system.
+pub fn choose_app_theme_for(app_id: &str, theme_id: Option<&str>) -> Result<(), String> {
+    match theme_id {
+        Some(id) => core::set_app_override(app_id, id)?,
+        None => core::clear_app_override(app_id)?,
+    }
+    announce(&format!("app:{app_id}"), if theme_id.is_some() { "override-set" } else { "override-cleared" });
+    apply();
+    Ok(())
+}
+
+/// After themes were installed, updated or removed (or appearance reset).
+pub fn themes_changed(reason: &str) {
+    announce("themes", reason);
+    apply();
 }
 
 /// The palette currently on screen (cached; graphs read it on every frame).
 pub fn palette() -> Palette {
-    ACTIVE.with(|a| a.borrow_mut().get_or_insert_with(current_palette).clone())
+    active().0
 }
 
 /// The look currently on screen: accents, fonts, radii, material (cached).
 pub fn look() -> Look {
-    ACTIVE_LOOK.with(|a| a.borrow_mut().get_or_insert_with(|| current_theme().look).clone())
+    active().1
+}
+
+fn active() -> (Palette, Look) {
+    ACTIVE.with(|a| {
+        a.borrow_mut()
+            .get_or_insert_with(|| {
+                let t = resolved().theme;
+                (t.palette, t.look)
+            })
+            .clone()
+    })
 }
 
 /// The accent for app `app` (`files`, `mail`, …): the swatch picked in its
@@ -548,8 +669,7 @@ pub fn app_swatch(app: &str) -> Option<String> {
     read_suite().and_then(|s| s.app_accents.get(app).cloned())
 }
 
-/// Pick a swatch for `app`, or `None` for the theme default. Every open app
-/// shows the change within a second.
+/// Pick a swatch for `app`, or `None` for the theme default.
 pub fn set_app_swatch(app: &str, name: Option<&str>) {
     update_suite(|s| match name {
         Some(n) => {
@@ -566,7 +686,7 @@ pub fn section_accent(app: &str, section: &str) -> String {
     look().sections.get(app).and_then(|s| s.get(section)).cloned().unwrap_or_else(|| app_accent(app))
 }
 
-/// Call `f` whenever the palette changes, for as long as `owner` lives.
+/// Call `f` whenever the theme changes, for as long as `owner` lives.
 pub fn subscribe(owner: &impl IsA<gtk::Widget>, f: impl Fn() + 'static) {
     LISTENERS.with(|l| l.borrow_mut().push((owner.upcast_ref::<gtk::Widget>().downgrade(), Box::new(f))));
 }
@@ -599,56 +719,44 @@ pub fn design_2() -> bool {
     DESIGN_2.with(|d| d.get())
 }
 
-/// Install the app's stylesheet and the current palette on the default display.
+/// Carry an old theme choice over once: an app that stored its own theme starts
+/// the shared choices file if there is none yet, as it always did. Its stored
+/// choice was a copy of the shared one, so it never becomes an override.
+fn migrate(style: &Style) {
+    // Only a choice the app actually stored (its settings file exists) carries over.
+    if style.set_theme.is_none() || is_shell() || core::paths::suite_file().exists() || !nyx_core::paths::prefs_file().exists() {
+        return;
+    }
+    let p = (style.prefs)();
+    let theme = current_id(&p.theme).to_owned();
+    update_suite(|s| {
+        s.mode = p.mode.clone();
+        if !theme.is_empty() {
+            s.theme = theme;
+        }
+        s.migrated = 1;
+    });
+}
+
+/// Install the app's stylesheet and the current theme on the default display,
+/// and follow changes.
 pub fn install(style: Style) {
-    // Start with the suite's theme if another app has chosen one.
-    let mine = {
-        let p = (style.prefs)();
-        (p.mode, themes::current_id(&p.theme).to_owned())
-    };
-    let synced = match read_suite() {
-        Some(suite) if (suite.mode.clone(), suite.theme.clone()) != mine => {
-            if let Some(set) = style.set_theme {
-                set(suite.mode.clone(), suite.theme.clone());
-            }
-            (suite.mode, suite.theme)
-        }
-        Some(_) => mine,
-        // Only an app that stores a theme choice may start the shared file.
-        None if style.set_theme.is_none() => mine,
-        None => {
-            update_suite(|s| {
-                s.mode = mine.0.clone();
-                s.theme = mine.1.clone();
-            });
-            mine
-        }
-    };
-    SYNCED.with(|s| *s.borrow_mut() = Some(synced));
+    migrate(&style);
     STYLE.with(|s| *s.borrow_mut() = Some(style));
     let display = gdk::Display::default().expect("no display");
     let provider = gtk::CssProvider::new();
     gtk::style_context_add_provider_for_display(&display, &provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
     PROVIDER.with(|p| *p.borrow_mut() = Some(provider));
     apply();
-    watch_omarchy();
+    watch();
 }
 
-/// Re-read prefs and restyle live. The palette and the stylesheet are loaded as
-/// one sheet so every `@theme_*` reference resolves against the new colours.
+/// Re-resolve and restyle live. The colours and the stylesheet are loaded as one
+/// sheet so every colour name resolves against the new theme.
 pub fn apply() {
-    let prefs = config_prefs();
-    // A theme chosen in this app goes to every app. An app that can't store a
-    // choice only follows the suite's, never writes its own back.
-    let mine = (prefs.mode.clone(), prefs.theme.clone());
-    if shares_theme() && SYNCED.with(|s| s.borrow().as_ref() != Some(&mine)) {
-        update_suite(|s| {
-            s.mode = mine.0.clone();
-            s.theme = mine.1.clone();
-        });
-        SYNCED.with(|s| *s.borrow_mut() = Some(mine));
-    }
-    let Theme { mut palette, mut look, .. } = current_theme();
+    let prefs = style_prefs();
+    let r = resolve_now();
+    let Theme { mut palette, mut look, .. } = r.theme.clone();
     let v2 = design_2();
     let suite = read_suite().unwrap_or_default();
     let app_accent = STYLE.with(|s| {
@@ -672,14 +780,13 @@ pub fn apply() {
             look.panel = palette.bg.clone();
         }
     }
-    ACTIVE.with(|a| *a.borrow_mut() = Some(palette.clone()));
-    ACTIVE_LOOK.with(|a| *a.borrow_mut() = Some(look.clone()));
     let mut css = palette_css(&palette);
     STYLE.with(|s| {
         if let Some(style) = s.borrow().as_ref() {
             let accent = app_accent.clone().unwrap_or_else(|| palette.accent.clone());
             if v2 {
                 css.push_str(&look_css(style.window_class, &accent, &look));
+                css.push_str(&tokens_css(style.window_class, &r.tokens));
                 css.push_str(&defines2(&look));
             }
             if let Some(extra) = style.extra_colors {
@@ -703,14 +810,26 @@ pub fn apply() {
                 css.push_str(&suite2_css(style.window_class, &suite));
             } else {
                 css.push_str(&look_css(style.window_class, &accent, &look));
+                css.push_str(&tokens_css(style.window_class, &r.tokens));
                 css.push_str(&suite_css(style.window_class, &suite));
             }
             if !prefs.glow {
                 css.push('\n');
                 css.push_str(style.no_glow_css);
             }
+            if ADWAITA.with(Cell::get) {
+                css.push_str(&adwaita_css(&palette, &look));
+            }
         }
     });
+    GENERATION.with(|g| g.set(g.get().max(core::snapshot::generation())));
+    RESOLVED.with(|x| *x.borrow_mut() = Some(r.clone()));
+    let unchanged = LAST_CSS.with(|l| *l.borrow() == css);
+    let was = ACTIVE.with(|a| a.borrow().clone());
+    ACTIVE.with(|a| *a.borrow_mut() = Some((palette.clone(), look.clone())));
+    if unchanged && was.as_ref() == Some(&(palette.clone(), look.clone())) {
+        return;
+    }
     #[cfg(debug_assertions)]
     for name in undefined_colors(&css) {
         eprintln!("nyx-theme: the stylesheet uses @{name}, which no theme defines; GTK draws it white");
@@ -720,6 +839,7 @@ pub fn apply() {
             provider.load_from_string(&css);
         }
     });
+    LAST_CSS.with(|l| *l.borrow_mut() = css);
     if let Some(settings) = gtk::Settings::default() {
         if let Some(property) = settings.find_property("gtk-interface-color-scheme") {
             if let Some(value) = glib::EnumClass::with_type(property.value_type())
@@ -730,8 +850,7 @@ pub fn apply() {
         } else {
             settings.set_gtk_application_prefer_dark_theme(!palette.light);
         }
-
-        settings.set_gtk_enable_animations(!prefs.reduce_motion);
+        settings.set_gtk_enable_animations(!(prefs.reduce_motion || r.tokens.motion.reduced));
     }
     notify_listeners();
 }
@@ -763,51 +882,79 @@ fn notify_listeners() {
     });
 }
 
-fn stamp() -> Option<(SystemTime, String)> {
-    let colors = paths::omarchy_colors();
-    let modified = std::fs::metadata(&colors).and_then(|m| m.modified()).ok()?;
-    let name = std::fs::read_to_string(paths::state_home().join("omarchy/current/theme.name")).unwrap_or_default();
-    Some((modified, name))
+/// Restyle shortly, once, however many changes arrive meanwhile.
+fn schedule() {
+    if PENDING.with(|p| p.replace(true)) {
+        return;
+    }
+    glib::timeout_add_local_once(std::time::Duration::from_millis(120), || {
+        PENDING.with(|p| p.set(false));
+        apply();
+    });
 }
 
-/// Omarchy swaps the theme by rewriting its state directory; a light poll is the
-/// most robust way to notice every variant of that. The same poll picks up a
-/// saved theme file and the shared settings.
-fn watch_omarchy() {
+/// Follow changes without polling: `ThemeChanged` on the session bus, and file
+/// monitors on everything a theme is resolved from, for when no service runs.
+/// Only if neither can be set up does it fall back to a slow poll.
+fn watch() {
+    let mut watching = false;
+    if let Ok(conn) = gio::bus_get_sync(gio::BusType::Session, gio::Cancellable::NONE) {
+        let subscription = conn.subscribe_to_signal(
+            None,
+            Some(core::dbus::INTERFACE),
+            Some(core::dbus::SIGNAL),
+            Some(core::dbus::PATH),
+            None,
+            gio::DBusSignalFlags::NONE,
+            |signal| {
+                let generation = signal.parameters.child_value(0).get::<u64>().unwrap_or(u64::MAX);
+                if generation > GENERATION.with(Cell::get) {
+                    schedule();
+                }
+            },
+        );
+        BUS.with(|b| *b.borrow_mut() = Some((conn, subscription)));
+        watching = true;
+    }
+    let mut dirs = core::paths::watched_dirs();
+    dirs.push(core::paths::theme_dirs()[1].clone());
+    for dir in dirs {
+        let file = gio::File::for_path(&dir);
+        if let Ok(monitor) = file.monitor_directory(gio::FileMonitorFlags::WATCH_MOVES, gio::Cancellable::NONE) {
+            monitor.connect_changed(|_, file, other, _| {
+                let name = |f: Option<&gio::File>| f.and_then(|f| f.basename()).map(|b| b.to_string_lossy().to_string()).unwrap_or_default();
+                let (a, b) = (name(Some(file)), name(other));
+                // Our own snapshot lock and the installer's scratch folders are no change.
+                if [a.as_str(), b.as_str()].into_iter().all(|n| n.is_empty() || n == ".staging" || n == ".previous" || n.ends_with(".lock")) {
+                    return;
+                }
+                schedule();
+            });
+            KEEP.with(|k| k.borrow_mut().push(monitor.upcast()));
+            watching = true;
+        }
+    }
+    if !watching {
+        poll();
+    }
+}
+
+/// The last resort without a bus or file monitors: look for changes every two seconds.
+fn poll() {
+    let stamp = || {
+        core::paths::watched_dirs()
+            .iter()
+            .map(|d| std::fs::metadata(d).and_then(|m| m.modified()).ok())
+            .chain(std::iter::once(std::fs::metadata(core::paths::suite_file()).and_then(|m| m.modified()).ok()))
+            .chain(std::iter::once(std::fs::metadata(core::paths::omarchy_colors()).and_then(|m| m.modified()).ok()))
+            .collect::<Vec<_>>()
+    };
     let last = RefCell::new(stamp());
-    let suite_stamp = || std::fs::metadata(suite_file()).and_then(|m| m.modified()).ok();
-    let last_suite = RefCell::new(suite_stamp());
-    let last_themes = RefCell::new(themes_stamp());
-    glib::timeout_add_seconds_local(1, move || {
+    glib::timeout_add_seconds_local(2, move || {
         let now = stamp();
         if now != *last.borrow() {
             *last.borrow_mut() = now;
-            if config_prefs().mode == ThemeMode::Omarchy {
-                apply();
-            }
-        }
-        // Another Nyx app changed the shared theme.
-        let now = suite_stamp();
-        if now != *last_suite.borrow() {
-            *last_suite.borrow_mut() = now;
-            if let Some(suite) = read_suite() {
-                let theirs = (suite.mode.clone(), suite.theme.clone());
-                if SYNCED.with(|s| s.borrow().as_ref() != Some(&theirs)) {
-                    if let Some(set) = STYLE.with(|s| s.borrow().as_ref().and_then(|s| s.set_theme)) {
-                        set(suite.mode, suite.theme);
-                    }
-                    SYNCED.with(|s| *s.borrow_mut() = Some(theirs));
-                }
-                apply();
-            }
-        }
-        // A theme file was saved: show the change if a theme (not Omarchy) is in use.
-        let now = themes_stamp();
-        if now != *last_themes.borrow() {
-            *last_themes.borrow_mut() = now;
-            if config_prefs().mode == ThemeMode::Theme {
-                apply();
-            }
+            apply();
         }
         glib::ControlFlow::Continue
     });
@@ -841,22 +988,6 @@ impl Rgb {
 
 #[cfg(test)]
 mod tests {
-    fn prefs(mode: ThemeMode, theme: &str) -> ThemePrefs {
-        ThemePrefs { mode, theme: theme.into(), glow: true, reduce_motion: false }
-    }
-
-    #[test]
-    fn an_app_without_a_theme_choice_shows_the_suites() {
-        let suite = Suite { mode: ThemeMode::Theme, theme: "nord".into(), ..Suite::default() };
-        let shown = effective_prefs(prefs(ThemeMode::Omarchy, ""), Some(&suite), false);
-        assert_eq!((shown.mode, shown.theme.as_str()), (ThemeMode::Theme, "nord"));
-        // An app that stores its choice shows its own until it syncs.
-        let own = effective_prefs(prefs(ThemeMode::Omarchy, ""), Some(&suite), true);
-        assert_eq!(own.mode, ThemeMode::Omarchy);
-        // Without a shared file, the app's own preferences apply.
-        let alone = effective_prefs(prefs(ThemeMode::Theme, "nixe-dark"), None, false);
-        assert_eq!(alone.theme, "nyx-dark");
-    }
     use super::*;
 
     #[test]
@@ -871,39 +1002,6 @@ mod tests {
         notify_listeners();
         // The first listener again (and it adds another), plus the one it added.
         assert_eq!(RUNS.with(|r| r.get()), 12);
-    }
-
-    #[test]
-    fn maps_omarchy_colors() {
-        let text = r##"
-            mode = "dark"
-            accent = "#89b4fa"
-            selection = "#45475a"
-            muted = "#585b70"
-            background = "#1e1e2e"
-            dark_background = "#161622"
-            darker_background = "#101019"
-            lighter_background = "#313244"
-            foreground = "#cdd6f4"
-            dark_foreground = "#6c7086"
-            red = "#f38ba8"
-        "##;
-        let p = from_omarchy_colors(text).unwrap();
-        assert_eq!(p.bg, "#1e1e2e");
-        assert_eq!(p.surface, "#161622");
-        assert_eq!(p.text, "#cdd6f4");
-        assert_eq!(p.dim_text, "#6c7086");
-        assert_eq!(p.accent, "#89b4fa");
-        assert_eq!(p.border, "#313244");
-        assert_eq!(p.highlight, "#45475a");
-        assert_eq!(p.danger, "#f38ba8");
-        assert_eq!(p.glow, "#89b4fa");
-        assert!(!p.light);
-    }
-
-    #[test]
-    fn rejects_incomplete_colors() {
-        assert!(from_omarchy_colors("accent = \"#fff\"").is_none());
     }
 
     #[test]
@@ -938,6 +1036,17 @@ mod tests {
     }
 
     #[test]
+    fn semantic_tokens_and_the_focus_ring_are_in_the_sheet() {
+        let theme = bundled().into_iter().find(|t| t.id == DEFAULT_THEME).unwrap();
+        let sheet = sheet_for_check("files-window", &theme, true);
+        assert!(sheet.contains("@define-color nyx_surface_primary #1e1e2e;"));
+        assert!(sheet.contains("@define-color nyx_text_on_accent "));
+        assert!(sheet.contains("--nyx-motion-normal: 120ms"));
+        assert!(sheet.contains(":focus-visible { outline-color: @nyx_border_focus; outline-width: 2px; }"));
+        assert_eq!(theme.palette.bg, "#1e1e2e", "the established names carry the same colours");
+    }
+
+    #[test]
     fn density_sizes_follow_the_suite() {
         let mut suite = Suite::default();
         assert!(suite2_css("files-window", &suite).contains(".app-header { min-height: 46px; }"));
@@ -962,5 +1071,17 @@ mod tests {
         ids.sort();
         ids.dedup();
         assert_eq!(ids.len(), themes.len());
+    }
+
+    #[test]
+    fn app_accents_name_swatches() {
+        let dark = bundled().into_iter().find(|t| t.id == "nyx-dark").unwrap();
+        let blue = dark.look.swatches.iter().find(|(n, _)| n == "blue").unwrap().1.clone();
+        assert_eq!(dark.look.sections["settings"]["connections"], blue);
+        let css = look_css("settings-window", &blue, &dark.look);
+        assert!(css.contains(".nav-group.section-connections { border-bottom-color: alpha("));
+        let t = bundled().into_iter().find(|t| t.id == "nyx-dark").unwrap();
+        let css = look_css("files-window", &t.look.accents["files"], &t.look);
+        assert!(css.contains("font-family: \"Inter\", \"Inter Variable\", \"Inter 18pt\", sans-serif;"));
     }
 }

@@ -472,36 +472,28 @@ pub fn standard_groups() -> &'static [(&'static str, &'static str, &'static str)
     STANDARD_GROUPS
 }
 
-/// Follow Omarchy, Theme, Accent, Reduce motion and Open on.
+/// The value of the theme row that follows the system theme.
+const FOLLOW_SYSTEM: &str = "";
+
+/// Theme (Follow system, or one for this app alone), Accent, Reduce motion and Open on.
 fn appearance(list: &gtk::Box, standard: &Standard) {
-    let prefs = nyx_theme::app_prefs();
-    let chooses = nyx_theme::can_choose_theme();
-    let themes: Vec<(String, String)> = nyx_theme::all().iter().map(|t| (t.id.clone(), t.name.clone())).collect();
+    let system = nyx_theme::engine::resolve_effective_theme(None, &nyx_theme::engine::suite(), &nyx_theme::A11y::default());
+    let mut themes: Vec<(String, String)> = vec![(FOLLOW_SYSTEM.to_string(), format!("Follow system ({})", system.meta.name))];
+    themes.extend(nyx_theme::engine::list_themes().into_iter().map(|m| (m.id, m.name)));
+    let current = nyx_theme::app_override().unwrap_or_default();
     let (theme_row, theme_dd) = widgets::choice_row(
         "Theme",
-        "A bundled theme, or one of your own.",
+        "This app follows the system theme unless you give it one of its own here.",
         themes,
-        &prefs.theme,
-        |id| nyx_theme::choose_theme(nyx_theme::ThemeMode::Theme, &id),
+        &current,
+        |id| {
+            let choice = (id != FOLLOW_SYSTEM).then_some(id.as_str());
+            if let Err(e) = nyx_theme::set_app_theme(choice) {
+                eprintln!("nyx-ui: {e}");
+            }
+        },
     );
-    let following = prefs.mode == nyx_theme::ThemeMode::Omarchy;
-    theme_dd.set_sensitive(chooses && (!following || !nyx_theme::omarchy_available()));
-    if nyx_theme::omarchy_available() {
-        let dd = theme_dd.clone();
-        let (row, switch) = widgets::switch_row(
-            "Follow Omarchy theme",
-            "Match the desktop's colors and update when the Omarchy theme changes.",
-            following,
-            move |on| {
-                let current = nyx_theme::app_prefs().theme;
-                let mode = if on { nyx_theme::ThemeMode::Omarchy } else { nyx_theme::ThemeMode::Theme };
-                nyx_theme::choose_theme(mode, &current);
-                dd.set_sensitive(!on);
-            },
-        );
-        switch.set_sensitive(chooses);
-        list.append(&row);
-    }
+    theme_dd.set_sensitive(nyx_theme::can_choose_theme());
     list.append(&theme_row);
     list.append(&widgets::accent_row(standard.app));
     let set = standard.set_reduce_motion;
