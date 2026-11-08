@@ -84,8 +84,9 @@ move to `Nyx.Theme` when they are migrated (handoff 03).
 - `nyx-files` has its own theme engine (`src/ui/theme.rs`) with file monitors; it
   should move to `nyx-theme` when it next bumps `nyx-design`.
 - `nyxos/themes/nyx-dark.nix` holds build-time Nyx Dark colours (an older palette)
-  for Limine, Plymouth and the zsh prompt. Boot and login visuals keep Nyx Dark until
-  their redesign; the desktop default is Catppuccin Mocha.
+  for Limine's menu and the zsh prompt; they don't follow the theme yet. The boot
+  splash and the sign-in screen do: they use `nyxos.theme.boot` and
+  `nyxos.theme.login` (Settings → Boot & Sign-in), which default to the system theme.
 - 41 other apps pin older `nyx-design` revisions; they keep the 1.x engine
   (polling, their own theme copies) until their next bump, and read the same
   `theme.toml`, so they stay in step for every built-in theme. A system theme that
