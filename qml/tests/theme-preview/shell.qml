@@ -39,6 +39,14 @@ ShellRoot {
                         y: NyxTheme.spacing.xl
                         spacing: NyxTheme.spacing.md
 
+                        Image {
+                            source: NyxTheme.logo.source
+                            sourceSize.width: 64
+                            sourceSize.height: 64
+                            width: 64
+                            height: 64
+                        }
+
                         Text {
                             text: NyxTheme.theme.name + "  ·  generation " + NyxTheme.generation + (NyxTheme.live ? "" : "  (built-in fallback)")
                             color: NyxTheme.colors.text.primary

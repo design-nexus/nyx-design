@@ -24,6 +24,7 @@ var snapshot = {
       "border.focus": "#b4befe",
       "border.strong": "#585b70",
       "border.subtle": "#313244",
+      "brand.logo": "#89b4fa",
       "scrim.color": "#11111b",
       "selection.background": "#585b70",
       "selection.foreground": "#cdd6f4",
@@ -180,6 +181,12 @@ var snapshot = {
     "music": "#f5c2e7",
     "notes": "#f9e2af",
     "photos": "#fab387"
+  },
+  "logo": {
+    "source": "built-in",
+    "recolorable": true,
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 128 128\" color=\"#89b4fa\">\n  <title>Nyx</title>\n  <defs>\n    <radialGradient id=\"nyx-orb\" cx=\"0.38\" cy=\"0.36\" r=\"0.72\"><stop offset=\"0\" stop-color=\"#2c2c31\"/><stop offset=\"1\" stop-color=\"#050506\"/></radialGradient>\n    <mask id=\"nyx-rim\"><rect width=\"128\" height=\"128\" fill=\"#fff\"/><circle cx=\"58\" cy=\"62\" r=\"45\" fill=\"#000\"/></mask>\n    <filter id=\"nyx-glow\" x=\"-30%\" y=\"-30%\" width=\"160%\" height=\"160%\"><feGaussianBlur stdDeviation=\"3.2\" result=\"b\"/><feMerge><feMergeNode in=\"b\"/><feMergeNode in=\"b\"/><feMergeNode in=\"SourceGraphic\"/></feMerge></filter>\n  </defs>\n  <circle cx=\"64\" cy=\"64\" r=\"47\" fill=\"currentColor\" mask=\"url(#nyx-rim)\" filter=\"url(#nyx-glow)\"/>\n  <circle cx=\"58\" cy=\"62\" r=\"45\" fill=\"url(#nyx-orb)\"/>\n  <g fill=\"#fff\"><circle cx=\"20\" cy=\"18\" r=\"1.3\"/><circle cx=\"106\" cy=\"14\" r=\"1\"/><circle cx=\"116\" cy=\"100\" r=\"1.3\"/><circle cx=\"14\" cy=\"106\" r=\"0.9\"/></g>\n</svg>\n",
+    "stamp": "e814ae0c42d67e82-89b4fa"
   },
   "issues": []
 };

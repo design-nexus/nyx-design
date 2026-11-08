@@ -16,6 +16,7 @@ pub mod contrast;
 pub mod dbus;
 pub mod installer;
 pub mod layer;
+pub mod logo;
 pub mod model;
 pub mod omarchy;
 pub mod paths;

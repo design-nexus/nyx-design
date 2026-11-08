@@ -53,7 +53,8 @@ Errors are `org.freedesktop.DBus.Error.Failed` with a message for people.
 `$XDG_RUNTIME_DIR/nyx/theme/system.json` (format 1): `generation`, `scope`,
 `reason`, `theme {id, name, appearance, origin}`, `tokens {colors, typography,
 geometry, motion, effects}`, `legacy` (the established names), `swatches`,
-`accents`, `issues`. It is replaced atomically under a lock
+`accents`, `logo {source, recolorable, path, stamp}` (the system logo in the theme's
+colours, written beside it as `logo.svg`), `issues`. It is replaced atomically under a lock
 (`$XDG_RUNTIME_DIR/nyx/theme/.lock`); `generation` beside it holds the counter.
 
 ## Plugins

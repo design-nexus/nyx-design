@@ -388,6 +388,8 @@ thread_local! {
     static GLOBAL: RefCell<Vec<Listener>> = const { RefCell::new(Vec::new()) };
     /// The sheet last loaded, to skip reloading an identical one.
     static LAST_CSS: RefCell<String> = const { RefCell::new(String::new()) };
+    /// The logo last shown and its colour, to repaint it when either changes.
+    static LAST_LOGO: RefCell<String> = const { RefCell::new(String::new()) };
     /// The newest theme generation applied; older announcements are ignored.
     static GENERATION: Cell<u64> = const { Cell::new(0) };
     static PENDING: Cell<bool> = const { Cell::new(false) };
@@ -523,6 +525,31 @@ pub fn suite_theme(app: &str) -> Theme {
     theme.palette.glow = accent.clone();
     theme.palette.accent = accent;
     theme
+}
+
+/// The system logo (the Nyx mark until one is set).
+pub fn logo() -> core::logo::Logo {
+    core::logo::current()
+}
+
+/// The system logo drawn `size` logical px across for a `scale`× display, in this
+/// app's theme (`brand.logo`). Repaint it from [`subscribe`]: a theme or logo change
+/// notifies.
+pub fn logo_texture(size: i32, scale: i32) -> Option<gdk::Texture> {
+    logo_texture_for(&core::logo::current(), size, scale)
+}
+
+/// `logo` (a file being previewed, say) drawn like [`logo_texture`].
+pub fn logo_texture_for(logo: &core::logo::Logo, size: i32, scale: i32) -> Option<gdk::Texture> {
+    let color = resolved().tokens.color(core::logo::TOKEN).to_string();
+    let px = size.max(1) * scale.max(1);
+    let svg = logo.svg(&color, size.max(1) as u32);
+    let stream = gio::MemoryInputStream::from_bytes(&glib::Bytes::from_owned(svg.into_bytes()));
+    let pixbuf = gtk::gdk_pixbuf::Pixbuf::from_stream_at_scale(&stream, px, px, true, gio::Cancellable::NONE)
+        .map_err(|e| eprintln!("nyx-theme: the logo can't be drawn: {e}"))
+        .ok()?;
+    #[allow(deprecated)]
+    Some(gdk::Texture::for_pixbuf(&pixbuf))
 }
 
 /// The palette this app shows now, from the files.
@@ -827,7 +854,12 @@ pub fn apply() {
     let unchanged = LAST_CSS.with(|l| *l.borrow() == css);
     let was = ACTIVE.with(|a| a.borrow().clone());
     ACTIVE.with(|a| *a.borrow_mut() = Some((palette.clone(), look.clone())));
+    let logo_stamp = format!("{}-{}", core::logo::current().stamp(), r.tokens.color(core::logo::TOKEN));
+    let same_logo = LAST_LOGO.with(|l| std::mem::replace(&mut *l.borrow_mut(), logo_stamp.clone()) == logo_stamp);
     if unchanged && was.as_ref() == Some(&(palette.clone(), look.clone())) {
+        if !same_logo {
+            notify_listeners();
+        }
         return;
     }
     #[cfg(debug_assertions)]

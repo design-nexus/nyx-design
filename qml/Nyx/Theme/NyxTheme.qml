@@ -79,6 +79,23 @@ Singleton {
     })
     readonly property var effects: snapshot.tokens.effects
 
+    /// The system logo in the theme's colours: `Image { source: NyxTheme.logo.source }`.
+    /// `recolorable` is false for a logo the theme doesn't colour (a PNG).
+    readonly property var logo: ({
+        source: logoSource(snapshot.logo),
+        recolorable: snapshot.logo ? snapshot.logo.recolorable : true
+    })
+
+    function logoSource(l) {
+        if (!l)
+            return ""
+        if (l.path)
+            return "file://" + l.path + "?" + l.stamp
+        if (l.svg)
+            return "data:image/svg+xml;utf8," + encodeURIComponent(l.svg)
+        return ""
+    }
+
     /// After a new generation is applied.
     signal changed(int generation)
 
@@ -169,5 +186,14 @@ Singleton {
         property bool tried: false
         command: ["nyx-theme", "snapshot"]
         onRunningChanged: if (!running) { tried = true; file.reload() }
+    }
+
+    // A file that doesn't exist yet can't be watched: until the first snapshot is
+    // read (the theme service may start after the shell), look for it now and then.
+    Timer {
+        interval: 2000
+        repeat: true
+        running: !root.live
+        onTriggered: file.reload()
     }
 }

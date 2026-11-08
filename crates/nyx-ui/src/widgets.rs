@@ -328,6 +328,26 @@ pub fn opts(pairs: &[(&str, &str)]) -> Vec<(String, String)> {
     pairs.iter().map(|(a, b)| (a.to_string(), b.to_string())).collect()
 }
 
+/// The system logo, `size` px across, in the theme's colours (`brand.logo`). It
+/// repaints when the theme or the logo changes, and on a display of another scale.
+pub fn logo(size: i32) -> gtk::Image {
+    let image = gtk::Image::new();
+    image.set_pixel_size(size);
+    image.add_css_class("nyx-logo");
+    image.update_property(&[gtk::accessible::Property::Label("Logo")]);
+    let weak = image.downgrade();
+    let draw = move || {
+        if let Some(image) = weak.upgrade() {
+            image.set_paintable(nyx_theme::logo_texture(size, image.scale_factor()).as_ref());
+        }
+    };
+    draw();
+    let redraw = draw.clone();
+    image.connect_scale_factor_notify(move |_| redraw());
+    nyx_theme::subscribe(&image, draw);
+    image
+}
+
 /// Set a widget's background to a colour (for swatches and previews).
 pub fn paint(widget: &impl IsA<gtk::Widget>, css_colour: &str) {
     let provider = gtk::CssProvider::new();

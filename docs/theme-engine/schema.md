@@ -62,6 +62,7 @@ Omarchy `colors.toml` instead is converted on install.
 | States | `state.hover`, `state.pressed`, `state.selected`, `state.disabled` |
 | Status | `status.success`, `status.warning`, `status.error`, `status.info` |
 | Other | `shadow.color`, `scrim.color`, `selection.background`, `selection.foreground` |
+| Brand | `brand.logo`: the system logo's colour (its `currentColor` parts), the accent by default; see [logo.md](logo.md) |
 
 Colours are `#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb()`/`rgba()`, a basic CSS name, or
 `palette.<name>`. Derived defaults: hover, pressed and subtle states are mixes of

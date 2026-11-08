@@ -69,5 +69,9 @@ pub fn watched_dirs() -> Vec<PathBuf> {
     let mut dirs = vec![paths::suite_dir(), paths::suite_dir().join("themes"), installed_dir()];
     dirs.push(paths::state_home().join("omarchy/current"));
     dirs.push(paths::state_home().join("omarchy"));
+    // The system logo; the user's is in the suite folder already.
+    if let Some(dir) = crate::logo::system_files()[0].parent() {
+        dirs.push(dir.to_path_buf());
+    }
     dirs
 }

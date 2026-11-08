@@ -46,6 +46,7 @@ pub const COLOR_TOKENS: &[&str] = &[
     "scrim.color",
     "selection.background",
     "selection.foreground",
+    "brand.logo",
 ];
 
 /// The established colour names and the token each one is. Setting the token in a
@@ -207,7 +208,7 @@ pub(crate) fn derive(
     let (p, l) = (&theme.palette, &theme.look);
     let on_accent = if p.light { "#ffffff".to_string() } else { p.bg.clone() };
     let info = l.swatches.iter().find(|(n, _)| n == "teal" || n == "blue").map(|(_, c)| c.clone()).unwrap_or(p.accent.clone());
-    let derived: [(&str, String); 34] = [
+    let derived: [(&str, String); 35] = [
         ("surface.primary", p.bg.clone()),
         ("surface.secondary", l.panel.clone()),
         ("surface.tertiary", l.card.clone()),
@@ -242,6 +243,8 @@ pub(crate) fn derive(
         ("scrim.color", mix(&p.bg, &p.shadow, 0.45)),
         ("selection.background", mix(&p.bg, &p.accent, 0.3)),
         ("selection.foreground", p.text.clone()),
+        // The logo's themeable parts (the Nyx mark's rim): the accent unless the theme says.
+        ("brand.logo", p.accent.clone()),
     ];
     let mut colors: BTreeMap<String, String> = derived.into_iter().map(|(k, v)| (k.to_string(), v)).collect();
     for (k, v) in explicit {

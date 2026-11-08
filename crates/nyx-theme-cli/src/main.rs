@@ -10,7 +10,7 @@ use std::process::ExitCode;
 const USAGE: &str = "\
 nyx-theme: Nyx themes
 
-  list [--json]                  every theme on offer
+  list [--builtin] [--json]      every theme on offer (or only the built-in ones)
   get [--app ID] [--json]        the theme shown (system, or one app)
   set ID|omarchy                 choose the system theme
   app set APP ID                 give one app its own theme
@@ -23,8 +23,13 @@ nyx-theme: Nyx themes
   remove ID                      remove an installed theme
   import-omarchy DIR             import an Omarchy theme folder
   validate PATH                  check a theme folder or file
-  resolve [--app ID] [--json] [--high-contrast] [--reduce-motion]
+  resolve [--app ID | --theme ID] [--json] [--high-contrast] [--reduce-motion]
                                  the resolved tokens
+  logo                           the logo in use and where it comes from
+  logo svg [--theme ID] [--file PATH] [--size PX]
+                                 the logo as SVG in a theme's colours
+  logo check FILE                whether a file can be the logo
+  logo set FILE | logo reset     your own logo (~/.config/nyx/logo.svg or .png)
   snapshot                       write the resolved system theme for clients
   sync                           re-resolve, write the snapshot, announce changes
   watch                          print theme change announcements
@@ -46,7 +51,7 @@ fn positional(args: &[String]) -> Vec<&str> {
     for a in args {
         if skip {
             skip = false;
-        } else if a == "--app" {
+        } else if matches!(a.as_str(), "--app" | "--theme" | "--file" | "--size") {
             skip = true;
         } else if !a.starts_with("--") {
             out.push(a.as_str());
@@ -86,7 +91,11 @@ fn main() -> ExitCode {
     let pos = positional(rest);
     let result: Result<(), String> = match cmd {
         "list" => {
-            let metas = core::list_themes();
+            let metas = if flag(rest, "--builtin") {
+                Registry::builtin().entries().iter().map(|e| e.meta.clone()).collect()
+            } else {
+                core::list_themes()
+            };
             if flag(rest, "--json") {
                 json(&metas);
             } else {
@@ -184,7 +193,13 @@ fn main() -> ExitCode {
             let mut a11y = A11y::system();
             a11y.high_contrast |= flag(rest, "--high-contrast");
             a11y.reduce_motion |= flag(rest, "--reduce-motion");
-            let r = core::resolve_effective_theme(value(rest, "--app"), &s, &a11y);
+            let r = match value(rest, "--theme") {
+                Some(id) => match resolver::resolve_id(&Registry::load(), id, None, &a11y) {
+                    Some(r) => r,
+                    None => return fail(format!("there is no theme {id}")),
+                },
+                None => core::resolve_effective_theme(value(rest, "--app"), &s, &a11y),
+            };
             if flag(rest, "--json") {
                 json(&core::snapshot::Snapshot::from_resolved(&r, core::snapshot::generation(), "resolve"));
             } else {
@@ -219,6 +234,7 @@ fn main() -> ExitCode {
             Err("built without D-Bus".into())
         }
         "reset" => core::reset_appearance(),
+        "logo" => logo(&pos, rest),
         "qml-fallback" => {
             print!("{}", core::snapshot::fallback_js());
             Ok(())
@@ -236,6 +252,59 @@ fn main() -> ExitCode {
             eprintln!("nyx-theme: {e}");
             ExitCode::FAILURE
         }
+    }
+}
+
+fn fail(e: String) -> ExitCode {
+    eprintln!("nyx-theme: {e}");
+    ExitCode::FAILURE
+}
+
+fn logo(pos: &[&str], rest: &[String]) -> Result<(), String> {
+    use core::logo;
+    match pos.first().copied() {
+        None => {
+            let l = logo::current();
+            let from = match (&l.source, &l.path) {
+                (logo::Source::BuiltIn, _) => "the Nyx mark, built in".to_string(),
+                (s, Some(p)) => format!("{} ({:?})", p.display(), s),
+                (s, None) => format!("{s:?}"),
+            };
+            println!("{from}, {}", if l.recolorable() { "in the theme's colours" } else { "as it is (not coloured by the theme)" });
+            Ok(())
+        }
+        Some("svg") => {
+            let l = match value(rest, "--file") {
+                Some(f) => logo::Logo { image: logo::Image::read(Path::new(f))?, source: logo::Source::User, path: Some(f.into()) },
+                None => logo::current(),
+            };
+            let r = match value(rest, "--theme") {
+                Some(id) => resolver::resolve_id(&Registry::load(), id, None, &A11y::default()).ok_or(format!("there is no theme {id}"))?,
+                None => resolver::resolve(&Registry::load(), &core::suite(), Scope::System, &A11y::default()),
+            };
+            let size = value(rest, "--size").and_then(|s| s.parse().ok()).unwrap_or(128);
+            print!("{}", l.svg(r.tokens.color(logo::TOKEN), size));
+            Ok(())
+        }
+        Some("check") => {
+            let f = pos.get(1).ok_or("logo check needs a file")?;
+            let image = logo::Image::read(Path::new(f))?;
+            let l = logo::Logo { image, source: logo::Source::User, path: None };
+            println!("ok, {}", if l.recolorable() { "coloured by the theme" } else { "shown as it is (only an SVG drawing in currentColor takes the theme's colour)" });
+            Ok(())
+        }
+        Some("set") => {
+            let f = pos.get(1).ok_or("logo set needs a file")?;
+            logo::set_user(Some(&logo::Image::read(Path::new(f))?))?;
+            core::notify_changed("themes", "logo-set");
+            Ok(())
+        }
+        Some("reset") => {
+            logo::set_user(None)?;
+            core::notify_changed("themes", "logo-reset");
+            Ok(())
+        }
+        Some(other) => Err(format!("unknown logo command {other:?}")),
     }
 }
 
