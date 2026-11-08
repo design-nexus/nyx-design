@@ -235,6 +235,10 @@ fn main() -> ExitCode {
         }
         "reset" => core::reset_appearance(),
         "logo" => logo(&pos, rest),
+        "builtin-json" => {
+            print!("{}", core::snapshot::builtin_json());
+            Ok(())
+        }
         "qml-fallback" => {
             print!("{}", core::snapshot::fallback_js());
             Ok(())

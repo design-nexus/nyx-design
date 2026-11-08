@@ -849,6 +849,7 @@ pub fn apply() {
             }
         }
     });
+    publish_for_quickshell(&r);
     GENERATION.with(|g| g.set(g.get().max(core::snapshot::generation())));
     RESOLVED.with(|x| *x.borrow_mut() = Some(r.clone()));
     let unchanged = LAST_CSS.with(|l| *l.borrow() == css);
@@ -885,6 +886,21 @@ pub fn apply() {
         settings.set_gtk_enable_animations(!(prefs.reduce_motion || r.tokens.motion.reduced));
     }
     notify_listeners();
+}
+
+/// Keep the snapshot Quickshell parts read where no theme service writes it
+/// (Omarchy): a shell component publishes the system theme it shows, and any app
+/// writes one if there is none yet. Unchanged content writes nothing.
+fn publish_for_quickshell(shown: &Resolved) {
+    if !installed() || FIXED.with(|f| f.borrow().is_some()) {
+        return;
+    }
+    if is_shell() {
+        let _ = core::snapshot::publish(shown, "shell", false);
+    } else if !core::paths::snapshot_file().exists() {
+        let system = core::resolver::resolve(&Registry::load(), &core::suite(), Scope::System, &system_a11y());
+        let _ = core::snapshot::publish(&system, "app", false);
+    }
 }
 
 /// Run every listener with the lists taken out, so a listener may subscribe (a page

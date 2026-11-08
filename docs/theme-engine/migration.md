@@ -65,9 +65,12 @@ New tokens without an established name: `surface.inverse`, `text.disabled`,
 Import `Nyx.Theme` (`QML_IMPORT_PATH` includes `/run/current-system/sw/share/nyx/qml`
 on NyxOS) and bind to `NyxTheme.colors.*`, `.radius.*`, `.spacing.*`,
 `.typography.*`, `.motion.*`. Use `Behavior on color { ThemeTransition {} }` for
-theme changes. Don't read `colors.toml` or theme files. The `nyx-assistant` and
-`nyx-biometrics` overlays still read Omarchy's `colors.toml` themselves and should
-move to `Nyx.Theme` when they are migrated (handoff 03).
+theme changes. Don't read `colors.toml` or theme files. A component that must also
+run where the module isn't installed (Omarchy) carries a copy beside its QML and
+imports it by folder (`import "Nyx/Theme"`), as Nyx Assistant's HUD does, refreshed
+from nyx-design by its `scripts/update-nyx-theme-qml.sh`. Omarchy shell plugins (Nyx
+Biometrics' sign-in overlays, Assistant's panel) take the Omarchy shell's own colours,
+which on Omarchy are the system theme.
 
 ## For users
 
@@ -83,10 +86,10 @@ move to `Nyx.Theme` when they are migrated (handoff 03).
 
 - `nyx-files` has its own theme engine (`src/ui/theme.rs`) with file monitors; it
   should move to `nyx-theme` when it next bumps `nyx-design`.
-- `nyxos/themes/nyx-dark.nix` holds build-time Nyx Dark colours (an older palette)
-  for Limine's menu and the zsh prompt; they don't follow the theme yet. The boot
-  splash and the sign-in screen do: they use `nyxos.theme.boot` and
-  `nyxos.theme.login` (Settings → Boot & Sign-in), which default to the system theme.
+- NyxOS's build-time colours come from `builtin-themes.json`: Limine's menu in the
+  boot theme, the session's defaults (Hyprland's borders before nyx-themed runs, the
+  prompt's first colours) in the system theme. The zsh prompt then follows each
+  person's theme live, from a file nyx-themed writes.
 - 41 other apps pin older `nyx-design` revisions; they keep the 1.x engine
   (polling, their own theme copies) until their next bump, and read the same
   `theme.toml`, so they stay in step for every built-in theme. A system theme that

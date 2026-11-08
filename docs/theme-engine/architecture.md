@@ -70,7 +70,13 @@ flowchart LR
 3. GTK apps hear `ThemeChanged` (or, without a bus, see the file change through GIO
    file monitors), re-resolve, and reload their sheet once; an identical sheet isn't
    reloaded. A generation older than the one applied is ignored.
-4. QML components see the snapshot file replaced and move to it whole.
+4. QML components see the snapshot file replaced and move to it whole. Where no
+   theme service runs (Omarchy), shell components publish the system theme they show,
+   and any Nyx app writes a snapshot if there is none yet.
+
+Builds that can't run the library (NixOS's boot menu and session defaults) read
+`crates/nyx-theme-core/builtin-themes.json`, every built-in theme resolved, kept
+current by a test.
 
 A client that reconnects (service restart, suspended app) reads the current
 generation instead of relying on missed events. Nothing polls.

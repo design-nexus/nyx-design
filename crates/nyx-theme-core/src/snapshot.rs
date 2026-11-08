@@ -119,6 +119,53 @@ pub fn fallback_js() -> String {
     )
 }
 
+/// Every built-in theme resolved, as JSON, for builds that can't run this library
+/// (NixOS reads it for the boot menu and the session's defaults). Generated:
+/// `nyx-theme builtin-json > crates/nyx-theme-core/builtin-themes.json`.
+pub fn builtin_json() -> String {
+    #[derive(Serialize)]
+    struct Font {
+        ui: Option<String>,
+        mono: Option<String>,
+    }
+    #[derive(Serialize)]
+    struct Radius {
+        small: u32,
+        card: u32,
+        dialog: u32,
+    }
+    #[derive(Serialize)]
+    struct Entry {
+        name: String,
+        appearance: Appearance,
+        colors: BTreeMap<String, String>,
+        swatches: BTreeMap<String, String>,
+        font: Font,
+        radius: Radius,
+    }
+    let reg = crate::Registry::builtin();
+    let all: BTreeMap<String, Entry> = reg
+        .entries()
+        .iter()
+        .filter_map(|e| crate::resolver::resolve_id(&reg, &e.meta.id, None, &crate::A11y::default()))
+        .map(|r| {
+            let g = &r.tokens.geometry;
+            (
+                r.meta.id.clone(),
+                Entry {
+                    name: r.meta.name.clone(),
+                    appearance: r.meta.appearance,
+                    colors: r.tokens.colors.clone(),
+                    swatches: r.theme.look.swatches.iter().cloned().collect(),
+                    font: Font { ui: r.tokens.typography.ui.clone(), mono: r.tokens.typography.mono.clone() },
+                    radius: Radius { small: g.radius_small, card: g.radius_card, dialog: g.radius_dialog },
+                },
+            )
+        })
+        .collect();
+    serde_json::to_string_pretty(&all).unwrap_or_default() + "\n"
+}
+
 /// The current snapshot, if one has been written.
 pub fn read() -> Option<Snapshot> {
     serde_json::from_str(&std::fs::read_to_string(crate::paths::snapshot_file()).ok()?).ok()
