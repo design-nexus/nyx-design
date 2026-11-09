@@ -1,6 +1,12 @@
 //! The one place theme choices live: `~/.config/nyx/theme.toml`. It holds the
 //! system theme, each app's choice (Follow System, the default, or an override),
 //! and the interface preferences every app shares. Apps never keep their own copy.
+//!
+//! The system theme is the user's only when they chose one: a file without `theme`
+//! takes the system's default, NyxOS's `theme` in the `appearance` configuration
+//! domain (`/etc/nyxos/defaults/appearance.toml`, under an administrator's
+//! `/etc/nyxos/overrides/appearance.toml`), else [`DEFAULT_THEME`]. Choosing the
+//! default again goes back to following it.
 
 use crate::v1::current_id;
 use serde::{Deserialize, Serialize};
@@ -63,6 +69,10 @@ pub struct Suite {
     /// Whether apps' own theme settings were folded into this file.
     #[serde(skip_serializing_if = "is_zero")]
     pub migrated: u32,
+    /// 1 once a `theme` written at first login (equal to the system default) was taken
+    /// out, so the system default is followed.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub follows_default: u32,
 }
 
 fn is_zero(v: &u32) -> bool {
@@ -81,6 +91,7 @@ impl Default for Suite {
             applications: Default::default(),
             tokens: Default::default(),
             migrated: 0,
+            follows_default: 0,
         }
     }
 }
@@ -106,11 +117,39 @@ impl Scope<'_> {
     }
 }
 
+/// The system theme when the user hasn't chosen one: an administrator's, else NyxOS's
+/// (`theme` in the `appearance` domain), else [`DEFAULT_THEME`].
+pub fn system_default() -> String {
+    system_default_in(&nyx_config::Layers::standard())
+}
+
+pub fn system_default_in(layers: &nyx_config::Layers) -> String {
+    [nyx_config::Layer::System, nyx_config::Layer::Defaults]
+        .into_iter()
+        .find_map(|l| layers.read(l, "appearance").ok()?.get("theme")?.as_str().map(str::to_owned))
+        .filter(|t| !t.is_empty())
+        .map(|t| current_id(&t).to_owned())
+        .unwrap_or_else(|| DEFAULT_THEME.to_owned())
+}
+
 /// The shared settings, if they have been written.
 pub fn read_suite() -> Option<Suite> {
     let text = std::fs::read_to_string(crate::paths::suite_file()).ok()?;
-    let mut suite: Suite = toml::from_str(&text).ok()?;
-    suite.theme = current_id(&suite.theme).to_owned();
+    let mut suite = parse_suite(&text, &system_default())?;
+    // A theme written at first login only to say what the default was: from now on the
+    // default is followed. Once.
+    if suite.follows_default == 0 && text.parse::<toml::Table>().is_ok_and(|t| t.contains_key("theme")) {
+        suite.follows_default = 1;
+        let _ = write_suite(&suite);
+    }
+    Some(suite)
+}
+
+/// A theme file's settings, `default` standing in for a theme the user hasn't chosen.
+pub fn parse_suite(text: &str, default: &str) -> Option<Suite> {
+    let mut suite: Suite = toml::from_str(text).ok()?;
+    let chosen = text.parse::<toml::Table>().ok().and_then(|t| t.get("theme").and_then(|v| v.as_str().map(str::to_owned)));
+    suite.theme = current_id(chosen.as_deref().unwrap_or(default)).to_owned();
     for choice in suite.applications.values_mut() {
         if let Some(t) = &mut choice.theme {
             *t = current_id(t).to_owned();
@@ -119,19 +158,32 @@ pub fn read_suite() -> Option<Suite> {
     Some(suite)
 }
 
-/// The shared settings, or the defaults.
+/// The shared settings, or the defaults (with the system's default theme).
 pub fn suite() -> Suite {
-    read_suite().unwrap_or_default()
+    read_suite().unwrap_or_else(|| Suite { theme: system_default(), ..Suite::default() })
+}
+
+/// The file's text: the system theme only when it isn't the default.
+pub fn suite_text(suite: &Suite, default: &str) -> std::io::Result<String> {
+    let mut table = toml::Table::try_from(suite).map_err(std::io::Error::other)?;
+    if suite.theme == default {
+        table.remove("theme");
+    }
+    toml::to_string_pretty(&table).map_err(std::io::Error::other)
+}
+
+fn write_suite(suite: &Suite) -> std::io::Result<()> {
+    let text = suite_text(suite, &system_default())?;
+    nyx_core::cmd::atomic_write(&crate::paths::suite_file(), text).map_err(std::io::Error::other)
 }
 
 /// Change the shared settings atomically. Unchanged settings aren't rewritten.
 pub fn update_suite(change: impl FnOnce(&mut Suite)) -> std::io::Result<Suite> {
     let before = read_suite();
-    let mut suite = before.clone().unwrap_or_default();
+    let mut suite = before.clone().unwrap_or_else(|| Suite { theme: system_default(), ..Suite::default() });
     change(&mut suite);
     if before.as_ref() != Some(&suite) {
-        let text = toml::to_string_pretty(&suite).map_err(std::io::Error::other)?;
-        nyx_core::cmd::atomic_write(&crate::paths::suite_file(), text).map_err(std::io::Error::other)?;
+        write_suite(&suite)?;
     }
     Ok(suite)
 }
@@ -195,5 +247,27 @@ mod tests {
         let with: Suite = toml::from_str("[applications.nyx-chat]\nmode = \"override\"\ntheme = \"dracula\"").unwrap();
         assert_eq!(with.app("nyx-chat").theme.as_deref(), Some("dracula"));
         assert_eq!(Suite::default().theme, DEFAULT_THEME);
+    }
+
+    #[test]
+    fn the_system_theme_follows_the_default_until_chosen() {
+        let d = tempfile::tempdir().unwrap();
+        let layers = nyx_config::Layers { defaults: d.path().join("d"), system: d.path().join("s"), user: d.path().join("u") };
+        assert_eq!(system_default_in(&layers), DEFAULT_THEME);
+        std::fs::create_dir_all(&layers.defaults).unwrap();
+        std::fs::write(layers.defaults.join("appearance.toml"), "theme = \"nord\"\n").unwrap();
+        assert_eq!(system_default_in(&layers), "nord");
+        std::fs::create_dir_all(&layers.system).unwrap();
+        std::fs::write(layers.system.join("appearance.toml"), "theme = \"dracula\"\n").unwrap();
+        let default = system_default_in(&layers);
+        assert_eq!(default, "dracula", "an administrator's wins over NyxOS's");
+
+        let s = parse_suite("mode = \"theme\"\ndensity = \"compact\"\n", &default).unwrap();
+        assert_eq!(s.theme, "dracula");
+        let text = suite_text(&s, &default).unwrap();
+        assert!(!text.contains("theme ="), "the default isn't written as a choice: {text}");
+        let chosen = Suite { theme: "gruvbox-dark".into(), ..s };
+        assert!(suite_text(&chosen, &default).unwrap().contains("theme = \"gruvbox-dark\""));
+        assert_eq!(parse_suite("theme = \"gruvbox-dark\"\n", &default).unwrap().theme, "gruvbox-dark");
     }
 }

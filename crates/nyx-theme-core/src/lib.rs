@@ -153,9 +153,9 @@ pub fn remove_theme(theme_id: &str) -> Result<(), String> {
 /// size stay.
 pub fn reset_appearance() -> Result<(), String> {
     update_suite(|s| {
-        let d = Suite::default();
         s.mode = if omarchy::live().is_some() { ThemeMode::Omarchy } else { ThemeMode::Theme };
-        s.theme = d.theme;
+        // The system's default, which the file then doesn't name: it's followed again.
+        s.theme = crate::config::system_default();
         s.applications.clear();
         s.tokens.clear();
     })

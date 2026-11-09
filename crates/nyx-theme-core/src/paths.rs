@@ -73,5 +73,9 @@ pub fn watched_dirs() -> Vec<PathBuf> {
     if let Some(dir) = crate::logo::system_files()[0].parent() {
         dirs.push(dir.to_path_buf());
     }
+    // The system's default theme (`appearance` in NyxOS's defaults and overrides).
+    let layers = nyx_config::Layers::standard();
+    dirs.push(layers.defaults);
+    dirs.push(layers.system);
     dirs
 }
