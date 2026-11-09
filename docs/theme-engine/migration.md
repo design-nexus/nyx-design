@@ -84,14 +84,14 @@ which on Omarchy are the system theme.
 
 ## Known leftovers
 
-- `nyx-files` has its own theme engine (`src/ui/theme.rs`) with file monitors; it
-  should move to `nyx-theme` when it next bumps `nyx-design`.
+- `nyx-files` keeps its own theme module (`src/ui/theme.rs`: source-view schemes,
+  document colours) on top of `nyx-theme`; its colours come from
+  `suite_theme("files")` and it restyles on `on_change`, so it follows the engine.
 - NyxOS's build-time colours come from `builtin-themes.json`: Limine's menu in the
   boot theme, the session's defaults (Hyprland's borders before nyx-themed runs, the
   prompt's first colours) in the system theme. The zsh prompt then follows each
   person's theme live, from a file nyx-themed writes.
-- 41 other apps pin older `nyx-design` revisions; they keep the 1.x engine
-  (polling, their own theme copies) until their next bump, and read the same
-  `theme.toml`, so they stay in step for every built-in theme. A system theme that
-  is an installed package (schema 2) is unknown to them, so they show their own
-  fallback until they move to 2.0.
+- Every Nyx app is on 2.0. A branch made before the move (and an app that pins an
+  older `nyx-design`) keeps the 1.x engine: it polls, reads the same `theme.toml` so
+  it stays in step for every built-in theme, and shows its own fallback for an
+  installed (schema 2) system theme until it bumps.
