@@ -9,4 +9,4 @@ async-channel = "2"
 serde_json = "1.0.151"
 gtk = { version = "0.11", package = "gtk4", features = ["v4_18"] }
 nyx-ui = { path = "../nyx-ui" }
-nyx-core = { git = "https://github.com/design-nexus/nyx-core.git", rev = "d78dba337fd753c4367d8f70ad0f080349b24ba9" }
+nyx-core = { git = "https://github.com/design-nexus/nyx-core.git", rev = "47c5e0f328b4042df4c08fc317510644a64d1124" }
