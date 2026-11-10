@@ -475,6 +475,8 @@ impl Builder<'_> {
                 v.append(&s);
                 h.append(&img);
                 h.append(&v);
+                // A row wider than its text (one that expands) keeps the text at its start.
+                h.set_halign(gtk::Align::Start);
                 b.set_child(Some(&h));
                 let control = action.clone().or_else(|| node.id.clone());
                 let c = ctx.clone();
