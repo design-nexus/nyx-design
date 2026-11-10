@@ -398,6 +398,7 @@ Item {
                     text: n.p.label || ""
                     icon: n.p.icon || ""
                     primary: n.has("accent") || n.has("suggested")
+                    toggled: n.has("active")
                     danger: n.has("danger")
                     confirm: false
                     onClicked: n.ctx.emit("action", n.p.action || n.p.id || "", null)
