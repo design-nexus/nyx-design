@@ -53,6 +53,12 @@ window.@APP@ .status-bar {
   margin-left: 9px;
 }
 
+window.@APP@ .app-header .window-controls button.window-close:hover,
+window.@APP@ .app-header .window-controls button.window-close:focus-visible {
+  background: alpha(@theme_danger, 0.14);
+  color: @theme_danger;
+}
+
 window.@APP@ popover.window-controls-popover > contents {
   min-width: 230px;
 }
