@@ -35,6 +35,10 @@ Rectangle {
     implicitWidth: row.implicitWidth + 24
     radius: Style.radiusSmall
     activeFocusOnTab: true
+    // For screen readers: a button named by its text; pressing it as Space would.
+    Accessible.role: Accessible.Button
+    Accessible.name: armed ? armedText : text
+    Accessible.onPressAction: press()
     onActiveFocusChanged: if (activeFocus) focusReason = area.pressed ? Qt.MouseFocusReason : Qt.TabFocusReason
     opacity: enabled ? 1 : 0.45
     color: primary ? (hovered ? Qt.lighter(Style.accent, 1.08) : Style.accent) : armed ? Style.alpha(Style.danger, 0.2) : (danger && hovered) ? Style.alpha(Style.danger, 0.14) : hovered ? Style.rowHover : flat ? "transparent" : Style.field
