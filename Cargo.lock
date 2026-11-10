@@ -1095,7 +1095,7 @@ dependencies = [
 [[package]]
 name = "nyx-actions"
 version = "0.1.0"
-source = "git+https://github.com/design-nexus/nyx-core.git?rev=3e7a6989434466f0cb259028922adbba020d7b3e#3e7a6989434466f0cb259028922adbba020d7b3e"
+source = "git+https://github.com/design-nexus/nyx-core.git?rev=3691c994583e89102687861909d533a593da9f9d#3691c994583e89102687861909d533a593da9f9d"
 dependencies = [
  "jsonschema",
  "serde",
@@ -1115,7 +1115,7 @@ dependencies = [
 [[package]]
 name = "nyx-core"
 version = "0.1.0"
-source = "git+https://github.com/design-nexus/nyx-core.git?rev=3e7a6989434466f0cb259028922adbba020d7b3e#3e7a6989434466f0cb259028922adbba020d7b3e"
+source = "git+https://github.com/design-nexus/nyx-core.git?rev=3691c994583e89102687861909d533a593da9f9d#3691c994583e89102687861909d533a593da9f9d"
 dependencies = [
  "anyhow",
  "gtk4",
@@ -1129,7 +1129,7 @@ dependencies = [
 [[package]]
 name = "nyx-desktop"
 version = "0.1.0"
-source = "git+https://github.com/design-nexus/nyx-core.git?rev=3e7a6989434466f0cb259028922adbba020d7b3e#3e7a6989434466f0cb259028922adbba020d7b3e"
+source = "git+https://github.com/design-nexus/nyx-core.git?rev=3691c994583e89102687861909d533a593da9f9d#3691c994583e89102687861909d533a593da9f9d"
 dependencies = [
  "anyhow",
  "async-channel",
@@ -1148,7 +1148,7 @@ version = "0.1.0"
 [[package]]
 name = "nyx-peer"
 version = "0.1.0"
-source = "git+https://github.com/design-nexus/nyx-core.git?rev=3e7a6989434466f0cb259028922adbba020d7b3e#3e7a6989434466f0cb259028922adbba020d7b3e"
+source = "git+https://github.com/design-nexus/nyx-core.git?rev=3691c994583e89102687861909d533a593da9f9d#3691c994583e89102687861909d533a593da9f9d"
 
 [[package]]
 name = "nyx-playback"
@@ -1164,7 +1164,7 @@ dependencies = [
 [[package]]
 name = "nyx-plugin-protocol"
 version = "0.1.0"
-source = "git+https://github.com/design-nexus/nyx-core.git?rev=3e7a6989434466f0cb259028922adbba020d7b3e#3e7a6989434466f0cb259028922adbba020d7b3e"
+source = "git+https://github.com/design-nexus/nyx-core.git?rev=3691c994583e89102687861909d533a593da9f9d#3691c994583e89102687861909d533a593da9f9d"
 dependencies = [
  "serde",
  "serde_json",

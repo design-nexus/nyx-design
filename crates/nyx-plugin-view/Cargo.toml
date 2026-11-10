@@ -9,6 +9,6 @@ repository.workspace = true
 
 [dependencies]
 gtk = { version = "0.11", package = "gtk4", features = ["v4_18"] }
-nyx-plugin-protocol = { git = "https://github.com/design-nexus/nyx-core.git", rev = "3e7a6989434466f0cb259028922adbba020d7b3e" }
+nyx-plugin-protocol = { git = "https://github.com/design-nexus/nyx-core.git", rev = "3691c994583e89102687861909d533a593da9f9d" }
 nyx-theme = { path = "../nyx-theme" }
 serde_json = "1"

@@ -14,7 +14,7 @@ default = ["dbus"]
 dbus = ["dep:zbus"]
 
 [dependencies]
-nyx-core = { git = "https://github.com/design-nexus/nyx-core.git", rev = "3e7a6989434466f0cb259028922adbba020d7b3e", default-features = false }
+nyx-core = { git = "https://github.com/design-nexus/nyx-core.git", rev = "3691c994583e89102687861909d533a593da9f9d", default-features = false }
 nyx-config = { git = "https://github.com/nyxos-project/nyx-system.git", rev = "2c051e628af5582516ece1a8790882328194c26b" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
