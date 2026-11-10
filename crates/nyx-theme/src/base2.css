@@ -53,23 +53,6 @@ window.@APP@ .status-bar {
   margin-left: 9px;
 }
 
-.app-header .window-controls {
-  margin-left: 6px;
-  padding-left: 8px;
-}
-
-window.@APP@ .app-header .window-controls button {
-  min-width: 28px;
-  min-height: 28px;
-  color: @theme_text_tertiary;
-}
-
-window.@APP@ .app-header .window-controls button.window-close:hover,
-window.@APP@ .app-header .window-controls button.window-close:focus-visible {
-  background: alpha(@theme_danger, 0.14);
-  color: @theme_danger;
-}
-
 window.@APP@ popover.window-controls-popover > contents {
   min-width: 230px;
 }
