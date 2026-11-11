@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Lyra mockups</title>
+<link rel="stylesheet" href="../polish/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  :root { --accent: var(--sw-violet); }
+  body { background: var(--bg); color: var(--text); font: 400 13px/1.45 "Inter", sans-serif; padding: 32px 40px 60px; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -.015em; }
+  h2 { font-size: 17px; font-weight: 600; margin: 34px 0 4px; }
+  p { color: var(--dim-text); max-width: 900px; margin-top: 6px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 18px; margin-top: 14px; }
+  figure { margin: 0; }
+  figure a { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px var(--border); }
+  figure img { display: block; width: 100%; }
+  figcaption { margin-top: 8px; display: flex; gap: 10px; align-items: baseline; }
+  figcaption b { font-weight: 600; }
+  figcaption span { color: var(--dim-text); font-size: 12px; }
+  figcaption a { margin-left: auto; color: var(--accent); font-size: 12px; text-decoration: none; }
+  .theme { display: flex; gap: 6px; margin-top: 14px; }
+  .theme a { padding: 5px 12px; border-radius: 7px; color: var(--dim-text); text-decoration: none; background: color-mix(in srgb, var(--text) 3.5%, transparent); }
+  .theme a.on { background: var(--accent); color: var(--on-accent); }
+</style>
+</head>
+<body>
+<h1>Nyx Lyra</h1>
+<p>A YouTube Music app for NyxOS in Nyx Design 2.0, separate from Nyx Music. Four layouts for the
+main window (A, the reference's layout, is the suggestion), the other screens drawn in A, three
+expanded players and three mini-players, and Lyra beside Nyx Music in Glimpse, the bar, the dock
+and notifications. The violet is Lyra's default accent, so other themes and accents restyle it.
+Every shot comes in Nyx Dark and Nyx Light. Click a shot for the full size, or "live" to open the
+page itself.</p>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const t = new URLSearchParams(location.search).get("theme") || "dark";
+  document.documentElement.dataset.theme = t;
+  document.getElementById("theme").innerHTML = ["dark", "light"]
+    .map((v) => `<a class="${v === t ? "on" : ""}" href="?theme=${v}">${v[0].toUpperCase() + v.slice(1)}</a>`).join("");
+  const sections = [
+    ["Main window directions", "directions", [
+      ["a", "A · Now-playing column (chosen)", "The reference's layout: art and tracks beside the grid"],
+      ["b", "B · Shelves", "Home as rows; queue and lyrics in a drawer"],
+      ["c", "C · Queue on the right", "A right panel with Up next and Lyrics, a slim bar"],
+      ["d", "D · Immersive", "Breaks 2.0: artwork backdrop, glows, frosted"],
+      ["ref", "A beside the reference", "What changed from the concept image"],
+    ]],
+    ["Screens, in direction A", "screens", [
+      ["explore", "Explore", "New releases, charts, moods and genres"],
+      ["search", "Search", "Top result, songs, albums, artists"],
+      ["artist", "Artist", "Top songs, albums, singles, similar artists"],
+      ["album", "Album", "The playing track marked"],
+      ["playlist", "Playlist", "Your own playlist, with its collage"],
+      ["liked", "Liked Music", "The auto playlist, newest first"],
+      ["library", "Library", "Playlists, albums, songs and artists"],
+      ["signin", "Sign in", "Google's own page, inside Lyra"],
+      ["blocked", "Sign-in blocked", "What Lyra says if Google refuses"],
+      ["offline", "Offline", "Reconnecting; controls wait"],
+      ["unsupported", "Not available", "A feature YouTube Music doesn't offer apps"],
+      ["empty", "Empty", "Nothing liked yet"],
+      ["settings", "Settings", "Playback, Account, Background"],
+      ["home-800", "Home at 800 px", "Tiled: icon rail, no column"],
+      ["album-800", "Album at 800 px", "Tiled: fewer columns"],
+    ]],
+    ["Players", "players", [
+      ["expanded-a", "Expanded · Art and tabs (chosen)", "Art left; Up next, Lyrics, Related"],
+      ["expanded-b", "Expanded · Lyrics beside the art", "The bar stays"],
+      ["expanded-c", "Expanded · Backdrop", "Breaks 2.0: the art blurred behind"],
+      ["mini-strip", "Mini · Strip (chosen)", "380 × 96"],
+      ["mini-square", "Mini · Square", "300 × 300, controls on hover"],
+      ["mini-card", "Mini · Card", "284 × 440, with seek"],
+      ["states", "Player bar states", "Waiting, offline, signed out, nothing playing"],
+    ]],
+    ["Around NyxOS", "integration", [
+      ["glimpse", "Glimpse", "music: Lyra and Music as two sources"],
+      ["media", "Bar media popover", "Choosing between Lyra and Music"],
+      ["notification", "Track change", "A notification while Lyra is in the background"],
+      ["dock", "Dock", "Lyra's card and the now-playing chip"],
+    ]],
+  ];
+  document.getElementById("out").innerHTML = sections.map(([title, page, shots]) =>
+    `<h2>${title}</h2><div class="grid">${shots.map(([s, name, sub]) => {
+      const img = `shots/${page}-${s}-${t}.png`;
+      const scr = s.replace(/-800$/, "");
+      return `<figure><a href="${img}"><img src="${img}" loading="lazy" alt="${name}"></a><figcaption><b>${name}</b><span>${sub}</span><a href="${page}.html?screen=${scr}&theme=${t}">live</a></figcaption></figure>`;
+    }).join("")}</div>`).join("");
+</script>
+</body>
+</html>

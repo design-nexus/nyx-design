@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" data-accent="violet" data-screens="expanded-a,expanded-b,expanded-c,mini-strip,mini-square,mini-card,states">
+<head>
+<meta charset="utf-8">
+<title>Players — Nyx Lyra mockups</title>
+<link rel="stylesheet" href="../polish/tokens.css">
+<link rel="stylesheet" href="../polish/mock.css">
+<link rel="stylesheet" href="../polish/nyx-after.css">
+<link rel="stylesheet" href="lyra.css">
+<script src="../polish/mock.js"></script>
+</head>
+<body>
+<script src="lyra.js"></script>
+<script>
+  // The expanded Now Playing view three ways, the mini-player three ways, and the bar's states.
+  const xhdr = () => header("Now playing", { nav: false, center: "", end: ib("collapse", "Back to the library (Esc)") });
+  const big = (c = "") => `<div class="tbtns ${c}">${ib("shuffle", "Shuffle (S)")}${ib("prev", "Previous (Ctrl+Left)")}<button class="play lg" title="Pause (Space)">${icon("pause")}</button>${ib("next", "Next (Ctrl+Right)")}${ib("repeat", "Repeat (R)", "on")}</div>`;
+  const seek = () => `<div class="seek"><span class="tm">${NOW.pos}</span>${slider(NOW.p, "", true)}<span class="tm">${NOW.dur}</span></div>`;
+  // Placeholder lines: the mockups don't reproduce real lyrics.
+  const LYR = [["past", "Streetlights humming under the overpass"], ["past", "We drove until the city woke up"], ["now", "Neon in the rain and we never sleep"], ["", "Every tower calling out our names"], ["", "Waiting on a morning that won't come"], ["", "The skyline wears the night so well"]];
+  const lyrics = () => `<div class="lyr">${LYR.map(([c, l]) => `<div class="${c}">${l}</div>`).join("")}</div>`;
+  const cap = (name, rule, desc) => `<div class="cap"><b>${name}<span class="rule ${rule[0]}">${rule[1]}</span></b><p>${desc}</p></div>`;
+  const desk = (mini, c) => `<div class="deskbg"></div>
+    <div class="fakewin"><div class="fh">${icon("folder")}Files<span class="ter" style="font-weight:400">~/Projects/nyx-lyra</span></div>${Array.from({ length: 16 }, (_, i) => `<div class="fl" style="width:${[72, 55, 80, 40, 66, 58, 75, 35, 62, 70, 48, 77, 52, 64, 44, 69][i]}%"></div>`).join("")}</div>
+    ${c}${mini}`;
+  const ctl = () => `${ib("prev", "Previous")}<button class="play" title="Pause (Space)">${icon("pause")}</button>${ib("next", "Next")}`;
+
+  const S = {
+    "expanded-a": () => win({ hdr: xhdr(), page: `<div class="xp">
+      <div class="left"><div class="art ${NOW.g} cv bigart"></div>
+        <div class="meta"><div class="grow"><div class="t">${NOW.t}</div><div class="a">${NOW.a} · ${NOW.al} · ${NOW.y}</div></div>${ib("heartf", "Unlike (L)", "acc")}${ib("more", "More")}</div>
+        ${seek()}${big()}</div>
+      <div class="right"><div class="seg"><button class="on">Up next</button><button>Lyrics</button><button>Related</button></div>
+        <div class="row-flex" style="margin:0 2px 6px"><span class="ter xs">Playing from <span class="dim">${NOW.al}</span></span><span class="grow"></span><button class="btn ghost">${icon("pladd")}Save queue</button></div>
+        <div class="list">${QUEUE.map((q, i) => qrow(q, i === 0)).join("")}</div>
+        <div class="card" style="margin-top:auto"><div class="opt"><div class="opt-text"><div class="t500">Autoplay</div><div class="d">Keeps playing similar music when the queue ends.</div></div><span class="switch on"></span></div></div>
+      </div></div>` }),
+
+    "expanded-b": () => win({ hdr: xhdr(), page: `<div class="xpb"><div class="art ${NOW.g} cv bigart"></div>
+      <div class="col"><div class="t">${NOW.t}</div><div class="a">${NOW.a} · ${NOW.al}</div>${lyrics()}
+        <div class="lyr-src">Lyrics from YouTube Music · they scroll with the song</div></div></div>`,
+      foot: pbar({ lyricsOn: true }) }),
+
+    "expanded-c": () => win({ cls: "glass", hdr: xhdr(), page: `<div class="xpcin"><div class="art ${NOW.g} cv bigart"></div>
+      <div class="t">${NOW.t}</div><div class="a">${NOW.a} · ${NOW.al}</div>${seek()}${big()}
+      <div class="lline">Neon in the rain and we never sleep</div></div>`,
+      over: `<div class="xpc"><div class="art ${NOW.g} blur"></div></div>` }),
+
+    "mini-strip": () => desk(`<div class="mini strip">${cover(NOW.g, 0, 9)}<div class="body"><div><div class="t">${NOW.t}</div><div class="a">${NOW.a} · ${NOW.al}</div></div>
+      <div class="ctl">${ctl()}<span class="grow"></span>${ib("heartf", "Unlike (L)", "acc")}${ib("expand", "Open Lyra")}</div></div><span class="prog"><b style="width:${NOW.p}%"></b></span></div>`,
+      cap("Mini · Strip", ["", "Within 2.0"], "A 380 × 96 window: the cover, the song and three controls, the progress as a line along its foot. Ctrl+M or the header's mini-player button opens it and hides the main window; Open Lyra brings it back. It stays on top (a setting) and remembers where it was put.")),
+
+    "mini-square": () => desk(`<div class="mini sq"><div class="art ${NOW.g} cv"></div><div class="shade"></div><div class="tl">${ib("expand", "Open Lyra")}${ib("x", "Close")}</div>
+      <div class="bt"><div class="t">${NOW.t}</div><div class="a">${NOW.a}</div><div class="ctl">${ctl()}</div></div><span class="prog"><b style="width:${NOW.p}%"></b></span></div>`,
+      cap("Mini · Square", ["", "Within 2.0"], "Only the cover, 300 × 300 (resizable, kept square). Hovering it, as here, darkens the edges and shows the song, the controls, Open Lyra and Close; otherwise it's just the art with the progress line.")),
+
+    "mini-card": () => desk(`<div class="mini cardp">${cover(NOW.g, 0, 11)}<div class="t">${NOW.t}</div><div class="a">${NOW.a} · ${NOW.al}</div>
+      <div class="seek"><span class="tm">${NOW.pos}</span>${slider(NOW.p)}<span class="tm">${NOW.dur}</span></div>
+      <div class="ctl">${ib("shuffle", "Shuffle")}${ctl()}${ib("repeat", "Repeat", "on")}</div>
+      <div class="foot">${ib("heartf", "Unlike (L)", "acc")}${ib("lyrics", "Lyrics")}<span class="grow"></span>${ib("volume", "Mute")}${ib("expand", "Open Lyra")}</div></div>`,
+      cap("Mini · Card", ["", "Within 2.0"], "284 × 440: the cover, seeking with times, all five controls, like, lyrics and volume. The most to do without the main window, and the largest to keep on screen.")),
+
+    states: () => `<div class="sheet">${[
+      ["Playing", "Liked, repeat on. Every control is a command to YouTube Music's player.", {}],
+      ["Paused", "Shown as paused only once YouTube Music reports it.", { state: "paused" }],
+      ["Waiting for YouTube Music", "After pressing Next: the button stays pressed and play spins until the new song is confirmed; a refusal ends in a toast.", { state: "waiting" }],
+      ["Reconnecting", "The web player can't be reached: controls are off, the last song stays, the chip says Offline.", { state: "reconnecting" }],
+      ["Signed out", "Playing without an account: liking asks you to sign in.", { state: "signedout", repeatOn: false }],
+      ["Nothing playing", "Before the first song, or once the queue and autoplay end.", { state: "empty", repeatOn: false }],
+    ].map(([n, d, o]) => `<div class="sl"><b>${n}</b><span>${d}</span></div>${pbar(o)}`).join("")}</div>`,
+  };
+  const out = S[SCREEN]();
+  mount(out);
+</script>
+</body>
+</html>

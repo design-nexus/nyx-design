@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en" data-accent="violet" data-screens="home,explore,search,artist,album,playlist,liked,library,signin,blocked,offline,unsupported,empty,settings">
+<head>
+<meta charset="utf-8">
+<title>Screens — Nyx Lyra mockups</title>
+<link rel="stylesheet" href="../polish/tokens.css">
+<link rel="stylesheet" href="../polish/mock.css">
+<link rel="stylesheet" href="../polish/nyx-after.css">
+<link rel="stylesheet" href="lyra.css">
+<script src="../polish/mock.js"></script>
+</head>
+<body>
+<script src="lyra.js"></script>
+<script>
+  // Every other screen in direction A: the column stays beside the content.
+  const ALB = {
+    "Midnight City": "Hurry Up, We're Dreaming", "Instant Crush": "Random Access Memories", Teardrop: "Mezzanine", Nightcall: "OutRun",
+    "Open Eye Signal": "Immunity", Roygbiv: "Music Has the Right to Children", "Glory Box": "Dummy", Reckoner: "In Rainbows",
+    "Let It Happen": "Currents", Xtal: "Selected Ambient Works 85–92", Ivy: "Blonde", "Frontier Psychiatrist": "Since I Left You",
+  };
+  const rows = (list, liked = () => false) => list.map(([t, a, g, d], i) => [t, a, ALB[t], g, d, liked(i), t === "Ivy"]);
+  const tiles = (g) => `<span class="tile" style="--tc:var(--sw-${g[1]})">${icon(g[0])}</span>`;
+
+  const S = {
+    home: () => ({ sub: "Home", nav: "home", page: `<div class="lp">${npcol()}${homeA()}</div>` }),
+
+    explore: () => ({ sub: "Explore", nav: "explore", page: `<div class="lp">${npcol()}<div class="main">
+      <div class="xtiles" style="margin-top:8px"><div class="xtile">${icon("spark")}New releases<span class="ter">${icon("chev-r")}</span></div><div class="xtile">${icon("genre")}Charts<span class="ter">${icon("chev-r")}</span></div><div class="xtile">${icon("compass")}Moods & genres<span class="ter">${icon("chev-r")}</span></div></div>
+      ${shead("New albums & singles", "", `${more()}${arrows()}`)}
+      ${shelf([["g13", "Alchemy", "Disclosure", "Album"], ["g1", "Moon Safari (Deluxe)", "Air", "Album"], ["g10", "Sunburn", "Jon Hopkins", "Single"], ["g3", "Night Drive", "Kavinsky", "EP"], ["g9", "Tidal", "Bonobo", "Album"], ["g15", "Late Light", "Sufjan Stevens", "Single"]].map((a, i) => alb(a, { kind: a[3], hover: i === 0 })), 128)}
+      ${shead("Top songs", "United States · this week", more("See all"))}
+      <div class="chart">${[["Nightcall", "Kavinsky", "g11", "up"], ["Let It Happen", "Tame Impala", "g11", "same"], ["Instant Crush", "Daft Punk", "g12", "down"], ["Open Eye Signal", "Jon Hopkins", "g5", "up"]].map(([t, a, g, tr], i) =>
+        song([t, a, g, ""], { pre: `<span class="rk">${i + 1}</span><span class="tr ${tr === "up" ? "up" : tr === "down" ? "down" : "ter"}">${icon(tr === "up" ? "trendup" : tr === "down" ? "trenddown" : "dash")}</span>`, post: ib("more", "More") })).join("")}</div>
+      ${shead("Moods & genres", "", more())}
+      <div class="moods">${[["Chill", "teal"], ["Focus", "blue"], ["Workout", "coral"], ["Party", "pink"], ["Electronic", "violet"], ["Hip-hop", "amber"], ["Indie & alternative", "green"], ["Jazz", "graphite"]].map(([m, c]) => `<div class="mood" style="--mc:var(--sw-${c})">${m}</div>`).join("")}</div>
+    </div></div>` }),
+
+    search: () => ({ sub: "Search", nav: "search", q: "daft punk", focus: true, page: `<div class="lp">${npcol()}<div class="main">
+      ${chips(["All", "Songs", "Videos", "Albums", "Artists", "Community playlists"])}
+      <div class="shead first"><span class="t">Top result</span><span class="act"></span></div>
+      <div class="sres">
+        <div class="topres"><div class="art g12 cv"></div><div><div class="nm">Daft Punk</div><div class="dim" style="margin-top:4px">Artist · 9.1M subscribers</div></div>
+          <div class="dacts" style="margin:0"><button class="btn primary">${icon("shuffle")}Shuffle</button><button class="btn">${icon("radio")}Radio</button></div></div>
+        <div>${[["Get Lucky", "Daft Punk", "g12", "6:09"], ["One More Time", "Daft Punk", "g10", "5:20"], ["Instant Crush", "Daft Punk", "g12", "5:37"], ["Harder, Better, Faster, Stronger", "Daft Punk", "g10", "3:45"]].map((s, i) =>
+          song(s, { sub: `Song · Daft Punk · ${i % 2 ? "Discovery" : "Random Access Memories"}`, hover: i === 1, post: `<span class="d">${s[3]}</span>${ib("more", "More")}` })).join("")}</div>
+      </div>
+      ${shead("Albums", "", more())}
+      ${shelf([["g12", "Random Access Memories", "Daft Punk", "2013"], ["g10", "Discovery", "Daft Punk", "2001"], ["g4", "Homework", "Daft Punk", "1997"], ["g13", "Human After All", "Daft Punk", "2005"], ["g16", "TRON: Legacy", "Daft Punk", "2010"]].map((a) => alb(a, { sub: `Album · ${a[3]}` })), 128)}
+    </div></div>` }),
+
+    artist: () => ({ sub: "Daft Punk", nav: "artists", page: `<div class="lp">${npcol()}<div class="main flush">
+      <div class="hero"><div class="art g12 bg"></div><div class="in"><h1>Daft Punk</h1><div class="meta">9.1M subscribers · 2 albums in your library</div>
+        <div class="dacts"><button class="btn primary">${icon("shuffle")}Shuffle</button><button class="btn">${icon("radio")}Radio</button><button class="btn">${icon("check")}Subscribed</button>${ib("share", "Share")}${ib("more", "More")}</div></div></div>
+      ${shead("Top songs", "", more("Show all"), "first")}
+      ${songs([["Get Lucky", "Random Access Memories · 1.2B plays", "g12", "6:09"], ["One More Time", "Discovery · 980M plays", "g10", "5:20"], ["Instant Crush", "Random Access Memories · 640M plays", "g12", "5:37"], ["Around the World", "Homework · 410M plays", "g4", "7:09"]], 2, { each: (i) => ({ hover: i === 2 }) })}
+      ${shead("Albums", "", more())}
+      ${shelf([["g12", "Random Access Memories", "", "2013"], ["g16", "TRON: Legacy", "", "2010"], ["g13", "Human After All", "", "2005"], ["g10", "Discovery", "", "2001"], ["g4", "Homework", "", "1997"]].map((a) => alb(a, { sub: a[3] })), 128)}
+    </div></div>` }),
+
+    album: () => ({ sub: "Hurry Up, We're Dreaming", nav: "albums", page: `<div class="lp">${npcol("queue")}<div class="main">
+      <div class="dhead">${cover(NOW.g, 0, 11)}<div class="grow"><div class="kind">Album · 2011</div><h1>Hurry Up, We're Dreaming</h1>
+        <div class="by"><span class="art g7" style="width:22px;height:22px;border-radius:50%"></span>M83</div><div class="meta">22 songs · 1 hr 13 min</div>
+        <div class="dacts"><button class="btn primary">${icon("play")}Play</button><button class="btn">${icon("shuffle")}Shuffle</button>${ib("saved", "Remove from library", "on")}${ib("share", "Share")}${ib("more", "More")}</div></div></div>
+      ${tlist(HURRY.map(([t, d], i) => [t, "M83", NOW.al, NOW.g, d, i === 1 || i === 4, false]), { album: true, on: 1, hover: 4 })}
+    </div></div>` }),
+
+    playlist: () => ({ sub: "Late night coding", nav: "coding", page: `<div class="lp">${npcol()}<div class="main">
+      <div class="dhead"><div class="cv collage" style="border-radius:11px">${PLAYLISTS[0].c.map((g) => `<span class="art ${g}"></span>`).join("")}</div><div class="grow"><div class="kind">Playlist · Private</div><h1>Late night coding</h1>
+        <div class="by"><span class="avatar">K</span>Ken</div><div class="meta">48 songs · 3 hr 12 min · updated today</div><div class="desc">Long instrumentals for after midnight.</div>
+        <div class="dacts"><button class="btn primary">${icon("play")}Play</button><button class="btn">${icon("shuffle")}Shuffle</button>${ib("pen", "Edit playlist")}${ib("share", "Share")}${ib("more", "More")}</div></div></div>
+      ${tlist(rows([SONGS[4], SONGS[5], SONGS[9], SONGS[2], SONGS[8], SONGS[6], SONGS[10]], (i) => i === 0 || i === 3), { hover: 2 })}
+    </div></div>` }),
+
+    liked: () => ({ sub: "Liked Music", nav: "liked", page: `<div class="lp">${npcol()}<div class="main">
+      <div class="dhead"><div class="cv likedart" style="border-radius:11px">${icon("heartf")}</div><div class="grow"><div class="kind">Auto playlist</div><h1>Liked Music</h1>
+        <div class="meta">1,284 songs · 89 hr</div><div class="desc">Songs you like in Lyra or anywhere on YouTube Music.</div>
+        <div class="dacts"><button class="btn primary">${icon("play")}Play</button><button class="btn">${icon("shuffle")}Shuffle</button><span class="grow"></span><span class="dd">Recently liked${icon("chev-d")}</span></div></div></div>
+      ${tlist(rows(SONGS.slice(0, 8), () => true), { on: 0, hover: 3 })}
+    </div></div>` }),
+
+    library: () => ({ sub: "Library", nav: "library", page: `<div class="lp">${npcol()}<div class="main">
+      <div class="row-flex" style="gap:8px;margin-top:4px"><div class="seg"><button class="on">Playlists</button><button>Albums</button><button>Songs</button><button>Artists</button></div><span class="grow"></span><span class="dd">Recent activity${icon("chev-d")}</span><div class="seg icons"><button class="on">${icon("grid")}</button><button>${icon("list")}</button></div></div>
+      <div style="height:18px"></div>
+      ${`<div class="agrid" style="--cols:5">${[
+        `<div class="alb"><div class="cv" style="background:var(--field);box-shadow:inset 0 0 0 1px var(--hair);display:flex;align-items:center;justify-content:center;color:var(--dim-text)">${icon("plus")}</div><div class="nm">New playlist</div><div class="ar">&nbsp;</div></div>`,
+        `<div class="alb"><div class="cv likedart">${icon("heartf")}</div><div class="nm">Liked Music</div><div class="ar">Auto playlist · 1,284 songs</div></div>`,
+        ...PLAYLISTS.map((p, i) => `<div class="alb ${i === 1 ? "hover" : ""}"><div class="cv collage" style="position:relative">${p.c.map((g) => `<span class="art ${g}"></span>`).join("")}<span class="hplay">${icon("play")}</span></div><div class="nm">${p.n}</div><div class="ar">Playlist · ${p.count} songs</div></div>`),
+        mixTile(MIXES[0]), mixTile(MIXES[3]),
+        alb(["g6", "Road trip", "", ""], { sub: "Sam · 74 songs" }), alb(["g2", "Sunday morning", "", ""], { sub: "Collaborative · 39 songs" }),
+      ].join("")}</div>`}
+    </div></div>` }),
+
+    signin: () => ({ bare: true, page: `<div class="signin">
+      <div class="copy">${icon("lyra", "big")}<h2>Sign in to YouTube Music</h2>
+        <p>Lyra plays music through YouTube Music's own web player, so you sign in on Google's page, shown here. Your password goes to Google, never to Lyra.</p>
+        <div class="pts"><div>${icon("check")}Your library, likes, playlists and mixes, as on your phone</div><div>${icon("check")}Premium plays without ads and in the background</div><div>${icon("lock")}Lyra keeps the session in its own web storage, apart from its settings</div></div>
+        <a class="skip">Continue without signing in${icon("chev-r")}</a></div>
+      <div class="webv"><div class="orig">${icon("lock")}<b>accounts.google.com</b>Google's sign-in page${ib("refresh", "Reload")}</div>
+        <div class="webpage"><div class="gl"><b style="background:#4285f4"></b><b style="background:#ea4335"></b><b style="background:#fbbc05"></b><b style="background:#34a853"></b></div><h3>Sign in</h3><div class="s">to continue to YouTube Music</div>
+          <div class="field"><span class="lbl">Email or phone</span>ken@</div><div class="lnk">Forgot email?</div>
+          <div class="note">Not your computer? Use a private browsing window to sign in.</div>
+          <div class="bt"><span>Create account</span><b>Next</b></div></div></div>
+    </div>` }),
+
+    blocked: () => ({ bare: true, page: `<div class="signin">
+      <div class="copy">${icon("lyra", "big")}<h2>Sign in to YouTube Music</h2>
+        <p>Lyra plays music through YouTube Music's own web player, so you sign in on Google's page, shown here. Your password goes to Google, never to Lyra.</p>
+        <a class="skip">Continue without signing in${icon("chev-r")}</a></div>
+      <div class="blocked">${icon("shield")}<h3>Google didn't allow signing in here</h3>
+        <p>Google turns away sign-in from some built-in browsers and said “This browser or app may not be secure.” Lyra won't work around that. You can try again later, or use Lyra without an account.</p>
+        <div class="can"><div class="y">${icon("check")}Search and play anything</div><div class="y">${icon("check")}Explore, charts and moods</div><div class="n">${icon("x")}Your library and playlists</div><div class="n">${icon("x")}Likes and mixes</div></div>
+        <div class="acts"><button class="btn primary">${icon("refresh")}Try again</button><button class="btn">Use without signing in</button><span class="grow"></span><button class="btn ghost">Why?</button></div></div>
+    </div>` }),
+
+    offline: () => ({ sub: "Home", nav: "home", bar: { state: "reconnecting" }, page: `<div class="lp">${npcol()}${homeA(`<div class="banner warn" style="margin:4px 0 14px">${icon("wifioff")}<div class="grow"><div class="t500">Can't reach YouTube Music</div><div class="d">Lyra is trying again every few seconds. Pages and covers you've seen are still here.</div></div><button class="btn plain">${icon("refresh")}Retry</button></div>`)}</div>` }),
+
+    unsupported: () => ({ sub: "Songs", nav: "songs", page: `<div class="lp">${npcol()}<div class="main" style="position:relative">
+      <div class="row-flex" style="gap:8px;margin-top:4px"><div class="seg"><button>Playlists</button><button>Albums</button><button class="on">Songs</button><button>Artists</button></div></div>
+      <div class="lcard empty boxed" style="margin-top:18px">${icon("info")}<div class="t">Lyra can't list your songs yet</div>
+        <div class="d">YouTube Music doesn't offer the songs in your library to other apps. They're on YouTube Music's own page, which Lyra can open inside its window.</div>
+        <div class="acts"><button class="btn primary">${icon("web")}Open YouTube Music's page</button><button class="btn ghost">What Lyra can do</button></div></div>
+      <div class="toast" style="bottom:20px">${icon("alert", "err")}Couldn't add “Reunion” to Focus: YouTube Music didn't confirm it<button class="btn">Try again</button></div>
+    </div></div>` }),
+
+    empty: () => ({ sub: "Liked Music", nav: "liked", likedCount: "", bar: { liked: false }, page: `<div class="lp">${npcol("album", false)}<div class="main">
+      <div class="dhead"><div class="cv likedart" style="border-radius:11px">${icon("heartf")}</div><div class="grow"><div class="kind">Auto playlist</div><h1>Liked Music</h1><div class="meta">No songs yet</div>
+        <div class="dacts"><button class="btn primary dimmed">${icon("play")}Play</button><button class="btn dimmed">${icon("shuffle")}Shuffle</button></div></div></div>
+      <div class="empty" style="padding-top:40px">${icon("heart")}<div class="t">No liked songs yet</div><div class="d">Songs you like in Lyra or anywhere on YouTube Music show up here. Press L or the heart in the player to like what's playing.</div>
+        <div class="acts"><button class="btn">${icon("compass")}Explore</button></div></div>
+    </div></div>` }),
+
+    settings: () => ({ sub: "Home", nav: "home", page: `<div class="lp">${npcol()}${homeA()}</div>`, over: `<div class="veil2"><div class="pop setcard">
+      <div class="gl">${search("", "")
+        .replace("Search YouTube Music", "Search settings").replace("Ctrl F", "")}
+        ${[[["play", "violet"], "Playback", "Lyrics, mini-player, resume", true], [["user", "green"], "Account", "Ken · YouTube Music"], [["moon", "teal"], "Background", "Keeps playing when closed"]].map(([t, n, s, on]) => `<div class="gi ${on ? "on" : ""}">${tiles(t)}<div class="grow" style="min-width:0"><div class="t500">${n}</div><div class="s">${s}</div></div></div>`).join("")}
+        <div style="height:10px"></div>
+        ${[[["palette", "pink"], "Appearance", "Follow Omarchy · Violet"], [["keyboard", "amber"], "Keyboard", "28 shortcuts"], [["info", "graphite"], "About", "Lyra 0.1"]].map(([t, n, s]) => `<div class="gi">${tiles(t)}<div class="grow" style="min-width:0"><div class="t500">${n}</div><div class="s">${s}</div></div></div>`).join("")}
+      </div>
+      <div class="gr"><h3>Playback${ib("x", "Close (Esc)")}</h3>
+        <div class="card">
+          <div class="opt"><div class="opt-text"><div class="t500">Show lyrics when available</div><div class="d">Opens lyrics beside the art when YouTube Music has them.</div></div><span class="switch on"></span></div>
+          <div class="opt"><div class="opt-text"><div class="t500">Resume on start</div><div class="d">Picks up the last song, paused, when Lyra opens.</div></div><span class="switch on"></span></div>
+          <div class="opt"><div class="opt-text"><div class="t500">Mini-player stays on top</div><div class="d">Keeps the mini-player above other windows.</div></div><span class="switch on"></span></div>
+          <div class="opt"><div class="opt-text"><div class="t500">Notify when the song changes</div><div class="d">Only while Lyra's window isn't in front.</div></div><span class="switch"></span></div>
+        </div>
+        <div class="gtitle">Audio</div>
+        <div class="card">
+          <div class="opt"><div class="opt-text"><div class="t500">Audio quality</div><div class="d">Kept by YouTube Music for your account; High needs Premium.</div></div><span class="dd">Auto${icon("chev-d")}</span></div>
+          <div class="opt"><div class="opt-text"><div class="t500">Output</div><div class="d">NyxOS picks the device for every app.</div></div><button class="btn">Sound settings${icon("external")}</button></div>
+        </div>
+      </div>
+    </div></div>` }),
+  };
+
+  const s = S[SCREEN]();
+  mount(win({
+    hdr: s.bare ? header("", { nav: false, center: "", end: "" }) : header(s.sub, { q: s.q, focus: s.focus }),
+    side: s.bare ? "" : sidebar(s.nav, { likedCount: s.likedCount }),
+    page: s.page,
+    foot: s.bare ? "" : pbar(s.bar || {}),
+    over: s.over || "",
+  }));
+</script>
+</body>
+</html>
