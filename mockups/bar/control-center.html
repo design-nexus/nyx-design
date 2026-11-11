@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-screens="dashboard,edit,wifi,wifi-more,bluetooth,devices,vpn,vpn-location,vpn-tor,tailscale,display,sound,battery">
+<head>
+<meta charset="utf-8">
+<title>Control Center — Nyx Bar mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="bar.css">
+<script src="parts.js"></script>
+</head>
+<body>
+<script>
+  // Control Center in the bar's popover style, opened from the status pill. Every detail
+  // page keeps what today's does (qml/ControlCenter/details/); only the look changes.
+  const C = {
+    dashboard: {
+      body: ccDashboard, name: "Control Center", rule: ["ok", "Same tiles, new look"],
+      desc: "Opens from the status pill as a floating panel under it, in the bar's popover style. Today's tiles, grid, sizes, pages and edit mode: Wi-Fi, Bluetooth, VPN and Tailscale each with a chevron to their own page, Sound & brightness (its chips open Sound and Screens), Now playing, Power mode, Battery and one-tap tiles.",
+    },
+    edit: {
+      body: ccEdit, name: "Control Center · editing", rule: ["ok", "Same tiles, new look"],
+      desc: "The pencil turns the dashboard into edit mode as today: drag a tile to move it (Now playing is being moved), drag its corner to resize, − removes it. Tiles that aren't on the dashboard, including plugin tiles, wait below. Pages get a + beside their dots.",
+    },
+    wifi: {
+      body: ccWifi, name: "Control Center · Wi-Fi", rule: ["ok", "Same features, new look"],
+      desc: "The switch, the current network with Disconnect and Metered connection, the connection's address, router, pings, speeds and signal, then known and other networks; a new secured network asks for its password in place. The foot keeps Look again, Speed test, Share as QR code and Wi-Fi settings.",
+    },
+    "wifi-more": {
+      body: ccWifiMore, name: "Control Center · Wi-Fi, further down", rule: ["ok", "Same features, new look"],
+      desc: "Scrolled down: the sign-in prompt (only on networks with a sign-in page), DNS as a row of icons (Cloudflare, Google, the network's own, or custom; the chosen one lit, each explained on hover) and the Wi-Fi band (automatic or one band).",
+    },
+    bluetooth: {
+      body: ccBluetooth, name: "Control Center · Bluetooth", rule: ["ok", "Same features, new look"],
+      desc: "The switch, paired devices with their state and battery (click to connect or disconnect, the bin forgets one), and devices nearby to pair while the page is open. The foot keeps Look again and Bluetooth settings.",
+    },
+    devices: {
+      body: ccDevices, name: "Control Center · Devices", rule: ["ok", "Same features, new look"],
+      desc: "Phones paired through Flux: one asking to pair (compare the key in Settings), then paired devices with battery and charging, Send the clipboard and Ring to find it.",
+    },
+    vpn: {
+      body: ccVpn, name: "Control Center · VPN", rule: ["ok", "Same features, new look"],
+      desc: "Its own page, apart from Wi-Fi and Tailscale. The route (Direct, NordVPN or Tor, one at a time), NordVPN's location, favourite servers with the default one marked, Kill Switch, Auto-connect, Threat Protection Lite, Pause, Technology and Protocol, Tor's modes and bridges, and NetworkManager's own VPN connections.",
+    },
+    "vpn-location": {
+      body: ccVpnLocation, name: "Control Center · VPN, picking a location", rule: ["ok", "Same features, new look"],
+      desc: "The location list open with a search: matching countries open to their cities, and every NordVPN city matches too. Stars add favourites. At the top, the warning shown when NordVPN and Tor are both on, with a button to keep each.",
+    },
+    "vpn-tor": {
+      body: ccVpnTor, name: "Control Center · VPN through Tor", rule: ["ok", "Same features, new look"],
+      desc: "With Tor carrying traffic: its mode, the exit and its address with New circuit and Let Tor choose, the exit country list, latency measured on request, the Tor-only browser, bridges, and Panic to remove every Tor rule.",
+    },
+    tailscale: {
+      body: ccTailscale, name: "Control Center · Tailscale", rule: ["ok", "Same features, new look"],
+      desc: "Its own page. Find a machine, this machine with Copy address and Copy name, Receive files (Taildrop) with Open Downloads, the exit node (none, your own, or Mullvad's by country, opening to cities), every machine with Copy and Send files, and accounts.",
+    },
+    display: {
+      body: ccDisplay, name: "Control Center · Screens", rule: ["ok", "Same features, new look"],
+      desc: "Brightness for each screen that has it, the scale of the focused screen, text size for the bar, menus, apps and terminals (the icon resets it to 12 px), and the laptop screen's switch while another screen is plugged in.",
+    },
+    sound: {
+      body: ccSound, name: "Control Center · Sound", rule: ["no", "New page"],
+      desc: "Replaces today's volume popover with a page the status pill can open, keeping all of it: output devices, each app's volume, the microphone with mute, input devices, and who's recording. New: the output volume slider at the top.",
+    },
+    battery: {
+      body: ccBattery, name: "Control Center · Battery", rule: ["ok", "Same features, new look"],
+      desc: "Today's page: the level and time left, power draw, capacity, charge cycles and charge limit, and the three power modes with what each does. New below them: the last 24 hours and the apps using a lot of power.",
+    },
+  };
+  const c = C[SCREEN] || C.dashboard;
+  mount(`<div class="desk">
+    ${fakeWindows()}
+    ${BARS.a()}
+    ${pop(c.body(), "i-status", 400, "right", "cc")}
+    <div class="cap-tag"><div class="ct"><b>${c.name}</b><span class="rule ${c.rule[0]}">${c.rule[1]}</span></div><p>${c.desc}</p></div>
+  </div>`);
+</script>
+</body>
+</html>

@@ -357,3 +357,38 @@ noted in its shortcuts list.
   keeps the frosted texture without showing the desktop. Without compositor blur it is
   solid. GTK can't blur its own content, so there is no per-panel glass.
 - **Blended** (`blended = true`, the default): one surface, as described in Principles.
+
+---
+
+## 11. Bar
+
+Nyx Bar (NyxOS's top bar) and its popovers follow the rest of this guide; these are the
+bar's own rules. The mockups are in `mockups/bar/` (direction A, "refined strip").
+
+**Strip:** a solid `@theme_panel` surface the full width of the screen, no outline,
+no floating island. Heights are presets: compact 28 px, default 32, cozy 36, spacious 40;
+text and icons grow a step with each.
+
+**Pills:** related items share one pill, `alpha(text, 0.055)` with radius 8: launcher
+and workspaces, media, weather and stats, the four status icons, the bell. An item on
+its own has no fill until hovered. A pill lights in the accent tint while one of its
+items is open (its popover, or the Control Center page it opened). A thin
+`@theme_divider` line can separate items instead of a pill.
+
+**Items:** icons 16 px, text 12.5 px; the time 600 and the date `dim_text`; secondary
+text `dim_text`, never smaller than 11 px. Counts are `tnum`. State shows as colour on
+the item: amber for a warning (a high CPU, an alert), `danger` for recording, the
+accent for on. A chip (18 px, radius 9) carries one short fact: the next event, an
+alert. Titles that can be long (the window, the song) give way with "…" on a narrow
+screen; the clock stays centred where the sides allow.
+
+**Popovers:** `@theme_popover`, radius 15, a hairline and a soft shadow, 14 px inside,
+up to 800 × 900 for first-party ones. Inside, cards (`@theme_card`, radius 11) group
+what belongs together; group labels are 11 px caps in `text_tertiary`; selected rows
+are accent-tinted with a tick. A popover ends in one link-style action to the full app
+(Open Weather, Open Activity) rather than a row of buttons.
+
+**Control Center:** the status pill opens it, each icon on its own page (right-click:
+the dashboard); the bar has no separate Control Center button by default. Its tiles and
+pages use the same cards, round icon chips (the tile's swatch when on), chevrons for a
+tile's page, and two-column fact cards.

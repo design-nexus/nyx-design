@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Bar redesign mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 400 13px/1.45 "Inter", sans-serif; padding: 32px 40px 60px; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -.015em; }
+  h2 { font-size: 17px; font-weight: 600; margin: 34px 0 4px; }
+  p { color: var(--dim-text); max-width: 900px; margin-top: 6px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 18px; margin-top: 14px; }
+  figure { margin: 0; }
+  figure a { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px var(--border); }
+  figure img { display: block; width: 100%; }
+  figcaption { margin-top: 8px; display: flex; gap: 10px; align-items: baseline; }
+  figcaption b { font-weight: 600; }
+  figcaption span { color: var(--dim-text); font-size: 12px; }
+  figcaption a { margin-left: auto; color: var(--accent); font-size: 12px; text-decoration: none; }
+  .theme { display: flex; gap: 6px; margin-top: 14px; }
+  .theme a { padding: 5px 12px; border-radius: 7px; color: var(--dim-text); text-decoration: none; background: var(--field); }
+  .theme a.on { background: var(--accent); color: var(--on-accent); }
+</style>
+</head>
+<body>
+<h1>Nyx Bar redesign</h1>
+<p>Direction A is the chosen one, at today's 32 px with four sizes, no quick settings
+and no Control Center button: the status pill opens Control Center, redesigned in the same
+style. Also here: the other five directions, richer widgets with a much bigger calendar, and icon
+layouts. Every shot is in Nyx Dark and Nyx Light; each direction also has a 1280 px shot.
+Click a shot for the full size, or "live" to open the page itself.</p>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const t = new URLSearchParams(location.search).get("theme") || "dark";
+  document.documentElement.dataset.theme = t;
+  document.getElementById("theme").innerHTML = ["dark", "light", "1280"]
+    .map((v) => `<a class="${v === t ? "on" : ""}" href="?theme=${v}">${v === "1280" ? "1280 px (directions)" : v[0].toUpperCase() + v.slice(1)}</a>`).join("");
+  const sections = [
+    ["Bar directions", "directions", [
+      ["current", "Current", "Today's 32 px strip and its calendar"],
+      ["a", "A · Refined strip (chosen)", "32 px, grouped pills, the status pill opens Control Center"],
+      ["b", "B · Menu bar", "Within 2.0: macOS-style, app name left, clock far right"],
+      ["c", "C · Islands", "Breaks 2.0: three floating pills"],
+      ["d", "D · Dynamic island", "Breaks 2.0: a centre capsule that grows"],
+      ["d-media", "D · Island, media", "The capsule grown for what's playing"],
+      ["d-notify", "D · Island, notification", "The capsule grown for a message"],
+      ["e", "E · Frosted float", "Breaks 2.0: translucent, detached, accent workspaces"],
+      ["f", "F · Omarchy polished", "Within 2.0: Omarchy's compact layout, tidied"],
+    ]],
+    ["Default widgets", "widgets", [
+      ["calendar", "Calendar, wide", "Month, today's agenda, upcoming, reminders"],
+      ["calendar-stacked", "Calendar, compact", "One column, 460 × 620"],
+      ["workspaces", "Workspaces", "Five looks and the hover preview"],
+      ["status", "Status pill", "Which Control Center page each icon opens; every icon state"],
+      ["media", "Media", "Player switcher, seek, queue"],
+      ["weather", "Weather", "Alerts, hourly and 5-day"],
+      ["stats", "System stats", "Graphs, cores, top processes"],
+      ["tray", "Tray", "Overflow drawer and app menus"],
+      ["panels", "Notifications", "Badge, Do not disturb, quick menu"],
+      ["new", "New widgets", "Window title, privacy, recording, keyboard layout"],
+    ]],
+    ["Icon layouts", "layouts", [
+      ["right", "Status icons", "Four arrangements for the right side"],
+      ["left", "Left side", "Workspaces, logo and window title"],
+      ["presets", "bar.toml presets", "The default layout for each direction"],
+      ["heights", "Sizes", "Compact, default, cozy and spacious"],
+    ]],
+    ["Control Center", "control-center", [
+      ["dashboard", "Dashboard", "Floating panel from the status pill"],
+      ["edit", "Editing", "Move, resize, remove and add tiles"],
+      ["wifi", "Wi-Fi", "Connection, metered, details, networks, password"],
+      ["wifi-more", "Wi-Fi, further down", "Sign-in prompt, DNS, band"],
+      ["bluetooth", "Bluetooth", "Devices, batteries, forget, pairing"],
+      ["devices", "Devices", "Flux phones: clipboard, ring, pairing"],
+      ["vpn", "VPN", "Routes, NordVPN settings, Tor, connections"],
+      ["vpn-location", "VPN, location", "Search, countries and cities, favourites"],
+      ["vpn-tor", "VPN through Tor", "Exit, circuit, exit country, latency, panic"],
+      ["tailscale", "Tailscale", "This machine, Taildrop, exit nodes, machines, accounts"],
+      ["display", "Screens", "Brightness, scale, text size, laptop screen"],
+      ["sound", "Sound (new)", "Today's volume popover as a page"],
+      ["battery", "Battery", "Today's page plus the last 24 hours"],
+    ]],
+  ];
+  document.getElementById("out").innerHTML = sections.map(([title, page, shots]) => {
+    const list = t === "1280" && page !== "directions" ? [] : shots;
+    if (!list.length) return "";
+    return `<h2>${title}</h2><div class="grid">${list.map(([s, name, sub]) => {
+      const img = `shots/${page}-${s}-${t}.png`;
+      const live = `${page}.html?screen=${s}&theme=${t === "1280" ? "dark" : t}`;
+      return `<figure><a href="${img}"><img src="${img}" loading="lazy" alt="${name}"></a><figcaption><b>${name}</b><span>${sub}</span><a href="${live}">live</a></figcaption></figure>`;
+    }).join("")}</div>`;
+  }).join("");
+</script>
+</body>
+</html>

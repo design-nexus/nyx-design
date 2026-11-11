@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-screens="current,a,b,c,d,d-media,d-notify,e,f">
+<head>
+<meta charset="utf-8">
+<title>Bar directions — Nyx Bar mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="bar.css">
+<script src="parts.js"></script>
+</head>
+<body>
+<script>
+  // Each direction: the bar, what opens on it, and the label in the corner.
+  const D = {
+    current: {
+      bar: BARS.current, pop: pop(calOld(), "i-clock", 230),
+      name: "Current", rule: ["cur", "Today"],
+      desc: "32 px solid strip. Every item is plain text or an icon at the same weight, so nothing reads as a group; the clock opens `cal` in a monospaced label.",
+    },
+    a: {
+      bar: BARS.a, pop: pop(calendarPop("two"), "i-clock", 800),
+      name: "A · Refined strip", rule: ["ok", "Within Nyx Design 2.0 · chosen"],
+      desc: "Solid strip at today's 32 px (compact, cozy and spacious are settings). Related items share a faint pill: launcher and workspaces, media, weather and stats, the four status icons, notifications. The status pill opens Control Center, so there's no separate button for it. The active workspace is an accent pill showing its windows' icons; the clock carries the next event.",
+    },
+    b: {
+      bar: BARS.b, pop: pop(calendarPop("two"), "i-clock", 800, "right"),
+      name: "B · Menu bar", rule: ["ok", "Within Nyx Design 2.0"],
+      desc: "30 px, after the macOS menu bar: the Nyx mark, the focused app in bold and its window title on the left, workspaces as dots. Status icons sit together on the right and the full date and time end the bar, where the calendar opens.",
+    },
+    c: {
+      bar: BARS.c, pop: pop(calendarPop("two"), "i-clock", 800),
+      name: "C · Islands", rule: ["no", "Breaks 2.0: floating, detached"],
+      desc: "Three rounded pills float 8 px under the screen edge, as in many Hyprland and Waybar setups: busy workspaces shown as their app icons, the clock with what's playing, and every status item. The wallpaper shows between them.",
+    },
+    d: {
+      bar: BARS.d, pop: pop(calendarPop("two"), "i-clock", 800),
+      name: "D · Dynamic island", rule: ["no", "Breaks 2.0: black capsule changes shape"],
+      desc: "A solid strip with a black capsule in the middle. At rest it shows the time and a live activity (here, music). It grows downward for media, timers, recordings and incoming notifications, then shrinks back.",
+    },
+    "d-media": {
+      bar: BARS.d, extra: islandMedia(), away: true,
+      name: "D · Island, media", rule: ["no", "Breaks 2.0: black capsule changes shape"],
+      desc: "Clicking the capsule while music plays grows it into a player: art, seek bar and controls. Moving the pointer away shrinks it back to the time.",
+    },
+    "d-notify": {
+      bar: BARS.d, extra: islandNotify(), away: true,
+      name: "D · Island, notification", rule: ["no", "Breaks 2.0: black capsule changes shape"],
+      desc: "A new notification drops out of the capsule instead of a corner toast, with its actions. It folds back into the capsule after a few seconds and goes to the Notification Center.",
+    },
+    e: {
+      bar: BARS.e, pop: pop(calendarPop("two"), "i-clock", 800, "center", "frost"),
+      name: "E · Frosted float", rule: ["no", "Breaks 2.0: translucent, detached"],
+      desc: "Full width but floating 8 px in, with rounded corners and the Frosted material (blurred wallpaper behind). Thin dividers group items instead of pills; the active workspace is a glowing accent pill.",
+    },
+    f: {
+      bar: BARS.f, pop: pop(calendarPop("two"), "i-clock", 800),
+      name: "F · Omarchy polished", rule: ["ok", "Within Nyx Design 2.0"],
+      desc: "Omarchy's compact 28 px layout kept as it is (workspaces left, day and time in the middle, icons right) and tidied: an accent underline for the active workspace, dividers between hardware, connections and power, hover states, and the same big calendar.",
+    },
+  };
+  const d = D[SCREEN] || D.a;
+  mount(`<div class="desk">
+    ${fakeWindows()}
+    ${d.bar()}
+    ${d.pop || ""}
+    ${d.extra || ""}
+    <div class="cap-tag"><div class="ct"><b>${d.name}</b><span class="rule ${d.rule[0]}">${d.rule[1]}</span></div><p>${d.desc.replace(/`([^`]+)`/g, "<code>$1</code>")}</p></div>
+  </div>`);
+  if (d.away) document.querySelector(".isl")?.classList.add("away");
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en" data-screens="right,left,presets,heights">
+<head>
+<meta charset="utf-8">
+<title>Icon layouts — Nyx Bar mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="bar.css">
+<script src="parts.js"></script>
+</head>
+<body>
+<script>
+  const T = { def: '<span class="tag">Default</span>', today: '<span class="tag today">Today</span>', nw: '<span class="tag new">New</span>' };
+  const noIds = (h) => h.replace(/ id="i-[^"]+"/g, "");
+  // A row: a label, the whole bar, and the part that changes at 1.6×.
+  const row = (title, desc, tag, bar, zoom) => `<div class="lrow">
+    <div class="lh"><b>${title}</b>${tag}<span>${desc}</span></div>
+    <div class="lbar">${noIds(bar)}</div>
+    <div class="lzoom">${zoom.map((z) => `<div>${noIds(z)}</div>`).join("")}</div>
+  </div>`;
+  const part = (cls, sec, inner) => `<div class="nbar d-a static ${cls}"><div class="sec ${sec}">${inner}</div></div>`;
+
+  const rightHead = `<div class="grp">${it(media.compact())}</div><div class="grp">${it(weather.basic())}${it(stats.spark())}</div>${trayItems(undefined, true, "")}`;
+  const tail = `<div class="grp">${bell(3, "")}</div>`;
+  const RIGHT = [
+    ["One pill", "The four status icons share one pill with the battery level; each opens Control Center on its own page.", T.def, `<div class="grp">${status.group("")}</div>`],
+    ["Separate icons", "Each icon is its own button, as today; each opens Control Center on its page.", T.today, status.separate()],
+    ["Icons with values", "Network name, headphone battery, volume and battery level beside their icons.", "", `<div class="grp">${status.values()}</div>`],
+    ["Minimal", "Only the battery shows; Wi-Fi, Bluetooth and sound are in Control Center behind it.", "", `<div class="grp">${it(`${batt(82)}<span class="tnum">82%</span>${ic("chev-d", "chev")}`, "", "trayit")}</div>`],
+  ];
+  const LEFT = [
+    ["Logo, workspaces and window title", "The Nyx mark opens the launcher; the focused window's app and title follow the workspaces.", T.def,
+      `<div class="grp">${it(logo(), "", "logoit")}${it(ws.pills(), "", "wsit")}</div>${winTitle()}`, null],
+    ["Workspaces only", "Nothing but workspaces, as today, in the new pill look.", T.today,
+      `<div class="grp">${it(ws.pills(), "", "wsit")}</div>`, null],
+    ["Workspaces as app icons", "Each busy workspace shows its windows' icons, so the title isn't needed.", "",
+      `<div class="grp">${it(logo(), "", "logoit")}${it(ws.icons(), "", "wsit")}</div>`, null],
+    ["Window title first", "macOS order: app and title on the left, workspaces in the middle, the clock at the right end.", "",
+      `${it(logo(), "", "logoit")}${winTitle()}`, `<div class="grp">${it(ws.pills(), "", "wsit")}</div>`],
+  ];
+
+  const PRESETS = [
+    ["current", "Current", "cur", `height = 32
+left = ["nyx.workspaces"]
+center = ["nyx.clock"]
+right = ["nyx.tray", "nyx.media", "nyx.weather",
+         "nyx.stats", "nyx.system", "nyx.panels"]`],
+    ["a", "A · Refined strip", "ok", `style = "strip"                  # new
+size = "default"                 # new: 28, 32, 36, 40 px
+left = [["nyx.launcher", "nyx.workspaces"],
+        "nyx.window"]
+center = [["nyx.clock"]]         # [ ] = a pill (new)
+right = [["nyx.media"], ["nyx.weather", "nyx.stats"],
+         "nyx.tray", ["nyx.system"],
+         ["nyx.panels/notifications"]]
+
+[plugins."nyx.workspaces"]
+look = "pills"
+[plugins."nyx.system"]
+combined = true          # one pill; opens Control Center`],
+    ["b", "B · Menu bar", "ok", `style = "menu"                   # new
+height = 30
+left = ["nyx.launcher", "nyx.window", "nyx.workspaces"]
+center = []
+right = ["nyx.tray", "nyx.media", "nyx.weather",
+         "nyx.system/battery", "nyx.system/network",
+         "nyx.system/volume", "nyx.panels/notifications", "nyx.clock"]
+
+[plugins."nyx.workspaces"]
+look = "dots"
+[plugins."nyx.clock"]
+format = "%a %b %-d  %-I:%M %p"`],
+    ["c", "C · Islands", "no", `style = "islands"                # new: sections float
+height = 52
+margin = 8                       # new
+left = ["nyx.launcher", "nyx.workspaces"]
+center = ["nyx.clock", "nyx.media"]
+right = ["nyx.tray", "nyx.stats", "nyx.weather",
+         "nyx.system", "nyx.panels/notifications"]
+
+[plugins."nyx.workspaces"]
+look = "icons"
+[plugins."nyx.stats"]
+look = "rings"`],
+    ["d", "D · Dynamic island", "no", `style = "island"                 # new
+height = 36
+left = ["nyx.launcher", "nyx.workspaces", "nyx.window"]
+center = ["nyx.island"]          # new: clock that grows
+right = ["nyx.weather", "nyx.stats", "nyx.tray",
+         "nyx.system", "nyx.panels/notifications"]
+
+[plugins."nyx.island"]
+activities = ["media", "timer", "recording",
+              "notifications"]`],
+    ["e", "E · Frosted float", "no", `style = "float"                  # new
+material = "frosted"             # new for the bar
+height = 42
+margin = 8
+left = ["nyx.launcher", "nyx.workspaces", "|",
+        "nyx.window"]
+center = ["nyx.clock"]           # "|" = divider (new)
+right = ["nyx.media", "|", "nyx.weather", "nyx.stats",
+         "|", "nyx.tray", "|", "nyx.system", "|",
+         "nyx.panels/notifications"]
+
+[plugins."nyx.workspaces"]
+look = "accent"`],
+    ["f", "F · Omarchy polished", "ok", `style = "strip"
+height = 28
+left = ["nyx.launcher", "nyx.workspaces"]
+center = ["nyx.clock"]
+right = ["nyx.tray", "|", "nyx.updates", "nyx.weather", "|",
+         "nyx.system/bluetooth", "nyx.system/network",
+         "nyx.system/volume", "|", "nyx.stats",
+         "nyx.system/battery", "|", "nyx.panels/notifications"]
+
+[plugins."nyx.workspaces"]
+look = "underline"`],
+  ];
+  const ruleText = { cur: "Today", ok: "Within 2.0", no: "Breaks 2.0" };
+
+  const screens = {
+    right: () => `<h1>Status icons</h1><p>Four ways to arrange the right side, each in direction A. The rest of the bar stays the same so only the status area changes; the strip under each bar repeats it at 1.6×.</p>
+      ${RIGHT.map(([t, d, tag, mid]) => row(t, d, tag, BARS.a({ center: `<div class="grp">${it(clock.strong())}</div>`, right: rightHead + mid + tail }), [part("", "r", rightHead + mid + tail)])).join("")}`,
+    left: () => `<h1>Left side</h1><p>What starts the bar. The launcher mark and the window title are new plugins (<code>nyx.launcher</code>, <code>nyx.window</code>); everything else is today's workspaces plugin with a new look.</p>
+      ${LEFT.map(([t, d, tag, left, center]) => row(t, d, tag,
+        BARS.a(center ? { left, center, right: `${trayItems(undefined, true, "")}<div class="grp">${status.group("")}</div>${tail}<div class="grp">${it(clock.strong())}</div>` } : { left }),
+        center ? [part("", "l", left), part("", "c", center)] : [part("", "l", left)])).join("")}`,
+    presets: () => `<h1>bar.toml presets</h1><p>The default <code>~/.config/nyx/bar.toml</code> for each direction, so the one you pick can ship as NyxOS's layout. Lines marked <span class="code" style="padding:1px 5px">new</span> need host support that doesn't exist yet.</p>
+      <div class="pgrid">
+        ${PRESETS.map(([id, name, rule, src]) => `<div class="pcard">
+          <div class="ph2"><b>${name}</b><span class="rule ${rule}">${ruleText[rule]}</span></div>
+          <div class="prev"><div class="half"><div>${noIds(BARS[id]())}</div></div><div class="half r"><div>${noIds(BARS[id]())}</div></div></div>
+          <div class="code">${toml(src)}</div>
+        </div>`).join("")}
+        <div class="pcard"><div class="ph2"><b>What's new</b></div>
+          <div class="code">${toml(`# Bar keys
+style = "strip"      # strip, menu, islands,
+                     # island or float
+size = "default"     # compact, default, cozy,
+                     # spacious (28 to 40 px)
+margin = 8           # gap from the screen edge
+material = "solid"   # solid | frosted
+
+# Layout entries
+["a", "b"]           # a pill holding a and b
+"|"                  # a thin divider
+
+# Plugin settings
+look = "pills"       # workspaces, stats, clock…
+
+# New plugins
+nyx.launcher  nyx.window  nyx.island
+nyx.updates   nyx.privacy nyx.keyboard
+nyx.recording`)}</div>
+        </div>
+      </div>`,
+    heights: () => `<h1>Sizes</h1><p>Direction A at the four sizes of the new <code>size</code> setting in <code>bar.toml</code> (and Settings → Bar). Default stays at today's 32 px; <code>height</code> still sets an exact number. The strip under each bar shows the left side and the clock at 1.6×.</p>
+      ${[[28, "Compact", "Pills slim to 22 px and the window dots under workspace numbers are dropped, so nothing gets squashed."], [32, "Default", "Today's height. Pills are 26 px with 3 px around them."], [36, "Cozy", "28 px pills; items grow to 24 px."], [40, "Spacious", "30 px pills with room around them, as first proposed for A."]]
+        .map(([h, t, d]) => row(`${t} · ${h} px`, d, h === 32 ? T.def : "",
+          BARS.a({ cls: h === 32 ? "" : `h${h}` }),
+          [part(h === 32 ? "" : `h${h}`, "l", `<div class="grp">${it(logo(), "", "logoit")}${it(ws.pills(), "", "wsit")}</div>${winTitle()}`), part(h === 32 ? "" : `h${h}`, "c", `<div class="grp">${it(clock.next())}</div>`)])).join("")}`,
+  };
+  mount(`<div class="desk"><div class="veil"></div><div class="lsheet">${(screens[SCREEN] || screens.right)()}</div></div>`);
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" data-screens="calendar,calendar-stacked,workspaces,status,media,weather,stats,tray,panels,new">
+<head>
+<meta charset="utf-8">
+<title>Default widgets — Nyx Bar mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="bar.css">
+<script src="parts.js"></script>
+</head>
+<body>
+<script>
+  // Every sheet: bar A on top with the widget open, its popover(s), and a panel of the
+  // widget's inline looks.
+  const T = { def: '<span class="tag">Default</span>', today: '<span class="tag today">Today</span>', nw: '<span class="tag new">New</span>' };
+  const v = (label, inner, tag = "") => `<div class="v"><div class="vl"><b>${label}</b>${tag}</div><div class="mini d-a">${inner}</div></div>`;
+  const bat = (p, c = "", charging = false) => it(`${batt(p, charging, c)}<span class="tnum ${c === "warnb" ? "warn" : c === "critb" ? "crit" : ""}">${p}%</span>`);
+
+  const S = {
+    calendar: {
+      pops: pop(calendarPop("two"), "i-clock", 800), side: "left",
+      title: "Calendar", lead: "Wide layout",
+      desc: "The clock opens about 800 × 580: the month with a dot per calendar, the day's agenda with a now line, Join on video calls and Open on hover, the next days, and today's reminders, ticked off in place. Holidays are red. First-party plugins may open popovers up to 800 × 900, so it fits.",
+      vars: [
+        v("With the next event", it(clock.next()), T.def),
+        v("Event about to start", it(clock.soon())),
+        v("Date and time", it(clock.strong())),
+        v("Two lines", it(clock.stack())),
+        v("Time only, date in the panel", it(clock.time())),
+        v("Plain text", it(clock.plain()), T.today),
+      ],
+    },
+    "calendar-stacked": {
+      pops: pop(calendarPop("one"), "i-clock", 460), side: "left",
+      title: "Calendar", lead: "Compact layout",
+      desc: "One column that fits even a third-party plugin's 480 × 640 popover. Here Thursday is selected (ringed) while today stays filled; the agenda follows the selection and reminders stay on today. Settings for both layouts, all new except format:",
+      extra: `<div class="code">${toml(`[plugins."nyx.clock"]
+format = "%a %b %-d  %H:%M"
+layout = "wide"                # wide | compact
+week_start = "monday"
+next_event = true              # the chip beside the time
+calendars = ["Work", "Personal", "Family"]
+holidays = "US"
+reminder_lists = "all"`)}</div>`,
+      vars: [],
+    },
+    workspaces: {
+      pops: pop(wsPop(), "i-ws", 330, "left"), side: "right",
+      title: "Workspaces",
+      desc: "Six looks, each showing busy (1, 3, 5), empty (4, 6), active (2) and urgent (5). Hovering a workspace previews its windows; clicking goes there, scrolling moves along. Omarchy's per-monitor workspaces and virtual monitors work as today.",
+      vars: [
+        v("Pills with the active workspace's icons (A, D)", it(ws.pills(), "", "wsit"), T.def),
+        v("App icons per busy workspace (C)", it(ws.icons(), "", "wsit")),
+        v("Accent pill, busy marks (E)", it(ws.accent(), "", "wsit")),
+        v("Dots (B)", it(ws.dots(), "", "wsit")),
+        v("Underline (F, Omarchy)", it(ws.underline(), "", "wsit")),
+        v("Tinted numbers", it(ws.numbers(6), "", "wsit"), T.today),
+      ],
+    },
+    status: {
+      hov: "i-status", side: "bottom",
+      pops: `<div class="diag">
+        <div class="diag-pill">${["wifi", "bluetooth", "volume"].map((i) => `<span>${ic(i)}</span>`).join("")}<span>${batt(82)}<b class="tnum">82%</b></span></div>
+        <div class="diag-cols">${[
+          ["Wi-Fi", "Networks, connection details, DNS and band. VPN and Tailscale keep their own pages."],
+          ["Bluetooth", "Devices with their batteries, forgetting and pairing."],
+          ["Sound", "New page holding today's volume popover: devices, per-app volume, microphone. Scrolling on the icon changes the volume."],
+          ["Battery", "Today's details and power modes, plus the last 24 hours."],
+        ].map(([t, d]) => `<div class="dcol"><span class="dline"></span><div class="dcard"><div class="glabel">Opens Control Center on</div><b>${t}</b><p>${d}</p></div></div>`).join("")}</div>
+        <div class="dnote">Right-click anywhere on the pill for the dashboard. The pill stays highlighted while Control Center is open, and clicking it again closes it.</div>
+      </div>`,
+      title: "Status pill and Control Center",
+      desc: "No quick settings and no Control Center button: the status pill opens Control Center itself, on the page of the icon you click. With separate icons the same clicks apply. Every icon state:",
+      vars: [
+        v("Network", it(ic("wifi")) + it(ic("wifi2")) + it(ic("wifi1")) + it(ic("ethernet")) + it(ic("wifioff"), "", "dim") + it(`${ic("wifi")}${ic("vpn", "sm acc")}`)),
+        v("Bluetooth", it(ic("btoff"), "", "dim") + it(ic("bluetooth")) + it(`${ic("headphones")}<span class="tnum dim">70%</span>`) + it(`${ic("mouse", "warn")}<span class="tnum warn">18%</span>`)),
+        v("Sound", it(ic("mute"), "", "dim") + it(ic("vol1")) + it(ic("volume")) + it(ic("headphones")) + it(`${ic("volume")}<span class="tnum">64%</span>`)),
+        v("Battery", bat(82) + bat(64, "", true) + bat(14, "warnb") + bat(6, "critb") + it(`${ic("bolt")}<span class="dim">AC</span>`)),
+      ],
+    },
+    media: {
+      pops: pop(mediaPop(), "i-media", 370), side: "left",
+      title: "Media",
+      desc: "Hidden when nothing plays. The popover switches between players, seeks, loves the track, sends audio to another device and shows what's next. Scrolling the item changes the player's volume.",
+      vars: [
+        v("Compact: art, title, level", it(media.compact()), T.def),
+        v("Expanded: artist and controls", it(media.expanded())),
+        v("With progress", it(media.progress())),
+        v("Paused", it(media.paused())),
+        v("Minimal", it(media.minimal())),
+        v("Art and title", it(media.old()), T.today),
+      ],
+    },
+    weather: {
+      pops: pop(weatherPop(), "i-weather", 400), side: "left",
+      title: "Weather",
+      desc: "From Nyx Weather. The popover leads with now and any alert, then wind, humidity, UV and sunset, the next eight hours with chance of rain, and five days with each day's range on one scale.",
+      vars: [
+        v("Icon and temperature", it(weather.basic()), T.def),
+        v("With conditions", it(weather.cond())),
+        v("With today's range", it(weather.range())),
+        v("Alert", it(weather.alert())),
+        v("Nyx Weather's text", it(weather.old()), T.today),
+      ],
+    },
+    stats: {
+      pops: pop(statsPop(), "i-stats", 400), side: "left",
+      title: "System stats",
+      desc: "The popover graphs the last minute of CPU with each core, memory, GPU, disk and network, and the busiest apps. Clicking Open Activity opens Nyx Activity.",
+      vars: [
+        v("CPU sparkline", it(stats.spark()), T.def),
+        v("Rings", it(stats.rings())),
+        v("Icons and values", it(stats.text())),
+        v("Under load, turns amber", it(stats.busy())),
+        v("Plain values", it(stats.old()), T.today),
+      ],
+    },
+    tray: {
+      pops: pop(trayPop(), "i-tray", 380, "center") + `<div class="pop nopad" data-at="i-tray" data-align="center" data-dx="-330" style="width:230px">${trayMenu()}</div>`,
+      side: "left",
+      title: "Tray",
+      desc: "Three icons stay on the bar; the chevron opens the rest, which can be dragged onto the bar. Left-click does what the app asks; right-click opens its menu (left, for Discord).",
+      vars: [
+        v("Pinned icons and a drawer", trayItems(undefined, true, ""), T.def),
+        v("Drawer only", it(ic("chev-d", "chev"), "", "trayit")),
+        v("Asking for attention", it(`${tray("discord")}<span class="bdot" style="position:absolute;top:3px;left:19px;width:6px;height:6px;border-radius:50%;background:var(--danger)"></span>${tray("nextcloud")}${tray("steam")}${ic("chev-d", "chev")}`, "", "trayit")),
+        v("Every icon", trayItems(Object.keys(TRAY), false, ""), T.today),
+      ],
+    },
+    panels: {
+      pops: pop(bellMenu(), "i-bell", 270, "right", "nopad"), side: "left",
+      title: "Notifications",
+      desc: "Left-click the bell for the Notification Center. Right-clicking it gives Do not disturb and Clear without opening the panel. Do not disturb swaps the bell for a moon. Control Center has no button of its own any more: the status pill opens it.",
+      vars: [
+        v("Unread count", `<div class="grp">${bell(3, "")}</div>`, T.def),
+        v("Nothing new", `<div class="grp">${bell(0, "")}</div>`),
+        v("Do not disturb", `<div class="grp">${dnd()}</div>`),
+        v("Notification Center open", `<div class="grp">${it(ic("bell"), "", "open")}</div>`),
+        v("Bell and Control Center button", bell(3, "") + cc(""), T.today),
+      ],
+    },
+    new: {
+      extra: `<div class="grp">${privacy()}${recording()}</div>${kbd()}`,
+      pops: pop(privPop(), "i-priv", 380, "right") + pop(kbdMenu(), "i-kbd", 240, "left", "nopad"), side: "left",
+      title: "New widgets",
+      desc: "Proposed items that today's bar doesn't have. Privacy dots appear only while the microphone (amber), camera (green) or screen sharing (violet) is in use; the recording timer only while recording.",
+      vars: [
+        v("Window title", winTitle().replace(' id="i-win"', ""), T.nw),
+        v("App name only", winTitle(true).replace(' id="i-win"', ""), T.nw),
+        v("Privacy dots", privacy(""), T.nw),
+        v("Screen recording", recording(""), T.nw),
+        v("Keyboard layout", kbd(""), T.nw),
+        v("Keep awake (idle inhibitor)", it(`${ic("coffee", "acc")}`, "", "open"), T.nw),
+      ],
+    },
+  };
+  const s = S[SCREEN] || S.calendar;
+  const lead = s.lead ? `<span class="tag today">${s.lead}</span>` : "";
+  mount(`<div class="desk">
+    <div class="veil"></div>
+    ${SCREEN === "new"
+      ? BARS.a({ right: `${s.extra}<div class="grp">${it(weather.basic(), "i-weather")}</div>${trayItems()}<div class="grp">${status.group()}</div><div class="grp">${bell(3)}</div>` })
+      : BARS.a()}
+    ${s.pops}
+    ${s.hov ? `<i data-hov="${s.hov}"></i>` : ""}
+    <div class="spec" data-side="${s.side}">
+      <h1>${s.title}${lead}</h1>
+      <p>${s.desc}</p>
+      ${SCREEN !== "new" && s.extra ? s.extra : ""}
+      <div class="vlist">${s.vars.join("")}</div>
+    </div>
+  </div>`);
+</script>
+</body>
+</html>
