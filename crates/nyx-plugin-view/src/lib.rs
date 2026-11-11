@@ -264,6 +264,68 @@ fn load_texture(ctx: &Ctx, path: Option<&str>, data: Option<&str>) -> Option<gdk
     gdk::Texture::from_filename(file).ok()
 }
 
+/// `tex` in the theme's text colour when it is all one neutral colour (an app's white
+/// or black tray icon), so it shows on any theme; `None` for a picture in colour.
+fn mono_tint(tex: &gdk::Texture) -> Option<gdk::Texture> {
+    let (w, h) = (tex.width() as usize, tex.height() as usize);
+    if w == 0 || h == 0 || w > 512 || h > 512 {
+        return None;
+    }
+    let stride = w * 4;
+    let mut px = vec![0u8; stride * h];
+    // B8g8r8a8Premultiplied, as GDK downloads.
+    tex.download(&mut px, stride);
+    let (mut lo, mut hi, mut n) = (1f32, 0f32, 0usize);
+    for p in px.chunks_exact(4) {
+        let a = p[3] as f32 / 255.0;
+        // Solid pixels only: a soft shadow or outline round the glyph doesn't count.
+        if a < 0.86 {
+            continue;
+        }
+        let [b, g, r] = [p[0], p[1], p[2]].map(|c| c as f32 / 255.0 / a);
+        let (max, min) = (r.max(g).max(b), r.min(g).min(b));
+        if max > 0.0 && (max - min) / max > 0.18 {
+            return None;
+        }
+        let l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        lo = lo.min(l);
+        hi = hi.max(l);
+        n += 1;
+    }
+    if n == 0 || hi - lo >= 0.3 {
+        return None;
+    }
+    let c = color::rgba("text")?;
+    let ink = [c.blue(), c.green(), c.red()].map(|v| v.clamp(0.0, 1.0));
+    let mid = (lo + hi) / 2.0;
+    for p in px.chunks_exact_mut(4) {
+        let a = p[3] as f32 / 255.0;
+        let [b, g, r] = [p[0], p[1], p[2]].map(|c| if a > 0.0 { c as f32 / 255.0 / a } else { 0.0 });
+        // The glyph alone: its outline and shadow, far from its shade, are left out.
+        let keep = a > 0.0 && ((0.2126 * r + 0.7152 * g + 0.0722 * b) - mid).abs() < 0.3;
+        let a = if keep { a } else { 0.0 };
+        for (i, v) in ink.iter().enumerate() {
+            p[i] = (v * a * 255.0).round() as u8;
+        }
+        p[3] = (a * 255.0).round() as u8;
+    }
+    let bytes = glib::Bytes::from_owned(px);
+    Some(gdk::MemoryTexture::new(w as i32, h as i32, gdk::MemoryFormat::B8g8r8a8Premultiplied, &bytes, stride).upcast())
+}
+
+/// A tray icon's picture by name or path, tinted when it is one neutral colour.
+fn tinted_icon(ctx: &Ctx, name: &str, size: i32) -> Option<gdk::Texture> {
+    let file = if name.contains('/') {
+        ctx.resolve_path(name)?
+    } else {
+        let display = gdk::Display::default()?;
+        let theme = gtk::IconTheme::for_display(&display);
+        let paintable = theme.lookup_icon(pick_icon(name), &[], size, 1, gtk::TextDirection::None, gtk::IconLookupFlags::empty());
+        paintable.file()?.path()?
+    };
+    mono_tint(&gdk::Texture::from_filename(file).ok()?)
+}
+
 /// The first of `a|b|c` the icon theme has (the last when it has none of them).
 fn pick_icon(name: &str) -> &str {
     if !name.contains('|') {
@@ -411,8 +473,11 @@ impl Builder<'_> {
             }
             NodeKind::Icon { name, size } => {
                 let i = gtk::Image::new();
-                set_icon(&i, ctx, name);
                 let s = size.unwrap_or(16).clamp(8, ctx.max_height.unwrap_or(128));
+                match node.class.iter().any(|c| c == "tint-if-mono").then(|| tinted_icon(ctx, name, s)).flatten() {
+                    Some(t) => i.set_paintable(Some(&t)),
+                    None => set_icon(&i, ctx, name),
+                }
                 i.set_pixel_size(s);
                 Handle::Icon(i)
             }
@@ -422,7 +487,8 @@ impl Builder<'_> {
             NodeKind::Image { path, data, radius } if node.width.is_some() && node.width == node.height => {
                 let i = gtk::Image::new();
                 if let Some(t) = load_texture(ctx, path.as_deref(), data.as_deref()) {
-                    i.set_paintable(Some(&t));
+                    let tinted = node.class.iter().any(|c| c == "tint-if-mono").then(|| mono_tint(&t)).flatten();
+                    i.set_paintable(Some(tinted.as_ref().unwrap_or(&t)));
                 }
                 i.set_pixel_size(node.width.unwrap_or(16).clamp(8, ctx.max_height.unwrap_or(256)));
                 match radius {
