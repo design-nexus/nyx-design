@@ -1,0 +1,32 @@
+# Solarized Dark (ethanschoonover.com/solarized, MIT) in Omarchy's colour format.
+mode = "dark"
+
+accent = "#268bd2"
+selection = "#073642"
+muted = "#586e75"
+
+background = "#002b36"
+dark_background = "#00252f"
+darker_background = "#001e26"
+lighter_background = "#073642"
+
+foreground = "#839496"
+dark_foreground = "#586e75"
+light_foreground = "#93a1a1"
+bright_foreground = "#eee8d5"
+
+red = "#dc322f"
+yellow = "#b58900"
+orange = "#cb4b16"
+green = "#859900"
+cyan = "#2aa198"
+blue = "#268bd2"
+magenta = "#d33682"
+brown = "#7b5c3a"
+
+bright_red = "#e35d5b"
+bright_yellow = "#c9a227"
+bright_green = "#a1b52a"
+bright_cyan = "#4fb8b0"
+bright_blue = "#4ea3de"
+bright_magenta = "#6c71c4"

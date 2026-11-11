@@ -1,0 +1,33 @@
+# Tokyo Night Moon (folke/tokyonight.nvim, Apache-2.0) in Omarchy's colour format, laid
+# out as Omarchy's Tokyo Night is.
+mode = "dark"
+
+accent = "#82aaff"
+selection = "#2d3f76"
+muted = "#444a73"
+
+background = "#222436"
+dark_background = "#1e2030"
+darker_background = "#191b29"
+lighter_background = "#2f334d"
+
+foreground = "#c8d3f5"
+dark_foreground = "#636da6"
+light_foreground = "#c8d3f5"
+bright_foreground = "#c8d3f5"
+
+red = "#ff757f"
+yellow = "#ffc777"
+orange = "#ff966c"
+green = "#c3e88d"
+cyan = "#4fd6be"
+blue = "#82aaff"
+magenta = "#c099ff"
+brown = "#7a4f45"
+
+bright_red = "#ff8d94"
+bright_yellow = "#ffd8ab"
+bright_green = "#c7fb6d"
+bright_cyan = "#86e1fc"
+bright_blue = "#9ab8ff"
+bright_magenta = "#fca7ea"

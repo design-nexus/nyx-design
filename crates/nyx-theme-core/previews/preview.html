@@ -1,0 +1,169 @@
+<!doctype html>
+<!-- A theme's preview, laid out as Omarchy's are: a desktop with an editor, a system
+     monitor, a terminal and Files, in the theme's resolved colours (theme.js, written
+     by render.sh from builtin-themes.json). -->
+<html>
+<head>
+<meta charset="utf-8">
+<script src="theme.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 720px; overflow: hidden; }
+  body { font: 13px/1.45 "Inter", "Cantarell", sans-serif; color: var(--text); background: var(--wall); }
+  .mono { font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace; font-size: 11.5px; line-height: 1.55; }
+  .bar { height: 26px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; background: var(--panel); font-size: 12px; }
+  .ws { display: flex; gap: 6px; align-items: center; }
+  .ws span { width: 18px; height: 18px; border-radius: 6px; display: grid; place-items: center; color: var(--dim); font-size: 11px; }
+  .ws span.on { background: var(--accent); color: var(--onAccent); font-weight: 700; }
+  .clock b { font-weight: 700; }
+  .status { display: flex; gap: 12px; color: var(--dim); }
+  .grid { position: absolute; top: 34px; left: 8px; right: 8px; bottom: 8px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1.15fr 1fr; gap: 8px; }
+  .win { background: var(--bg); border: 2px solid var(--border); border-radius: 10px; overflow: hidden; position: relative; }
+  .win.active { border-color: var(--accent); }
+  .code { display: grid; grid-template-columns: 34px 1fr; padding: 8px 0; height: 100%; }
+  .ln { color: var(--tertiary); text-align: right; padding-right: 10px; }
+  .ln .cur { color: var(--text); }
+  .src div, .term div { white-space: pre; }
+  .src .cl { background: var(--hl); display: block; margin-right: 0; }
+  .kw { color: var(--violet); } .fn { color: var(--blue); } .st { color: var(--green); } .nu { color: var(--coral); }
+  .ty { color: var(--teal); } .cm { color: var(--tertiary); font-style: italic; } .va { color: var(--red); } .pp { color: var(--amber); }
+  .line { position: absolute; left: 0; right: 0; bottom: 0; height: 20px; background: var(--panel); display: flex; align-items: center; gap: 10px; padding-right: 10px; font-size: 11px; }
+  .line .mode { background: var(--accent); color: var(--onAccent); padding: 0 10px; height: 100%; display: flex; align-items: center; font-weight: 700; }
+  .line .sp { flex: 1; }
+  .mon { padding: 10px; display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: auto 1fr; gap: 8px; height: 100%; }
+  .box { border: 1px solid var(--border2); border-radius: 6px; padding: 6px 8px; position: relative; }
+  .box h4 { position: absolute; top: -8px; left: 8px; background: var(--bg); padding: 0 4px; font-size: 11px; color: var(--accent); font-weight: 600; }
+  .cpu { grid-column: 1 / 3; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px 18px; padding-top: 10px; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .meter { flex: 1; height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+  .meter i { display: block; height: 100%; border-radius: 3px; }
+  .graph { display: flex; align-items: flex-end; gap: 2px; height: 70px; margin-top: 10px; }
+  .graph i { flex: 1; border-radius: 2px 2px 0 0; }
+  .procs div { display: grid; grid-template-columns: 48px 1fr 44px; gap: 6px; }
+  .procs div:first-child { color: var(--accent); font-weight: 600; }
+  .term { padding: 10px 12px; }
+  .prompt { color: var(--green); } .path { color: var(--blue); font-weight: 600; } .dir { color: var(--blue); font-weight: 600; }
+  .ex { color: var(--green); } .dim { color: var(--dim); } .cursor { display: inline-block; width: 7px; height: 13px; background: var(--text); vertical-align: -2px; }
+  .files { display: grid; grid-template-columns: 170px 1fr; height: 100%; }
+  .side { background: var(--panel); padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; }
+  .side div { padding: 5px 10px; border-radius: 7px; display: flex; gap: 10px; align-items: center; color: var(--dim); }
+  .side div.on { background: var(--sel); color: var(--text); }
+  .side svg { width: 14px; height: 14px; }
+  .main { padding: 12px 16px; }
+  .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font-weight: 600; font-size: 14px; }
+  .head .pill { background: var(--hl); border-radius: 8px; padding: 3px 10px; font-size: 12px; color: var(--dim); font-weight: 500; }
+  .folders { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 10px; }
+  .folder { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; }
+  .folder svg { width: 64px; height: 52px; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="ws"><span>1</span><span class="on">2</span><span>3</span><span>4</span><span>5</span></div>
+  <div class="clock">Wed Nov 11 <b>21:47</b></div>
+  <div class="status"><span>61°</span><span>CPU 9%</span><span>&#9673; 100%</span></div>
+</div>
+<div class="grid">
+  <div class="win active">
+    <div class="code mono">
+      <div class="ln" id="ln"></div>
+      <div class="src" id="src"></div>
+    </div>
+    <div class="line mono"><span class="mode">NORMAL</span><span>theme.rs</span><span class="sp"></span><span class="dim">rust</span><span>42:18</span></div>
+  </div>
+  <div class="win mon mono" id="mon">
+    <div class="box cpu" id="cpu"><h4>cpu</h4></div>
+    <div class="box"><h4>mem</h4><div id="mem"></div><div class="graph" id="graph"></div></div>
+    <div class="box procs" id="procs"><h4>proc</h4></div>
+  </div>
+  <div class="win term mono" id="term"></div>
+  <div class="win files">
+    <div class="side" id="side"></div>
+    <div class="main">
+      <div class="head"><span>Home</span><span class="pill">8 folders</span></div>
+      <div class="folders" id="folders"></div>
+    </div>
+  </div>
+</div>
+<script>
+const T = window.THEME;
+const c = T.colors, s = T.swatches;
+const mix = (a, b, t) => {
+  const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const [x, y] = [p(a), p(b)];
+  return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join("");
+};
+const vars = {
+  bg: c["surface.primary"], panel: c["surface.secondary"], text: c["text.primary"], dim: c["text.secondary"],
+  tertiary: c["text.tertiary"], accent: c["accent.primary"], onAccent: c["text.onAccent"], border: c["border.default"],
+  border2: mix(c["border.default"], c["text.tertiary"], 0.35), hl: c["state.hover"] && c["state.hover"].length === 7 ? c["state.hover"] : mix(c["surface.primary"], c["text.primary"], 0.06),
+  sel: mix(c["surface.secondary"], c["accent.primary"], 0.22), track: mix(c["surface.primary"], c["text.primary"], 0.1),
+  wall: `radial-gradient(120% 90% at 85% 10%, ${mix(c["surface.primary"], c["accent.primary"], 0.35)} 0%, transparent 55%),
+         radial-gradient(90% 80% at 10% 95%, ${mix(c["surface.primary"], s.violet, 0.3)} 0%, transparent 60%),
+         linear-gradient(160deg, ${mix(c["surface.primary"], "#000000", T.appearance === "light" ? 0.06 : 0.25)}, ${c["surface.primary"]})`,
+  ...s
+};
+for (const [k, v] of Object.entries(vars)) document.documentElement.style.setProperty("--" + k, v);
+
+const code = [
+  `<span class="cm">// The active theme, resolved for every app.</span>`,
+  `<span class="kw">use</span> std::collections::<span class="ty">BTreeMap</span>;`,
+  ``,
+  `<span class="pp">#[derive(Debug, Clone)]</span>`,
+  `<span class="kw">pub struct</span> <span class="ty">Theme</span> {`,
+  `    <span class="kw">pub</span> <span class="va">name</span>: <span class="ty">String</span>,`,
+  `    <span class="kw">pub</span> <span class="va">colors</span>: <span class="ty">BTreeMap</span>&lt;<span class="ty">String</span>, <span class="ty">String</span>&gt;,`,
+  `    <span class="kw">pub</span> <span class="va">radius</span>: <span class="ty">u32</span>,`,
+  `}`,
+  ``,
+  `<span class="kw">impl</span> <span class="ty">Theme</span> {`,
+  `    <span class="kw">pub fn</span> <span class="fn">color</span>(&amp;<span class="kw">self</span>, <span class="va">token</span>: &amp;<span class="ty">str</span>) -&gt; &amp;<span class="ty">str</span> {`,
+  `        <span class="kw">self</span>.colors.<span class="fn">get</span>(token).<span class="fn">map_or</span>(<span class="st">"#000000"</span>, |c| c.<span class="fn">as_str</span>())`,
+  `    }`,
+  ``,
+  `    <span class="kw">pub fn</span> <span class="fn">corner</span>(&amp;<span class="kw">self</span>, <span class="va">scale</span>: <span class="ty">f64</span>) -&gt; <span class="ty">f64</span> {`,
+  `        (<span class="kw">self</span>.radius <span class="kw">as</span> <span class="ty">f64</span> * scale).<span class="fn">max</span>(<span class="nu">4.0</span>)`,
+  `    }`,
+  `}`,
+  ``,
+  `<span class="kw">fn</span> <span class="fn">main</span>() {`,
+  `    <span class="kw">let</span> theme = <span class="ty">Theme</span>::<span class="fn">load</span>(<span class="st">"${T.id}"</span>);`,
+  `    <span class="fn">println!</span>(<span class="st">"{} at {} px"</span>, theme.name, theme.<span class="fn">corner</span>(<span class="nu">1.5</span>));`,
+  `}`,
+];
+const cur = 11;
+document.getElementById("ln").innerHTML = code.map((_, i) => i === cur ? `<div class="cur">${i + 1}</div>` : `<div>${i + 1}</div>`).join("");
+document.getElementById("src").innerHTML = code.map((l, i) => `<div${i === cur ? ' class="cl"' : ""}>${l || "&nbsp;"}</div>`).join("");
+
+const cpuColors = [s.green, s.green, s.teal, s.amber, s.green, s.coral, s.teal, s.green];
+const loads = [22, 35, 61, 78, 18, 88, 47, 30];
+document.getElementById("cpu").innerHTML += loads.map((v, i) =>
+  `<div class="row"><span class="dim">C${i}</span><div class="meter"><i style="width:${v}%;background:${cpuColors[i]}"></i></div><span>${v}%</span></div>`).join("");
+document.getElementById("mem").innerHTML = [["Used", 62, s.blue], ["Cache", 24, s.violet], ["Swap", 8, s.coral]].map(([n, v, col]) =>
+  `<div class="row"><span class="dim" style="width:40px">${n}</span><div class="meter"><i style="width:${v}%;background:${col}"></i></div></div>`).join("");
+document.getElementById("graph").innerHTML = [30, 42, 38, 55, 61, 48, 70, 66, 52, 44, 58, 73, 80, 62, 50, 45, 57, 64].map(v =>
+  `<i style="height:${v}%;background:linear-gradient(${s.teal}, ${mix(s.teal, c["surface.primary"], 0.55)})"></i>`).join("");
+document.getElementById("procs").innerHTML += [["pid", "program", "cpu"], ["2286", "nyx-shell", "4.1"], ["1940", "firefox", "3.2"], ["3121", "cargo", "2.7"],
+  ["812", "pipewire", "0.9"], ["2950", "nyx-files", "0.6"], ["1203", "nyx-dock", "0.4"]].map(r => `<div><span>${r[0]}</span><span>${r[1]}</span><span>${r[2]}</span></div>`).join("");
+
+const ls = [["drwxr-xr-x", "4.0K", "Desktop", true], ["drwxr-xr-x", "4.0K", "Documents", true], ["drwxr-xr-x", "4.0K", "Downloads", true],
+  ["drwxr-xr-x", "4.0K", "Projects", true], ["-rw-r--r--", "2.3K", "notes.md", false], ["-rwxr-xr-x", "8.1K", "deploy.sh", "ex"],
+  ["-rw-r--r--", " 912", "theme.toml", false]];
+document.getElementById("term").innerHTML =
+  `<div><span class="prompt">ken@nyxos</span> <span class="path">~</span> <span class="dim">$</span> ls -lh</div>` +
+  ls.map(([p, sz, n, d]) => `<div><span class="dim">${p}</span> ken ken ${sz} Nov 11 <span class="${d === true ? "dir" : d === "ex" ? "ex" : ""}">${n}</span></div>`).join("") +
+  `<div><span class="prompt">ken@nyxos</span> <span class="path">~</span> <span class="dim">$</span> nyx theme set ${T.id}</div>` +
+  `<div style="color:${s.green}">Theme set to ${T.name}</div>` +
+  `<div><span class="prompt">ken@nyxos</span> <span class="path">~</span> <span class="dim">$</span> <span class="cursor"></span></div>`;
+
+const icon = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const sideItems = [["Home", '<path d="M3 11l9-7 9 7v9H3z"/>', true], ["Recent", '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'],
+  ["Starred", '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'], ["Downloads", '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>'],
+  ["Projects", '<path d="M3 7h6l2 2h10v10H3z"/>'], ["Trash", '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>']];
+document.getElementById("side").innerHTML = sideItems.map(([n, d, on]) => `<div class="${on ? "on" : ""}">${icon(d)}${n}</div>`).join("");
+const folder = (col) => `<svg viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="${mix(col, c["surface.primary"], 0.35)}"/><path d="M4 18a4 4 0 0 1 4-4h48a4 4 0 0 1 4 4v26a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="${col}"/></svg>`;
+document.getElementById("folders").innerHTML = ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Projects", "Videos", "Public"]
+  .map(n => `<div class="folder">${folder(c["accent.primary"])}<span>${n}</span></div>`).join("");
+</script>
+</body>
+</html>

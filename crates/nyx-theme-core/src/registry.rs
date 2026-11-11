@@ -12,35 +12,52 @@ use std::path::{Path, PathBuf};
 
 enum Shipped {
     V1(&'static str),
-    Package(&'static str),
+    /// An Omarchy `colors.toml` and the theme's name: converted as Follow Omarchy
+    /// converts the active Omarchy theme, so a theme looks the same either way.
+    Omarchy(&'static str, &'static str),
+}
+
+macro_rules! omarchy {
+    ($id:literal, $name:literal) => {
+        ($id, Shipped::Omarchy(include_str!(concat!("../themes/", $id, "/colors.toml")), $name))
+    };
 }
 
 /// The themes Nyx ships, built in so they never go missing.
 const SHIPPED: &[(&str, Shipped)] = &[
-    ("catppuccin-mocha", Shipped::Package(include_str!("../themes/catppuccin-mocha/nyx-theme.toml"))),
+    omarchy!("catppuccin-mocha", "Catppuccin Mocha"),
     ("nyx-dark", Shipped::V1(include_str!("../themes/nyx-dark.toml"))),
     ("nyx-light", Shipped::V1(include_str!("../themes/nyx-light.toml"))),
-    ("dracula", Shipped::V1(include_str!("../themes/dracula.toml"))),
-    ("catppuccin-macchiato", Shipped::V1(include_str!("../themes/catppuccin-macchiato.toml"))),
-    ("catppuccin-frappe", Shipped::V1(include_str!("../themes/catppuccin-frappe.toml"))),
-    ("catppuccin-latte", Shipped::V1(include_str!("../themes/catppuccin-latte.toml"))),
-    ("tokyo-night", Shipped::V1(include_str!("../themes/tokyo-night.toml"))),
-    ("tokyo-night-storm", Shipped::V1(include_str!("../themes/tokyo-night-storm.toml"))),
-    ("tokyo-night-moon", Shipped::V1(include_str!("../themes/tokyo-night-moon.toml"))),
-    ("one-dark-pro", Shipped::V1(include_str!("../themes/one-dark-pro.toml"))),
-    ("nord", Shipped::V1(include_str!("../themes/nord.toml"))),
-    ("gruvbox-dark", Shipped::V1(include_str!("../themes/gruvbox-dark.toml"))),
-    ("rose-pine", Shipped::V1(include_str!("../themes/rose-pine.toml"))),
-    ("everforest", Shipped::V1(include_str!("../themes/everforest.toml"))),
-    ("solarized-dark", Shipped::V1(include_str!("../themes/solarized-dark.toml"))),
-    ("kanagawa", Shipped::V1(include_str!("../themes/kanagawa.toml"))),
+    omarchy!("dracula", "Dracula"),
+    omarchy!("catppuccin-macchiato", "Catppuccin Macchiato"),
+    omarchy!("catppuccin-frappe", "Catppuccin Frappé"),
+    omarchy!("catppuccin-latte", "Catppuccin Latte"),
+    omarchy!("tokyo-night", "Tokyo Night"),
+    omarchy!("tokyo-night-storm", "Tokyo Night Storm"),
+    omarchy!("tokyo-night-moon", "Tokyo Night Moon"),
+    omarchy!("one-dark-pro", "One Dark Pro"),
+    omarchy!("nord", "Nord"),
+    omarchy!("gruvbox-dark", "Gruvbox Dark"),
+    omarchy!("rose-pine", "Rosé Pine"),
+    omarchy!("everforest", "Everforest"),
+    omarchy!("solarized-dark", "Solarized Dark"),
+    omarchy!("kanagawa", "Kanagawa"),
 ];
 
-/// The shipped text of a built-in theme.
+/// The shipped text of a built-in theme: its v1 file or its Omarchy colours.
 pub fn shipped_text(id: &str) -> Option<&'static str> {
     SHIPPED.iter().find(|(s, _)| *s == id).map(|(_, t)| match t {
-        Shipped::V1(t) | Shipped::Package(t) => *t,
+        Shipped::V1(t) | Shipped::Omarchy(t, _) => *t,
     })
+}
+
+/// A built-in theme's preview picture, installed with the system
+/// (`<data dir>/nyx/theme-previews/<id>.jpg`).
+fn builtin_preview(id: &str) -> Option<PathBuf> {
+    crate::paths::data_dirs()
+        .into_iter()
+        .flat_map(|d| ["jpg", "png"].map(|ext| d.join("nyx/theme-previews").join(format!("{id}.{ext}"))))
+        .find(|p| p.is_file())
 }
 
 pub fn is_builtin(id: &str) -> bool {
@@ -123,16 +140,24 @@ impl Registry {
                 Shipped::V1(text) => {
                     let file = ThemeFile::parse(text, &diag).unwrap_or_default();
                     let name = file.name.clone().unwrap_or_else(|| (*id).into());
-                    let meta = v1_meta(id, &name, &file, Origin::BuiltIn, None);
+                    let mut meta = v1_meta(id, &name, &file, Origin::BuiltIn, None);
+                    meta.preview = builtin_preview(id);
                     r.entries.push(Entry { meta, layers: vec![Layer::from_v1(file)], issues: diag.take() });
                 }
-                Shipped::Package(text) => match parse_package(text, &diag.origin) {
-                    Ok(pkg) => {
-                        let meta = package_meta(&pkg, Origin::BuiltIn, None);
-                        r.entries.push(Entry { meta, layers: vec![Layer::from_package(&pkg)], issues: diag.take() });
+                Shipped::Omarchy(text, name) => {
+                    let pkg = toml::from_str::<toml::Table>(text).ok().and_then(|t| crate::omarchy::package_for(&t, id, name, false));
+                    match pkg {
+                        Some(pkg) => {
+                            let mut meta = package_meta(&pkg, Origin::BuiltIn, None);
+                            meta.preview = builtin_preview(id);
+                            r.entries.push(Entry { meta, layers: vec![Layer::from_package(&pkg)], issues: diag.take() });
+                        }
+                        None => {
+                            diag.error("colors.toml", "needs at least background, foreground and accent");
+                            r.skipped.extend(diag.take());
+                        }
                     }
-                    Err(issues) => r.skipped.extend(issues),
-                },
+                }
             }
         }
         r

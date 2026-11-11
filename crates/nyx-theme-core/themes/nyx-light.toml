@@ -51,7 +51,7 @@ coral = "#c9532a"
 amber = "#a87012"
 green = "#2f9a33"
 teal = "#14869a"
-graphite = "#6a6e90"
+graphite = "#50546c"
 
 [sections.settings]
 home = "teal"

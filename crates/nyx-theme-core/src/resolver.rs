@@ -206,15 +206,71 @@ mod tests {
         }
     }
 
+    /// Resolve an Omarchy `colors.toml` as Follow Omarchy does.
+    fn from_omarchy(text: &str) -> Resolved {
+        let table: toml::Table = toml::from_str(text).unwrap();
+        let pkg = crate::omarchy::package_for(&table, "omarchy", "Omarchy", false).unwrap();
+        let mut r = Registry::builtin();
+        r.push_for_test(Entry {
+            meta: Meta { id: "omarchy".into(), name: "Omarchy".into(), origin: Origin::Omarchy, ..Meta::default() },
+            layers: vec![Layer::from_package(&pkg)],
+            issues: vec![],
+        });
+        resolve_id(&r, "omarchy", None, &A11y::default()).unwrap()
+    }
+
+    #[test]
+    fn every_builtin_converts() {
+        let r = Registry::builtin();
+        assert!(r.skipped.is_empty(), "{:?}", r.skipped);
+        assert_eq!(r.entries().len(), 17);
+    }
+
+    #[test]
+    fn a_builtin_theme_looks_as_its_omarchy_version_does() {
+        let builtin = resolve_id(&Registry::builtin(), "gruvbox-dark", None, &A11y::default()).unwrap();
+        let omarchy = from_omarchy(include_str!("../themes/gruvbox-dark/colors.toml"));
+        assert_eq!(builtin.tokens.colors, omarchy.tokens.colors);
+        assert_eq!(builtin.theme.look.swatches, omarchy.theme.look.swatches);
+    }
+
+    /// Nyx Dark and Light are designed in Nyx's own format; their Omarchy versions
+    /// (nyx-themes) carry the colours that make them look as they do. Omarchy's format
+    /// has fewer roles (`muted` is both a border and a text colour), so the shades
+    /// Nyx derives between them can differ slightly.
+    #[test]
+    fn nyx_dark_and_light_look_as_their_omarchy_versions_do() {
+        const DEFINING: &[&str] = &[
+            "surface.primary",
+            "text.primary",
+            "text.secondary",
+            "accent.primary",
+            "border.default",
+            "status.error",
+            "status.warning",
+            "status.success",
+        ];
+        for (id, text) in [
+            ("nyx-dark", include_str!("../themes/omarchy-nyx/nyx-dark.colors.toml")),
+            ("nyx-light", include_str!("../themes/omarchy-nyx/nyx-light.colors.toml")),
+        ] {
+            let builtin = resolve_id(&Registry::builtin(), id, None, &A11y::default()).unwrap();
+            let omarchy = from_omarchy(text);
+            for t in DEFINING {
+                assert_eq!(builtin.tokens.color(t), omarchy.tokens.color(t), "{id} {t}");
+            }
+            assert_eq!(builtin.theme.look.swatches, omarchy.theme.look.swatches, "{id}");
+        }
+    }
+
     #[test]
     fn catppuccin_mocha_keeps_its_palette() {
         let r = resolve_id(&Registry::builtin(), "catppuccin-mocha", None, &A11y::default()).unwrap();
         assert_eq!(r.tokens.color("surface.primary"), "#1e1e2e");
         assert_eq!(r.tokens.color("text.primary"), "#cdd6f4");
         assert_eq!(r.tokens.color("accent.primary"), "#89b4fa");
-        assert_eq!(r.tokens.color("border.focus"), "#b4befe");
+        assert_eq!(r.tokens.color("border.default"), "#313244");
         assert_eq!(r.theme.palette.bg, "#1e1e2e", "the established names follow the tokens");
-        assert_eq!(r.theme.look.card, "#313244");
         assert!(r.issues.iter().all(|i| i.severity != crate::Severity::Error), "{:?}", r.issues);
     }
 
@@ -222,12 +278,12 @@ mod tests {
     fn inheritance_and_explicit_tokens() {
         let r = reg(&[(
             "child",
-            "schema = 2\nid = \"child\"\nname = \"Child\"\ninherits = \"catppuccin-mocha\"\n[tokens]\n\"accent.primary\" = \"#ff8800\"\n\"status.info\" = \"palette.sky\"",
+            "schema = 2\nid = \"child\"\nname = \"Child\"\ninherits = \"catppuccin-mocha\"\n[tokens]\n\"accent.primary\" = \"#ff8800\"\n\"status.info\" = \"palette.magenta\"",
         )]);
         let res = resolve_id(&r, "child", None, &A11y::default()).unwrap();
         assert_eq!(res.tokens.color("accent.primary"), "#ff8800");
         assert_eq!(res.tokens.color("surface.primary"), "#1e1e2e", "inherited");
-        assert_eq!(res.tokens.color("status.info"), "#89dceb", "the parent's palette is in scope");
+        assert_eq!(res.tokens.color("status.info"), "#f5c2e7", "the parent's palette is in scope");
         assert_eq!(res.theme.palette.accent, "#ff8800");
         let parent = resolve_id(&r, "catppuccin-mocha", None, &A11y::default()).unwrap();
         assert_ne!(res.tokens.color("accent.subtle"), parent.tokens.color("accent.subtle"), "derived tokens follow");

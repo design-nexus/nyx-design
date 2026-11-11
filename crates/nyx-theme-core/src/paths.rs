@@ -43,6 +43,19 @@ pub fn system_dirs() -> Vec<PathBuf> {
     dirs.split(':').filter(|d| d.starts_with('/')).map(|d| PathBuf::from(d).join("nyx/themes")).collect()
 }
 
+/// The user's data folder, then the system's (`XDG_DATA_DIRS`), then NixOS's system
+/// profile for services started without the session's data dirs.
+pub fn data_dirs() -> Vec<PathBuf> {
+    let dirs = std::env::var("XDG_DATA_DIRS").unwrap_or_else(|_| "/usr/local/share:/usr/share".into());
+    let mut out = vec![paths::data_home()];
+    out.extend(dirs.split(':').filter(|d| d.starts_with('/')).map(PathBuf::from));
+    let nixos = PathBuf::from("/run/current-system/sw/share");
+    if !out.contains(&nixos) {
+        out.push(nixos);
+    }
+    out
+}
+
 /// `$XDG_RUNTIME_DIR/nyx/theme`, else a per-user folder under the cache.
 pub fn runtime_dir() -> PathBuf {
     std::env::var_os("XDG_RUNTIME_DIR")

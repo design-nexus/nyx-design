@@ -1,0 +1,37 @@
+# Nyx Light — from nyx-design/crates/nyx-theme/themes/nyx-light.toml.
+# Keys are chosen so Nyx apps on Follow Omarchy read back the same tokens.
+mode = "light"
+accent = "#136dcd"
+selection = "#e0e2ea"
+selection_background = "#cedbed"
+selection_foreground = "#171820"
+muted = "#6a6e90"
+
+background = "#ecedf2"
+dark_background = "#f5f6f9"
+darker_background = "#b6b8c6"
+lighter_background = "#cfd1db"
+
+foreground = "#171820"
+dark_foreground = "#50546c"
+light_foreground = "#171820"
+bright_foreground = "#171820"
+
+red = "#cf3434"
+yellow = "#a87012"
+orange = "#c9532a"
+green = "#2f9a33"
+cyan = "#14869a"
+blue = "#136dcd"
+magenta = "#6a4fd0"
+brown = "#7a5a2e"
+
+bright_red = "#cf3434"
+bright_yellow = "#a87012"
+bright_green = "#2f9a33"
+bright_cyan = "#14869a"
+bright_blue = "#136dcd"
+bright_magenta = "#aa41a8"
+
+hyprland_active_border = "#136dcd"
+hyprland_inactive_border = "#cfd1db"
