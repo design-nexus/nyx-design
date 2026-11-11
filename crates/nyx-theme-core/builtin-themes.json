@@ -22,7 +22,7 @@
       "state.pressed": "#46506e",
       "state.selected": "#414559",
       "status.error": "#e78284",
-      "status.info": "#3d8ae8",
+      "status.info": "#8caaee",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#292c3c",
@@ -40,15 +40,15 @@
       "text.tertiary": "#727a94"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#e5c890",
+      "blue": "#8caaee",
+      "coral": "#ef9f76",
+      "graphite": "#737994",
+      "green": "#a6d189",
+      "pink": "#f4b8e4",
+      "red": "#e78284",
+      "teal": "#81c8be",
+      "violet": "#ca9ee6"
     },
     "font": {
       "ui": null,
@@ -83,7 +83,7 @@
       "state.pressed": "#bdd0f5",
       "state.selected": "#dce0e8",
       "status.error": "#d20f39",
-      "status.info": "#136dcd",
+      "status.info": "#1e66f5",
       "status.success": "#1f9e5c",
       "status.warning": "#b7791f",
       "surface.alternate": "#e6e9ef",
@@ -101,15 +101,15 @@
       "text.tertiary": "#a0a3b2"
     },
     "swatches": {
-      "amber": "#a87012",
-      "blue": "#136dcd",
-      "coral": "#c9532a",
-      "graphite": "#6a6e90",
-      "green": "#2f9a33",
-      "pink": "#aa41a8",
-      "red": "#cf3434",
-      "teal": "#14869a",
-      "violet": "#6a4fd0"
+      "amber": "#df8e1d",
+      "blue": "#1e66f5",
+      "coral": "#d84e2b",
+      "graphite": "#9ca0b0",
+      "green": "#40a02b",
+      "pink": "#ea76cb",
+      "red": "#d20f39",
+      "teal": "#179299",
+      "violet": "#ea76cb"
     },
     "font": {
       "ui": null,
@@ -144,7 +144,7 @@
       "state.pressed": "#3c4767",
       "state.selected": "#363a4f",
       "status.error": "#ed8796",
-      "status.info": "#3d8ae8",
+      "status.info": "#8aadf4",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#1e2030",
@@ -162,15 +162,15 @@
       "text.tertiary": "#6e748d"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#eed49f",
+      "blue": "#8aadf4",
+      "coral": "#f5a97f",
+      "graphite": "#6e738d",
+      "green": "#a6da95",
+      "pink": "#f5bde6",
+      "red": "#ed8796",
+      "teal": "#8bd5ca",
+      "violet": "#c6a0f6"
     },
     "font": {
       "ui": null,
@@ -266,7 +266,7 @@
       "state.pressed": "#4c4365",
       "state.selected": "#343746",
       "status.error": "#ff5555",
-      "status.info": "#3d8ae8",
+      "status.info": "#bd93f9",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#21222c",
@@ -284,15 +284,15 @@
       "text.tertiary": "#56648e"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#f1fa8c",
+      "blue": "#bd93f9",
+      "coral": "#ffb86c",
+      "graphite": "#6272a4",
+      "green": "#50fa7b",
+      "pink": "#ff92df",
+      "red": "#ff5555",
+      "teal": "#8be9fd",
+      "violet": "#ff79c6"
     },
     "font": {
       "ui": null,
@@ -327,7 +327,7 @@
       "state.pressed": "#4a564c",
       "state.selected": "#3d484d",
       "status.error": "#e67e80",
-      "status.info": "#3d8ae8",
+      "status.info": "#7fbbb3",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#272e33",
@@ -345,15 +345,15 @@
       "text.tertiary": "#737f79"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#dbbc7f",
+      "blue": "#7fbbb3",
+      "coral": "#e09d7f",
+      "graphite": "#4f585e",
+      "green": "#a7c080",
+      "pink": "#d699b6",
+      "red": "#e67e80",
+      "teal": "#83c092",
+      "violet": "#d699b6"
     },
     "font": {
       "ui": null,
@@ -388,7 +388,7 @@
       "state.pressed": "#5a4c2a",
       "state.selected": "#3c3836",
       "status.error": "#fb4934",
-      "status.info": "#3d8ae8",
+      "status.info": "#7daea3",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#1d2021",
@@ -406,15 +406,15 @@
       "text.tertiary": "#7d7165"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#d8a657",
+      "blue": "#7daea3",
+      "coral": "#e1875c",
+      "graphite": "#7c6f64",
+      "green": "#a9b665",
+      "pink": "#d3869b",
+      "red": "#ea6962",
+      "teal": "#89b482",
+      "violet": "#d3869b"
     },
     "font": {
       "ui": null,
@@ -449,7 +449,7 @@
       "state.pressed": "#363d52",
       "state.selected": "#2d4f67",
       "status.error": "#e82424",
-      "status.info": "#3d8ae8",
+      "status.info": "#7e9cd8",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#16161d",
@@ -467,15 +467,15 @@
       "text.tertiary": "#61615c"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#c0a36e",
+      "blue": "#7e9cd8",
+      "coral": "#c17158",
+      "graphite": "#727169",
+      "green": "#76946a",
+      "pink": "#938aa9",
+      "red": "#c34043",
+      "teal": "#6a9589",
+      "violet": "#957fb8"
     },
     "font": {
       "ui": null,
@@ -510,7 +510,7 @@
       "state.pressed": "#445663",
       "state.selected": "#3b4252",
       "status.error": "#bf616a",
-      "status.info": "#3d8ae8",
+      "status.info": "#81a1c1",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#292e39",
@@ -528,15 +528,15 @@
       "text.tertiary": "#6c778e"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#ebcb8b",
+      "blue": "#81a1c1",
+      "coral": "#d5967a",
+      "graphite": "#667080",
+      "green": "#a3be8c",
+      "pink": "#b48ead",
+      "red": "#bf616a",
+      "teal": "#88c0d0",
+      "violet": "#b48ead"
     },
     "font": {
       "ui": null,
@@ -693,7 +693,7 @@
       "state.pressed": "#364b61",
       "state.selected": "#2c313a",
       "status.error": "#e06c75",
-      "status.info": "#3d8ae8",
+      "status.info": "#61afef",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#21252b",
@@ -711,15 +711,15 @@
       "text.tertiary": "#525864"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#e5c07b",
+      "blue": "#61afef",
+      "coral": "#d19a66",
+      "graphite": "#5c6370",
+      "green": "#98c379",
+      "pink": "#c678dd",
+      "red": "#e06c75",
+      "teal": "#56b6c2",
+      "violet": "#c678dd"
     },
     "font": {
       "ui": null,
@@ -754,7 +754,7 @@
       "state.pressed": "#423a53",
       "state.selected": "#26233a",
       "status.error": "#eb6f92",
-      "status.info": "#3d8ae8",
+      "status.info": "#9ccfd8",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#1f1d2e",
@@ -772,15 +772,15 @@
       "text.tertiary": "#5d5972"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#f6c177",
+      "blue": "#9ccfd8",
+      "coral": "#ea9a97",
+      "graphite": "#6e6a86",
+      "green": "#31748f",
+      "pink": "#c4a7e7",
+      "red": "#eb6f92",
+      "teal": "#ebbcba",
+      "violet": "#c4a7e7"
     },
     "font": {
       "ui": null,
@@ -815,7 +815,7 @@
       "state.pressed": "#09425b",
       "state.selected": "#073642",
       "status.error": "#dc322f",
-      "status.info": "#3d8ae8",
+      "status.info": "#268bd2",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#00232c",
@@ -833,15 +833,15 @@
       "text.tertiary": "#466168"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#b58900",
+      "blue": "#268bd2",
+      "coral": "#cb4b16",
+      "graphite": "#586e75",
+      "green": "#859900",
+      "pink": "#d33682",
+      "red": "#dc322f",
+      "teal": "#2aa198",
+      "violet": "#6c71c4"
     },
     "font": {
       "ui": null,
@@ -876,7 +876,7 @@
       "state.pressed": "#313b58",
       "state.selected": "#283457",
       "status.error": "#f7768e",
-      "status.info": "#3d8ae8",
+      "status.info": "#7aa2f7",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#16161e",
@@ -894,15 +894,15 @@
       "text.tertiary": "#4a5175"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#e0af68",
+      "blue": "#7aa2f7",
+      "coral": "#eb927b",
+      "graphite": "#565f89",
+      "green": "#9ece6a",
+      "pink": "#bb9af7",
+      "red": "#f7768e",
+      "teal": "#449dab",
+      "violet": "#ad8ee6"
     },
     "font": {
       "ui": null,
@@ -937,7 +937,7 @@
       "state.pressed": "#394466",
       "state.selected": "#2d3f76",
       "status.error": "#ff757f",
-      "status.info": "#3d8ae8",
+      "status.info": "#82aaff",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#1e2030",
@@ -955,15 +955,15 @@
       "text.tertiary": "#565e90"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#ffc777",
+      "blue": "#82aaff",
+      "coral": "#ff966c",
+      "graphite": "#636da6",
+      "green": "#c3e88d",
+      "pink": "#fca7ea",
+      "red": "#ff757f",
+      "teal": "#4fd6be",
+      "violet": "#c099ff"
     },
     "font": {
       "ui": null,
@@ -998,7 +998,7 @@
       "state.pressed": "#394568",
       "state.selected": "#2e3c64",
       "status.error": "#f7768e",
-      "status.info": "#3d8ae8",
+      "status.info": "#7aa2f7",
       "status.success": "#46d08a",
       "status.warning": "#e5a50a",
       "surface.alternate": "#1f2335",
@@ -1016,15 +1016,15 @@
       "text.tertiary": "#4c5479"
     },
     "swatches": {
-      "amber": "#eeb43f",
-      "blue": "#3d8ae8",
-      "coral": "#f5875a",
-      "graphite": "#9ea2bf",
-      "green": "#59d45b",
-      "pink": "#c95fc6",
-      "red": "#f2655f",
-      "teal": "#3cc4c9",
-      "violet": "#8b6cf0"
+      "amber": "#e0af68",
+      "blue": "#7aa2f7",
+      "coral": "#eb927b",
+      "graphite": "#565f89",
+      "green": "#9ece6a",
+      "pink": "#bb9af7",
+      "red": "#f7768e",
+      "teal": "#449dab",
+      "violet": "#ad8ee6"
     },
     "font": {
       "ui": null,

@@ -11,3 +11,14 @@ danger = "#e06c75"
 glow = "#61afef"
 shadow = "#181a1f"
 light = false
+
+[swatches]
+blue = "#61afef"
+violet = "#c678dd"
+pink = "#c678dd"
+red = "#e06c75"
+coral = "#d19a66"
+amber = "#e5c07b"
+green = "#98c379"
+teal = "#56b6c2"
+graphite = "#5c6370"
