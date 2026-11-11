@@ -9,6 +9,6 @@ repository.workspace = true
 
 [dependencies]
 gtk = { version = "0.11", package = "gtk4", features = ["v4_18"] }
-nyx-core = { git = "https://github.com/design-nexus/nyx-core.git", rev = "4f05fb8fc92ec211f4e0f0b722fdf29a083c9e89" }
+nyx-core = { git = "https://github.com/design-nexus/nyx-core.git", rev = "569546962455fe0a7bea07b195b07e9162cf2328" }
 nyx-theme-core = { path = "../nyx-theme-core", default-features = false }
 toml = "1"

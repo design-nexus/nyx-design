@@ -261,6 +261,22 @@ fn load_texture(ctx: &Ctx, path: Option<&str>, data: Option<&str>) -> Option<gdk
     gdk::Texture::from_filename(file).ok()
 }
 
+/// The first of `a|b|c` the icon theme has (the last when it has none of them).
+fn pick_icon(name: &str) -> &str {
+    if !name.contains('|') {
+        return name;
+    }
+    let theme = gdk::Display::default().map(|d| gtk::IconTheme::for_display(&d));
+    let mut last = name;
+    for n in name.split('|').map(str::trim).filter(|n| !n.is_empty()) {
+        last = n;
+        if theme.as_ref().is_some_and(|t| t.has_icon(n)) {
+            return n;
+        }
+    }
+    last
+}
+
 fn set_icon(img: &gtk::Image, ctx: &Ctx, name: &str) {
     if name.contains('/') {
         match ctx.resolve_path(name) {
@@ -268,7 +284,7 @@ fn set_icon(img: &gtk::Image, ctx: &Ctx, name: &str) {
             None => img.clear(),
         }
     } else {
-        img.set_icon_name(Some(name));
+        img.set_icon_name(Some(pick_icon(name)));
     }
 }
 
@@ -370,9 +386,10 @@ impl Builder<'_> {
             NodeKind::Label { text, markup } => {
                 let l = gtk::Label::new(None);
                 set_markup_or_text(&l, text, *markup);
-                // In the bar a label keeps its width unless the plugin sets one; then it
-                // ends in "…" when it doesn't fit.
-                if node.width.is_some() || ctx.max_height.is_none() {
+                // In the bar a label keeps its width unless the plugin sets one or marks
+                // it `shrink` (a title that gives way on a narrow screen); then it ends
+                // in "…" when it doesn't fit.
+                if node.width.is_some() || ctx.max_height.is_none() || node.class.iter().any(|c| c == "shrink") {
                     l.set_ellipsize(gtk::pango::EllipsizeMode::End);
                 }
                 l.set_single_line_mode(ctx.max_height.is_some());
@@ -600,6 +617,17 @@ impl Builder<'_> {
         }
         if let Some(t) = &node.tooltip {
             w.set_tooltip_text(Some(t));
+        }
+        if let Some(action) = node.action.clone().filter(|_| !matches!(node.kind, NodeKind::Button { .. } | NodeKind::Row { .. })) {
+            let click = gtk::GestureClick::new();
+            let c = self.ctx.clone();
+            click.connect_released(move |g, _, _, _| {
+                g.set_state(gtk::EventSequenceState::Claimed);
+                c.emit(EventKind::Action, Some(action.clone()), None);
+            });
+            w.add_controller(click);
+            w.add_css_class("plugin-clickable");
+            w.set_cursor_from_name(Some("pointer"));
         }
         if node.visible == Some(false) {
             w.set_visible(false);
