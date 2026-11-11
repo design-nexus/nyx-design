@@ -166,17 +166,18 @@ pub fn reset_appearance() -> Result<(), String> {
 
 impl A11y {
     /// The desktop's accessibility settings (GNOME interface keys; `NYX_REDUCE_MOTION`
-    /// and `NYX_HIGH_CONTRAST` override them).
+    /// and `NYX_HIGH_CONTRAST` override them). Read with `dconf`: NyxOS has no `gsettings`
+    /// command. An unset key is the schema's default (off).
     pub fn system() -> A11y {
         let env = |k: &str| std::env::var(k).ok().map(|v| v == "1" || v == "true");
-        let get = |schema: &str, key: &str| -> Option<String> {
-            let out = std::process::Command::new("gsettings").args(["get", schema, key]).stderr(std::process::Stdio::null()).output().ok()?;
+        let get = |path: &str| -> Option<String> {
+            let out = std::process::Command::new("dconf").args(["read", path]).stderr(std::process::Stdio::null()).output().ok()?;
             out.status.success().then(|| String::from_utf8_lossy(&out.stdout).trim().to_string())
         };
         let reduce_motion = env("NYX_REDUCE_MOTION")
-            .unwrap_or_else(|| get("org.gnome.desktop.interface", "enable-animations").is_some_and(|v| v == "false"));
+            .unwrap_or_else(|| get("/org/gnome/desktop/interface/enable-animations").is_some_and(|v| v == "false"));
         let high_contrast = env("NYX_HIGH_CONTRAST")
-            .unwrap_or_else(|| get("org.gnome.desktop.a11y.interface", "high-contrast").is_some_and(|v| v == "true"));
+            .unwrap_or_else(|| get("/org/gnome/desktop/a11y/interface/high-contrast").is_some_and(|v| v == "true"));
         A11y { reduce_motion, high_contrast }
     }
 }
