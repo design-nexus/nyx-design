@@ -198,9 +198,33 @@ fn write_atomic(path: &std::path::Path, bytes: &[u8]) -> std::io::Result<()> {
     std::fs::rename(&tmp, path)
 }
 
+fn service_file() -> std::path::PathBuf {
+    crate::paths::runtime_dir().join("service")
+}
+
+/// The theme service (nyx-themed) says it is the snapshot's writer: while it runs,
+/// other programs leave the snapshot to it. Each of them builds in its own copy of the
+/// built-in themes, and one built before a theme changed would publish it as it was.
+pub fn claim_service() -> std::io::Result<()> {
+    write_atomic(&service_file(), std::process::id().to_string().as_bytes())
+}
+
+/// Another process is the theme service and is running.
+pub fn service_running() -> bool {
+    let Some(pid) = std::fs::read_to_string(service_file()).ok().and_then(|s| s.trim().parse::<u32>().ok()) else {
+        return false;
+    };
+    pid != std::process::id()
+        && std::fs::read_to_string(format!("/proc/{pid}/comm")).is_ok_and(|comm| comm.contains("nyx-themed"))
+}
+
 /// Write `r` as the next generation, unless it is the theme already published and
 /// `force` is off. Writers take a lock, so two never hand out the same generation.
+/// While the theme service runs it is the only writer (see [`claim_service`]).
 pub fn publish(r: &Resolved, reason: &str, force: bool) -> std::io::Result<Published> {
+    if service_running() {
+        return Ok(Published { generation: generation(), changed: false });
+    }
     let dir = crate::paths::runtime_dir();
     std::fs::create_dir_all(&dir)?;
     let lock = std::fs::OpenOptions::new().create(true).truncate(false).write(true).open(dir.join(".lock"))?;
