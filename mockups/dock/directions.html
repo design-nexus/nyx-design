@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-screens="current,a,b,c,d,e,v">
+<head>
+<meta charset="utf-8">
+<title>Dock directions — Nyx Dock mockups</title>
+<link rel="stylesheet" href="../bar/tokens.css">
+<link rel="stylesheet" href="../bar/bar.css">
+<link rel="stylesheet" href="dock.css">
+<script src="../bar/parts.js"></script>
+<script src="dock.js"></script>
+</head>
+<body>
+<script>
+  // Each look: the dock with Notes under the pointer, and the caption.
+  const Z = { calendar: 1.12, notes: 1.5, music: 1.12, mail: 1.0, chatgpt: 1.0 };
+  Z.notes = 1.5; Z.calendar = 1.25; Z.music = 1.25; Z.mail = 1.08; Z.chatgpt = 1.08;
+  const D = {
+    current: {
+      dock: dock({ look: "cur", hov: "notes" }),
+      name: "Current", rule: ["cur", "Today"],
+      desc: "A card with a hairline at 42 px: the Apps button, pins, running apps, a line, folders and the Trash. A dot per running app (two for more windows) and an accent bar for the focused one. The Apps button and Trash are grey squares, and nothing ties it to the new bar.",
+    },
+    a: {
+      dock: dock({ look: "a", hov: "notes" }),
+      name: "A · Refined float", rule: ["ok", "Within Nyx Design 2.0 · suggested"],
+      desc: "The bar's popover surface, 48 px icons, rounder (22 px) with a soft shadow, sitting 10 px above the edge. A mark per window (up to three) and an accent bar for the focused app; a faint line between pins and running apps, a stronger one before folders. The Apps button takes the accent. Badges, progress, an urgent glow and a playing chip sit on the icons.",
+    },
+    b: {
+      dock: dock({ look: "b", hov: "notes" }),
+      name: "B · Grouped pills", rule: ["ok", "Within Nyx Design 2.0"],
+      desc: "The bar's pill groups carried down: the Apps button, the apps, and folders with the Trash each float as their own pill with the wallpaper between them. Reads as part of the same family as bar A.",
+    },
+    c: {
+      dock: dock({ look: "c", hov: "notes" }),
+      name: "C · Edge strip", rule: ["ok", "Within Nyx Design 2.0 · for wide screens"],
+      desc: "A full-width strip on the bottom edge that keeps its space, like a taskbar: the Apps button and a search field (Glimpse) on the left, apps in the middle, folders and the Trash on the right. 40 px icons in a 64 px strip; it never covers windows.",
+    },
+    d: {
+      dock: dock({ look: "d", hov: "notes", scales: Z }),
+      name: "D · Magnify", rule: ["no", "Breaks 2.0: frosted, motion"],
+      desc: "After macOS: icons grow toward the pointer (up to 1.5×) and the frosted material shows the wallpaper through. A setting on top of any look rather than a look of its own: Reduce motion turns it off.",
+    },
+    e: {
+      dock: dock({ look: "e", hov: "notes" }),
+      name: "E · Minimal", rule: ["no", "Breaks 2.0: no surface"],
+      desc: "No surface at all: the icons float over the wallpaper with a shadow, gaps instead of lines, white marks for running apps. The calmest look, at the cost of reading less well over busy wallpapers.",
+    },
+    v: {
+      dock: dock({ look: "v", hov: "notes", size: 44 }),
+      name: "A on the left", rule: ["ok", "Within Nyx Design 2.0"],
+      desc: "Direction A placed on the left edge (also right or top), as today's position setting does. Marks move to the inner side; lines run across. 44 px icons fit a 1080 px screen with room for the folders.",
+    },
+  };
+  const d = D[SCREEN] || D.a;
+  screen({
+    dockHtml: d.dock,
+    pops: SCREEN === "v" ? "" : tip("Notes", "d-notes"),
+    caption: { name: d.name, rule: d.rule, desc: d.desc },
+  });
+  if (SCREEN === "v") document.querySelector(".dcap").style.left = "110px";
+</script>
+</body>
+</html>

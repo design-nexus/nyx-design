@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" data-screens="keys,recent,media,drives,downloads,drop,minimized,hidden">
+<head>
+<meta charset="utf-8">
+<title>New for the dock — Nyx Dock mockups</title>
+<link rel="stylesheet" href="../bar/tokens.css">
+<link rel="stylesheet" href="../bar/bar.css">
+<link rel="stylesheet" href="dock.css">
+<script src="../bar/parts.js"></script>
+<script src="dock.js"></script>
+</head>
+<body>
+<script>
+  // Proposed features, each on direction A with what it opens and a caption.
+  const N = ["ok", "New"];
+  const recent = `${sep("thin")}${tile("photos", { id: "photos", cls: "rec" })}${tile("write", { id: "write", cls: "rec" })}${tile("weather", { id: "weather", cls: "rec" })}`;
+  const nowTile = `<div class="dt nowp" id="d-now"><span class="ai nowart">${cover(48, "g7", 10)}<span class="npl">${ic("pause")}</span></span><span class="dprog"><b style="width:38%"></b></span></div>`;
+  const nowPop = `<div class="dnow flat">${cover(52, "g7", 9)}<div class="grow"><div class="pt">Midnight City</div><div class="ps">M83</div>
+    <div class="dnc"><button class="ibtn sm">${ic("prev")}</button><button class="ibtn playb">${ic("pause")}</button><button class="ibtn sm">${ic("next")}</button><span class="grow"></span><span class="ter xs tnum">1:42 / 4:03</span></div></div></div>`;
+  const drivePop = `<div class="drvpop"><div class="bigu"><span class="ai lt drvi" style="--is:40px">${ic("usb")}</span><div class="grow"><b>SanDisk Ultra</b><div class="ps">USB drive · 64 GB · exFAT</div></div></div>
+    <div class="sl">${ic("drive")}${rail(41, "thin")}<span class="pv tnum ter">26 GB used</span></div>
+    <div class="msep"></div>
+    <div class="menu"><div class="mi hov">${ic("folder")}Open</div><div class="mi">${ic("box")}Back up to it with Nyx Backup</div><div class="mi">${ic("eject")}Eject<span class="grow"></span><span class="ter xs">Safe to remove after</span></div></div></div>`;
+  const dlPop = `${phead("dl", "Downloading", '<span class="ter small">2 files</span>')}
+    <div class="dlrow"><span class="fth doc">${ic("box")}</span><div class="grow"><div class="ell">ubuntu-26.04-desktop-amd64.iso</div>${rail(64, "thin")}<div class="ps tnum">3.9 of 6.1 GB · 22 MB/s · 2 min left</div></div><button class="ibtn sm" title="Pause">${ic("pause")}</button></div>
+    <div class="dlrow"><span class="fth art g5"></span><div class="grow"><div class="ell">wallpaper-pack.zip</div>${rail(18, "thin")}<div class="ps tnum">41 of 230 MB · Firefox</div></div><button class="ibtn sm" title="Pause">${ic("pause")}</button></div>
+    ${gl("Done today")}
+    <div class="dlrow"><span class="fth art g7"></span><div class="grow"><div class="ell">sunset-over-lake.jpg</div><div class="ps">2 min ago · 4.2 MB</div></div><button class="ibtn sm" title="Show in folder">${ic("folder")}</button></div>
+    ${pfoot("Open Downloads")}`;
+  const shelf = `${sep()}<div class="dt shelfw" id="d-shelf"><div class="shelf">${thumb("files")}${thumb("photos")}</div></div>`;
+  const dragged = `<div class="dragf" id="dragf"><span class="fth doc">${ic("file")}</span><div><div class="t500">Invoice-2026-11.pdf</div><div class="ps">1 file</div></div></div>`;
+
+  const S = {
+    keys: {
+      dock: dock({ keys: true }),
+      name: "Super + number", rule: N,
+      desc: "Holding Super shows a number on the first nine apps. Super+1 to 9 opens that app, or goes to its window, or cycles its windows, as a click does; Super+Shift+number opens a new window. Super+Space still opens Glimpse, and the Apps button gets Super+A.",
+    },
+    recent: {
+      dock: dock({ extraPins: recent, hov: "photos" }),
+      pops: tip("Photos · recently used", "d-photos"),
+      name: "Recent apps", rule: N,
+      desc: "After the pins, the last three apps you opened that aren't pinned, behind a faint line (as macOS's \"suggested and recent apps\"). They leave as others replace them; drag one left of the line to keep it. Off, or another count, in the dock's menu.",
+    },
+    media: {
+      dock: dock({ extraEnd: `${nowTile}${sep("thin")}` }),
+      pops: above(nowPop, "d-now", 330, "center"),
+      name: "Now playing", rule: N,
+      desc: "While something plays, its cover sits before the folders with a progress line; resting on it shows the controls, a click pauses. One place for whatever plays (Music, a browser video, Spotify) through MPRIS, without opening the player's window.",
+    },
+    drives: {
+      dock: dock({ extraEnd: `${drive({ hov: true })}${sep("thin")}` }),
+      pops: above(drivePop, "d-drive", 320, "center"),
+      name: "Drives", rule: N,
+      desc: "A USB drive or SD card appears beside the folders while it's plugged in, with an eject button on its corner. Its card shows how full it is and offers Open, a backup with Nyx Backup, and Eject (unmounted with udisks, so it's safe to pull).",
+    },
+    downloads: {
+      dock: dock({ downloading: true, hov: "downloads" }),
+      pops: above(dlPop, "d-downloads", 380, "right"),
+      name: "Downloads in progress", rule: N,
+      desc: "Files still arriving in Downloads (the .part and .crdownload files browsers write) put an arrow on the folder; its card lists them growing, with speed and time left where the size is known, and what finished today. Works with any browser that downloads there.",
+    },
+    drop: {
+      dock: dock({ drop: "browser", dim: ["calendar", "music", "chatgpt", "theater", "settings", "terminal", "store"] }),
+      pops: `<div class="dtip dropl" data-up="d-browser" data-gap="12">${ic("external", "sm")} Open with Firefox</div>`,
+      extra: dragged,
+      name: "Dropping files", rule: ["ok", "Clearer"],
+      desc: "While a file is dragged over the dock, apps that can't open it fade, and the one under the pointer lights up and says what will happen: Open with Firefox, Attach to a new email (Mail), Copy to Projects, Move to Trash. Today's drop behaviour, made visible.",
+    },
+    minimized: {
+      dock: dock({ extraEnd: shelf.replace(sep(), "") + sep("thin") }),
+      pops: tip("2 minimized windows", "d-shelf"),
+      name: "Minimized windows", rule: N,
+      desc: "An option to keep minimized windows as small thumbnails before the folders, as macOS does, instead of only inside their app's preview. A click brings the window back to the workspace you're on.",
+    },
+    hidden: {
+      dock: `<div class="handle"></div>`,
+      windows: true,
+      name: "Hidden", rule: ["ok", "Clearer"],
+      desc: "While windows fill the screen (or Hide is Automatically) a short line marks where the dock is; pushing the pointer to the edge brings it up, as today. The line fades after a few seconds of typing, and fullscreen apps get none.",
+    },
+  };
+  const s = S[SCREEN] || S.keys;
+  screen({ dockHtml: s.dock + (s.extra || ""), pops: s.pops || "", windows: s.windows, caption: { name: s.name, rule: s.rule, desc: s.desc } });
+  if (s.extra) requestAnimationFrame(() => setTimeout(() => {
+    const b = document.getElementById("d-browser").getBoundingClientRect();
+    const f = document.getElementById("dragf");
+    f.style.left = `${b.left + 18}px`;
+    f.style.top = `${b.top - 120}px`;
+  }, 50));
+</script>
+</body>
+</html>

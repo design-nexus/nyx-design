@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Dock redesign mockups</title>
+<link rel="stylesheet" href="../bar/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 400 13px/1.45 "Inter", sans-serif; padding: 32px 40px 60px; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -.015em; }
+  h2 { font-size: 17px; font-weight: 600; margin: 34px 0 4px; }
+  p { color: var(--dim-text); max-width: 900px; margin-top: 6px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 18px; margin-top: 14px; }
+  figure { margin: 0; }
+  figure a { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px var(--border); }
+  figure img { display: block; width: 100%; }
+  figcaption { margin-top: 8px; display: flex; gap: 10px; align-items: baseline; }
+  figcaption b { font-weight: 600; }
+  figcaption span { color: var(--dim-text); font-size: 12px; }
+  figcaption a { margin-left: auto; color: var(--accent); font-size: 12px; text-decoration: none; }
+  .theme { display: flex; gap: 6px; margin-top: 14px; }
+  .theme a { padding: 5px 12px; border-radius: 7px; color: var(--dim-text); text-decoration: none; background: var(--field); }
+  .theme a.on { background: var(--accent); color: var(--on-accent); }
+</style>
+</head>
+<body>
+<h1>Nyx Dock redesign</h1>
+<p>The dock in the new bar's style: five looks beside today's (A, the refined float, is the
+suggestion), what it already does redrawn in the popover style, and new features. Every shot
+sits under bar A and comes in Nyx Dark and Nyx Light. Click a shot for the full size, or "live"
+to open the page itself.</p>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const t = new URLSearchParams(location.search).get("theme") || "dark";
+  document.documentElement.dataset.theme = t;
+  document.getElementById("theme").innerHTML = ["dark", "light"]
+    .map((v) => `<a class="${v === t ? "on" : ""}" href="?theme=${v}">${v[0].toUpperCase() + v.slice(1)}</a>`).join("");
+  const sections = [
+    ["Dock directions", "directions", [
+      ["current", "Current", "Today's card, 42 px, dots"],
+      ["a", "A · Refined float (suggested)", "The popover surface, 48 px, marks per window"],
+      ["b", "B · Grouped pills", "The bar's pills: Apps, apps, folders"],
+      ["c", "C · Edge strip", "Full width, keeps its space, a search field"],
+      ["d", "D · Magnify", "Breaks 2.0: frosted, icons grow under the pointer"],
+      ["e", "E · Minimal", "Breaks 2.0: no surface"],
+      ["v", "A on the left", "The same look on a side edge"],
+    ]],
+    ["What it does, redrawn", "features", [
+      ["indicators", "Indicators", "Five styles; badges, progress, playing, urgent"],
+      ["preview", "Window previews", "Larger, with workspaces and minimized windows"],
+      ["card", "App card", "What the app has, its actions, Keep in Dock"],
+      ["folder", "Folders", "Grid, list or fan, chosen in the header"],
+      ["apps", "Apps panel", "Search, categories, frequent, everything"],
+      ["menu", "The dock's menu", "Size, position, hiding and switches"],
+    ]],
+    ["New", "ideas", [
+      ["keys", "Super + number", "Numbers on the first nine apps"],
+      ["recent", "Recent apps", "The last three unpinned apps"],
+      ["media", "Now playing", "The cover with controls on hover"],
+      ["drives", "Drives", "USB drives with eject"],
+      ["downloads", "Downloads in progress", "Files still arriving, with speed"],
+      ["drop", "Dropping files", "Which app opens it, made visible"],
+      ["minimized", "Minimized windows", "Thumbnails before the folders"],
+      ["hidden", "Hidden", "A line where the dock is"],
+    ]],
+  ];
+  document.getElementById("out").innerHTML = sections.map(([title, page, shots]) =>
+    `<h2>${title}</h2><div class="grid">${shots.map(([s, name, sub]) => {
+      const img = `shots/${page}-${s}-${t}.png`;
+      return `<figure><a href="${img}"><img src="${img}" loading="lazy" alt="${name}"></a><figcaption><b>${name}</b><span>${sub}</span><a href="${page}.html?screen=${s}&theme=${t}">live</a></figcaption></figure>`;
+    }).join("")}</div>`).join("");
+</script>
+</body>
+</html>

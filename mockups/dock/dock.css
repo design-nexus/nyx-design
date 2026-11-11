@@ -1,0 +1,261 @@
+/* Nyx Dock mockups, on top of ../bar/bar.css. Every colour is a token from tokens.css or
+ * a mix of them, except the app icons (their own) and generated album art. */
+
+/* ── App icons ───────────────────────────────────────────────────────── */
+.ai { display: block; width: var(--is); height: var(--is); flex: none; }
+img.ai { object-fit: contain; }
+/* Drawn in the Nyx icons' style: a satin tile inset as theirs are (8 of 128). */
+.ai.tp { padding: calc(var(--is) * .0625); }
+.ai.tp > span {
+  display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
+  border-radius: 22%; color: var(--c);
+  background: radial-gradient(circle at 20% 10%, color-mix(in srgb, var(--c) 22%, transparent), transparent 70%), linear-gradient(135deg, #26262a, #121214);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 30%, transparent);
+}
+.ai.tp .ic { width: 52%; height: 52%; }
+.ai.tp .ic svg { stroke-width: 2; }
+/* The Apps button, the Trash and drives: a soft square with a muted glyph. */
+.ai.lt { padding: calc(var(--is) * .0625); }
+.ai.lt::before { content: none; }
+.ai.lt {
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.ai.lt > .ic {
+  width: 100%; height: 100%; padding: 25%; border-radius: 22%; color: var(--dim-text);
+  background: color-mix(in srgb, var(--text) 8%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 9%, transparent);
+}
+.ai.lt.full > .ic { color: var(--text); }
+.launch .ai.lt > .ic { color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 24%, transparent); }
+
+/* Folders: a stack of the newest files, or a folder in its colour. */
+.ai.stack { position: relative; }
+.ai.stack i { position: absolute; left: 14%; top: 12%; width: 72%; height: 76%; border-radius: 12%; box-shadow: 0 1px 4px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.12); }
+.ai.stack i:nth-child(1) { transform: rotate(-9deg) translate(-6%, 2%); }
+.ai.stack i:nth-child(2) { transform: rotate(6deg) translate(5%, 0); background: #f4f4f6; color: #8a8a96; display: flex; align-items: center; justify-content: center; }
+.ai.stack i:nth-child(2) .ic { width: 46%; height: 46%; }
+.ai.stack i:nth-child(3) { transform: translateY(4%); }
+.ai.fold svg { width: 100%; height: 100%; }
+.ai.fold .b { fill: color-mix(in srgb, var(--f) 70%, #000); }
+.ai.fold .f { fill: var(--f); }
+.ai.fold .g { fill: none; stroke: color-mix(in srgb, var(--f) 35%, #000); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── One tile ────────────────────────────────────────────────────────── */
+.dt { position: relative; flex: none; display: flex; flex-direction: column; align-items: center; padding: 4px 4px 8px; border-radius: 12px; transition: transform .15s; }
+.dt.hov { background: color-mix(in srgb, var(--text) 7%, transparent); }
+.dt.hov .ai { transform: translateY(-2px); }
+.dt .ind { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); display: flex; gap: 3px; }
+.dt .ind u { width: 4px; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--text) 55%, transparent); }
+.dt.focus .ind { gap: 0; }
+.dt.focus .ind u { display: none; }
+.dt.focus .ind u:first-child { display: block; width: 16px; background: var(--accent); }
+.dt.urg .ind u { background: var(--warning); }
+.dt.urg .ai { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--warning) 55%, transparent)); }
+.dbdg {
+  position: absolute; top: 0; right: 0; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px;
+  background: var(--danger); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 2px var(--popover);
+}
+.dprog { position: absolute; left: 10px; right: 10px; bottom: 11px; height: 5px; border-radius: 3px; background: rgba(0,0,0,.55); box-shadow: 0 0 0 1px rgba(255,255,255,.15); overflow: hidden; }
+.dprog b { display: block; height: 100%; background: var(--accent); }
+.dplay { position: absolute; left: 3px; bottom: 9px; padding: 3px 4px; border-radius: 6px; background: var(--popover); box-shadow: 0 0 0 1px var(--border); }
+.dplay .eq { height: 10px; }
+.dkey {
+  position: absolute; top: 0; left: 0; min-width: 20px; height: 20px; border-radius: 6px; padding: 0 5px;
+  display: flex; align-items: center; justify-content: center; font-size: 11.5px; font-weight: 700;
+  background: var(--text); color: var(--bg); box-shadow: 0 2px 6px rgba(0,0,0,.35);
+}
+.fcnt { position: absolute; right: 2px; bottom: 9px; min-width: 18px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--popover); color: var(--dim-text); font-size: 10.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 1px var(--border); }
+.dldot { position: absolute; right: 2px; top: 0; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--accent); color: var(--on-accent); box-shadow: 0 0 0 2px var(--popover); }
+.dldot .ic { width: 12px; height: 12px; }
+.dldot .ic svg { stroke-width: 2.4; }
+.ej { position: absolute; right: 2px; top: 0; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--popover); color: var(--dim-text); box-shadow: 0 0 0 1px var(--border); }
+.ej .ic { width: 11px; height: 11px; }
+.dt.dimt { opacity: .35; filter: grayscale(.7); }
+.dt.drop { background: color-mix(in srgb, var(--accent) 18%, transparent); box-shadow: inset 0 0 0 2px var(--accent); }
+.dt.drop .ai { transform: scale(1.08); }
+.dsep { width: 1px; align-self: stretch; margin: 10px 6px 14px; background: color-mix(in srgb, var(--text) 14%, transparent); flex: none; }
+.dsep.thin { margin: 18px 3px 22px; background: color-mix(in srgb, var(--text) 8%, transparent); }
+
+/* ── The dock ────────────────────────────────────────────────────────── */
+.dock { position: absolute; z-index: 10; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; align-items: flex-end; }
+
+/* Today's dock: a card with a hairline, 42 px icons, dots and a bar for the focused app. */
+.dock.cur { padding: 4px 6px 2px; gap: 2px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); }
+.dock.cur .dt { padding: 4px 3px 9px; }
+.dock.cur .dt.focus .ind u:first-child { width: 12px; height: 3px; }
+.dock.cur .dsep { margin: 8px 5px 12px; background: var(--border); }
+.dock.cur .launch .ai.lt > .ic { color: var(--dim-text); background: color-mix(in srgb, var(--text) 8%, transparent); box-shadow: none; }
+
+/* A · Refined float: the popover surface, larger and rounder, a soft shadow. */
+.dock.a, .dock.d, .dock.v {
+  padding: 6px 8px 3px; gap: 3px; border-radius: 22px;
+  background: var(--popover); border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+  box-shadow: 0 14px 40px color-mix(in srgb, var(--shadow) 55%, transparent), 0 2px 6px color-mix(in srgb, var(--shadow) 35%, transparent);
+}
+[data-theme="light"] .dock.a, [data-theme="light"] .dock.d, [data-theme="light"] .dock.v { border-color: var(--border); }
+
+/* B · Grouped pills: the bar's pills, one per kind of thing. */
+.dock.b { gap: 8px; }
+.dock.b .dg {
+  display: flex; align-items: flex-end; gap: 3px; padding: 6px 8px 3px; border-radius: 22px;
+  background: var(--popover); border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+  box-shadow: 0 14px 40px color-mix(in srgb, var(--shadow) 50%, transparent);
+}
+.dock.b .dg:first-child { padding: 6px 6px 3px; }
+
+/* C · Edge strip: full width on the bottom edge, a search field, labels on hover. */
+.dock.c {
+  left: 0; right: 0; bottom: 0; transform: none; height: 64px; align-items: center; padding: 0 12px;
+  background: var(--panel); border-top: 1px solid var(--divider);
+}
+.dock.c { --is: 40px !important; }
+.dock.c .cl, .dock.c .cr { flex: 1; display: flex; align-items: center; gap: 4px; }
+.dock.c .cr { justify-content: flex-end; }
+.dock.c .cm { display: flex; align-items: flex-end; gap: 2px; padding-top: 4px; }
+.dock.c .dt { padding: 4px 4px 9px; }
+.dock.c .dsep { margin: 10px 5px 14px; }
+.csrch { display: flex; align-items: center; gap: 8px; height: 36px; width: 300px; padding: 0 10px 0 12px; border-radius: 18px; background: color-mix(in srgb, var(--text) 6%, transparent); box-shadow: inset 0 0 0 1px var(--border); color: var(--text-tertiary); margin-left: 4px; }
+.csrch span:nth-child(2) { flex: 1; }
+
+/* D · Magnify: the icons near the pointer grow (frosted surface). */
+.dock.d { background: color-mix(in srgb, var(--popover) 72%, transparent); backdrop-filter: blur(26px) saturate(1.5); overflow: visible; }
+.dock.d .dt .ai { width: calc(var(--is) * var(--z, 1)); height: calc(var(--is) * var(--z, 1)); transition: none; }
+.dock.d .dt.hov { background: none; }
+.dock.d .dt.hov .ai { transform: none; }
+
+/* E · Minimal: no surface, icons over the wallpaper with a shadow; gaps instead of lines. */
+.dock.e { gap: 6px; padding: 0 0 2px; }
+.dock.e .ai { filter: drop-shadow(0 6px 12px rgba(0,0,0,.45)); }
+.dock.e .dsep { background: none; margin: 0 8px; }
+.dock.e .dt .ind u { background: rgba(255,255,255,.85); box-shadow: 0 0 4px rgba(0,0,0,.6); }
+.dock.e .dt.focus .ind u:first-child { background: var(--accent); }
+.dock.e .dbdg { box-shadow: none; }
+
+/* Vertical, on the left. */
+.dock.v { left: 10px; top: 50%; bottom: auto; transform: translateY(-50%); flex-direction: column; align-items: center; padding: 8px 6px 8px 3px; }
+.dock.v .dt { padding: 4px 4px 4px 9px; }
+.dock.v .dt .ind { left: 1px; bottom: auto; top: 50%; transform: translateY(-50%); flex-direction: column; }
+.dock.v .dt.focus .ind u:first-child { width: 4px; height: 16px; }
+.dock.v .dsep { width: auto; height: 1px; align-self: stretch; margin: 6px 12px; }
+.dock.v .dsep.thin { margin: 4px 18px; }
+
+/* Indicator styles (features: indicators). */
+.ind-pill .dt.run .ind u { width: 6px; height: 4px; }
+.ind-pill .dt.focus .ind u:first-child { width: 22px; }
+.ind-line .dt .ind { bottom: 0; }
+.ind-line .dt.run .ind u { display: none; }
+.ind-line .dt.run .ind u:first-child { display: block; width: 28px; height: 2px; border-radius: 1px; background: color-mix(in srgb, var(--text) 40%, transparent); }
+.ind-line .dt.focus .ind u:first-child { width: 36px; background: var(--accent); }
+.ind-glow .dt.run { background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--text) 16%, transparent), transparent 60%); }
+.ind-glow .dt.focus { background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--accent) 45%, transparent), transparent 62%); }
+.ind-glow .dt .ind { display: none; }
+.ind-count .dt.run .ind u { display: none; }
+.ind-count .dt.run .ind::after { content: attr(data-n); }
+.ind-none .dt .ind { display: none; }
+
+/* ── Above the dock ──────────────────────────────────────────────────── */
+.pop.dup { top: auto; }
+.dtip {
+  position: absolute; z-index: 25; padding: 5px 10px; border-radius: 8px; font-size: 12.5px; font-weight: 500;
+  background: var(--popover); border: 1px solid var(--border); box-shadow: 0 4px 14px color-mix(in srgb, var(--shadow) 45%, transparent);
+}
+.dcap { left: 24px; top: 56px; bottom: auto; }
+.dk .spec { top: 60px; }
+
+/* Window previews. */
+.wcards { display: flex; gap: 10px; }
+.wcard { width: 236px; padding: 6px; border-radius: 12px; }
+.wcard.hov { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.wcard.cur .wthumb { box-shadow: 0 0 0 2px var(--accent); }
+.wct { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 0 2px; font-weight: 500; }
+.wct .ai { --is: 18px; }
+.wct .chip { height: 18px; font-size: 10.5px; padding: 0 6px; color: var(--dim-text); }
+.wx { margin: -4px -4px -4px 0; }
+.wthumb { position: relative; height: 136px; border-radius: 8px; overflow: hidden; background: var(--bg); box-shadow: 0 0 0 1px var(--border); display: grid; grid-template-columns: 54px 1fr; grid-template-rows: 16px 1fr; }
+.wthumb .wtb { grid-column: 1 / 3; background: color-mix(in srgb, var(--text) 4%, transparent); }
+.wthumb .wts { margin: 6px; border-radius: 4px; background: repeating-linear-gradient(var(--track) 0 6px, transparent 6px 12px); }
+.wthumb .wtc { padding: 8px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-content: start; }
+.wthumb .wtc i { aspect-ratio: 1.2; border-radius: 4px; background: var(--card); }
+.wthumb.photos .wtc i:nth-child(1) { background: linear-gradient(135deg, #1d0b3a, #6a1b9a 55%, #ff6f91); }
+.wthumb.photos .wtc i:nth-child(2) { background: linear-gradient(135deg, #43cea2, #185a9d); }
+.wthumb.photos .wtc i:nth-child(3) { background: linear-gradient(135deg, #2b1055, #7597de); }
+.wthumb.minimized { opacity: .55; }
+.wthumb.term { display: block; padding: 8px; background: #101014; }
+.wthumb.term .wtc { display: flex; flex-direction: column; gap: 5px; padding: 0; }
+.wthumb.term .wtc i { aspect-ratio: auto; height: 5px; border-radius: 2px; background: color-mix(in srgb, var(--sw-green) 45%, transparent); }
+.wthumb.term .wtc i:nth-child(2n) { width: 70%; background: rgba(255,255,255,.18); }
+
+/* The app card. */
+.dch { display: flex; align-items: center; gap: 10px; padding: 2px 4px 8px; }
+.dch .ai { --is: 34px; }
+.dch b { font-size: 14px; font-weight: 600; }
+.dnow { display: flex; gap: 12px; padding: 8px; border-radius: 12px; background: color-mix(in srgb, var(--text) 5%, transparent); }
+.dnc { display: flex; align-items: center; gap: 2px; margin-top: 4px; }
+.playb { width: 32px; height: 32px; border-radius: 50%; background: var(--text); color: var(--bg); }
+.dseek { margin: 10px 6px 2px; flex: none; }
+.drec { display: flex; flex-direction: column; gap: 2px; }
+.drr { display: flex; align-items: center; gap: 10px; padding: 4px 6px; border-radius: 8px; font-size: 12.5px; }
+
+/* Folders. */
+.fph { display: flex; align-items: center; gap: 8px; padding: 0 4px 8px; }
+.fph b { font-size: 14px; font-weight: 600; }
+.seg.mini { margin: 0; }
+.seg.mini span { height: 24px; padding: 0 9px; font-size: 12px; }
+.seg.mini .ic { width: 13px; height: 13px; }
+.fgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.fcell { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; border-radius: 10px; min-width: 0; }
+.fcell:first-child { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.fth { width: 64px; height: 52px; border-radius: 7px; box-shadow: 0 0 0 1px var(--border); }
+.fth.doc { display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--text) 6%, transparent); color: var(--dim-text); }
+.fth.doc .ic { width: 22px; height: 22px; }
+.fn { font-size: 12px; max-width: 100%; }
+.ft { font-size: 10.5px; }
+
+/* The Apps panel. */
+.aph { display: flex; align-items: center; gap: 12px; }
+.aph .srch { flex: 1; height: 38px; }
+.achips { display: flex; gap: 6px; padding: 6px 2px 2px; }
+.achips .chip { height: 24px; padding: 0 10px; }
+.agrid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; }
+.acell { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px; border-radius: 12px; font-size: 12px; min-width: 0; }
+.acell .ai { --is: 52px; }
+.acell span { max-width: 100%; }
+.acell.hov { background: color-mix(in srgb, var(--text) 7%, transparent); }
+.agrid.freq { padding-bottom: 6px; border-bottom: 1px solid var(--divider); margin-bottom: 2px; }
+
+/* The dock's menu. */
+.mh { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-tertiary); padding: 4px 9px 2px; }
+.mrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 36px; padding: 0 9px; }
+.dsl { padding: 6px 9px; }
+
+/* New features. */
+.dt.rec .ai { opacity: .9; }
+.nowart { position: relative; padding: calc(var(--is) * .0625); }
+.nowart .art { width: 100% !important; height: 100% !important; border-radius: 22% !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
+.npl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; }
+.npl .ic { width: 34%; height: 34%; padding: 5%; border-radius: 50%; background: rgba(0,0,0,.45); }
+.dnow.flat { background: none; padding: 2px; }
+.dt.shelfw { padding: 2px 2px 8px; }
+.dock .shelf { padding: 0; gap: 4px; height: var(--is); align-items: center; }
+.dock .shelf .wthumb { width: 58px; height: 42px; }
+.drvpop .bigu { display: flex; align-items: center; gap: 12px; padding: 4px 4px 10px; }
+.drvpop .bigu .ai { --is: 40px; }
+.dlrow { display: flex; align-items: center; gap: 10px; padding: 6px; }
+.dlrow .fth { width: 34px; height: 34px; }
+.dlrow .rail { margin-top: 6px; }
+.dragf { position: absolute; z-index: 30; display: flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px; border-radius: 10px; background: var(--popover); border: 1px solid var(--border); box-shadow: 0 10px 26px color-mix(in srgb, var(--shadow) 55%, transparent); font-size: 12.5px; transform: rotate(-3deg); }
+.dragf .fth { width: 34px; height: 40px; }
+.dropl { font-weight: 600; }
+.dropl .ic { color: var(--accent); }
+.shelf { display: flex; align-items: flex-end; gap: 6px; padding: 4px 4px 8px; }
+.shelf .wthumb { width: 70px; height: 50px; grid-template-columns: 18px 1fr; grid-template-rows: 6px 1fr; opacity: .9; }
+.shelf .wthumb .wtc { padding: 3px; gap: 3px; }
+.handle { position: absolute; z-index: 10; left: 50%; bottom: 4px; transform: translateX(-50%); width: 140px; height: 5px; border-radius: 3px; background: color-mix(in srgb, var(--text) 45%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--bg) 50%, transparent); }
+.peek { position: absolute; z-index: 10; left: 50%; bottom: -34px; transform: translateX(-50%); }
+.mini-dock { display: inline-flex; align-items: flex-end; gap: 2px; padding: 4px 6px 2px; border-radius: 16px; background: var(--popover); border: 1px solid color-mix(in srgb, var(--text) 9%, transparent); --is: 36px; }
+.mini-dock .dt { padding: 3px 3px 8px; }
+.mini-dock .dbdg { min-width: 15px; height: 15px; font-size: 9.5px; padding: 0 4px; }
+.mini-dock .dprog { left: 7px; right: 7px; bottom: 9px; height: 4px; }
+.mini-dock .dplay { bottom: 8px; padding: 2px 3px; }
+.mini-dock .dplay .eq { height: 8px; }
+.mini-dock .dsep { margin: 8px 4px 12px; }

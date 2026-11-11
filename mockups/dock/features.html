@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-screens="indicators,preview,card,folder,apps,menu">
+<head>
+<meta charset="utf-8">
+<title>Dock features — Nyx Dock mockups</title>
+<link rel="stylesheet" href="../bar/tokens.css">
+<link rel="stylesheet" href="../bar/bar.css">
+<link rel="stylesheet" href="dock.css">
+<script src="../bar/parts.js"></script>
+<script src="dock.js"></script>
+</head>
+<body>
+<script>
+  // What the dock does today, in direction A: each with what opens and a sheet.
+  const T = { def: '<span class="tag">Default</span>', today: '<span class="tag today">Today</span>', nw: '<span class="tag new">New</span>' };
+  const v = (label, inner, tag = "") => `<div class="v"><div class="vl"><b>${label}</b>${tag}</div>${inner}</div>`;
+  let mid = 0;
+  const mini = (keys, cls = "", opts = {}) => `<div class="mini-dock ${cls}">${keys.map((k) => (k === "|" ? sep() : tile(k, { ...opts, id: `m${mid++}` }))).join("")}</div>`;
+  const sheet = (title, desc, vars, side = "left", extra = "") => `<div class="spec" data-side="${side}"><h1>${title}</h1><p>${desc}</p>${extra}<div class="vlist">${vars.join("")}</div></div>`;
+
+  const S = {
+    indicators: {
+      dock: dock({ hov: "store" }),
+      pops: tip("Store · installing Darktable, 62%", "d-store"),
+      spec: sheet("Indicators", "What an icon says without opening anything. Five styles for running apps (a setting), and the states every style keeps.", [
+        v("Marks per window, accent bar on the focused app", mini(["files", "browser", "terminal", "calendar"]), T.def),
+        v("Pills", mini(["files", "browser", "terminal", "calendar"], "ind-pill")),
+        v("Underline", mini(["files", "browser", "terminal", "calendar"], "ind-line")),
+        v("Glow", mini(["files", "browser", "terminal", "calendar"], "ind-glow"), T.nw),
+        v("None (running apps only by their place)", mini(["files", "browser", "terminal", "calendar"], "ind-none")),
+        v("Badge · notifications · progress · playing · urgent", mini(["mail", "chat", "store", "music", "|", "calendar"], "", { play: true }), T.nw),
+      ]),
+    },
+    preview: {
+      dock: dock({ hov: "files" }),
+      pops: above(previewPop(), "d-files", 0, "left"),
+      spec: sheet("Window previews", "Resting on a running app shows its windows as live thumbnails, larger than today's, with the workspace each is on, minimized ones dimmed, and close on hover. The window you're in is ringed.", [
+        v("Today's previews, kept", '<p class="dim small">Windows on other workspaces and minimized ones, click to go there, close from the card. A window not drawn since it opened shows its last frame.</p>', T.today),
+        v("New in the card", '<p class="dim small">The workspace chip, a ring on the current window, keyboard: arrows move, Enter goes, Delete closes.</p>', T.nw),
+      ]),
+    },
+    card: {
+      dock: dock({ hov: "music" }),
+      pops: above(musicCard(), "d-music", 330),
+      spec: sheet("App card", "Right-click an app for its card, in the popover style: what the app has for you first (here, what's playing and recent albums), then its own actions, then Keep in Dock and Quit. Every app's card keeps today's contents:", [
+        v("Calendar", '<p class="dim small">The next five events, each opening its day; Today and Agenda.</p>', T.today),
+        v("Files", '<p class="dim small">Bookmarked folders, then the standard ones.</p>', T.today),
+        v("Browser", '<p class="dim small">The bookmarks toolbar, or the sites you visit most.</p>', T.today),
+        v("Any other app", '<p class="dim small">The files it opened lately; its desktop actions (New Private Window, Compose).</p>', T.today),
+        v("Play on…", '<p class="dim small">Players get the output switch from Control Center\'s Sound page.</p>', T.nw),
+      ]),
+    },
+    folder: {
+      dock: dock({ hov: "downloads" }),
+      pops: above(folderPop(), "d-downloads", 420),
+      spec: sheet("Folders", "A folder opens as a grid, list or fan, sorted by date, name or kind, now chosen right in the header instead of the right-click menu. Thumbnails are the shared cache's; drag a file out to any app.", [
+        v("Stack of the newest files", mini(["files"], "", {}).replace(tile("files"), folderTile("stack", { id: "x1" })), T.def),
+        v("The folder's own icon (Umbra: Downloads, Games, Dropbox…)", mini(["files"]).replace(tile("files"), folderTile("folder", { id: "x2", glyph: "down", color: "var(--sw-teal)" }) + folderTile("folder", { id: "x3", glyph: "code", color: "var(--sw-violet)" }))),
+        v("With a count", mini(["files"]).replace(tile("files"), folderTile("stack", { id: "x4", count: 12 }))),
+      ]),
+    },
+    apps: {
+      dock: dock({ hov: "apps" }),
+      pops: above(appsPanel(), "d-apps", 760, "left"),
+      spec: "",
+      caption: { name: "Apps panel", rule: ["ok", "Within Nyx Design 2.0"], desc: "The Apps button opens every app in the popover style: search first (Enter opens the first match; Tab hands the search to Glimpse for files and the web), categories from the apps' desktop files, a Frequent row, then everything. Right-click an app to keep it in the dock or uninstall it in Nyx Store; drag it onto the dock to pin it there." },
+    },
+    menu: {
+      dock: dock({}),
+      pops: above(dockMenu(), "d-settings", 290, "center", "nopad"),
+      spec: sheet("The dock's menu", "Right-click the dock itself for its settings, in the menu style: size, position and hiding as quick choices, switches for the rest, and Dock settings for everything else in Nyx Settings.", [
+        v("New switches", '<p class="dim small">Magnify on hover and Recent apps (see the ideas page).</p>', T.nw),
+        v("dock.toml", `<div class="code">${toml(`icon_size = 48
+position = "bottom"
+hide = "smart"
+previews = true
+magnify = false        # new
+recent = 3             # new: recent apps (0: off)
+indicator = "marks"    # new: or pills, underline, glow, none`)}</div>`),
+      ]),
+    },
+  };
+  const s = S[SCREEN] || S.indicators;
+  screen({ dockHtml: s.dock, pops: s.pops, spec: s.spec, caption: s.caption, veil: !!s.spec });
+</script>
+</body>
+</html>
