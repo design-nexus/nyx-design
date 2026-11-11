@@ -78,6 +78,8 @@ enum Handle {
     Label(gtk::Label),
     Icon(gtk::Image),
     Image(gtk::Picture),
+    /// A square image clipped to rounded corners.
+    Framed(gtk::Box, gtk::Image),
     Badge(gtk::Label),
     Progress(gtk::LevelBar),
     Graph(gtk::DrawingArea, GraphData),
@@ -102,6 +104,7 @@ impl Handle {
             Handle::Label(w) | Handle::Badge(w) => w.clone().upcast(),
             Handle::Icon(w) => w.clone().upcast(),
             Handle::Image(w) | Handle::Frame(w) => w.clone().upcast(),
+            Handle::Framed(b, _) => b.clone().upcast(),
             Handle::Progress(w) => w.clone().upcast(),
             Handle::Graph(w, _) | Handle::Vector(w, _) => w.clone().upcast(),
             Handle::Spinner(w) => w.clone().upcast(),
@@ -314,7 +317,7 @@ fn draw_graph(cr: &gtk::cairo::Context, w: f64, h: f64, values: &[f64], max: Opt
                 cr.line_to(i as f64 * step, y(*v));
             }
             cr.set_source_rgba(r, g, b, 1.0);
-            cr.set_line_width(1.5);
+            cr.set_line_width(1.4);
             cr.set_line_join(gtk::cairo::LineJoin::Round);
             let _ = cr.stroke_preserve();
             cr.line_to(w, h);
@@ -345,8 +348,10 @@ impl Builder<'_> {
                 let b = gtk::Box::new(o, (*spacing).clamp(0, 64));
                 for c in children {
                     let w = self.build(c, Some(*orientation));
+                    // A drawing keeps the height it asked for (a sparkline in the bar).
+                    let drawing = matches!(c.kind, NodeKind::Graph { .. } | NodeKind::Vector(_));
                     match orientation {
-                        Orientation::Horizontal if c.height.is_none() => w.set_valign(align(*a)),
+                        Orientation::Horizontal if c.height.is_none() || drawing => w.set_valign(align(*a)),
                         Orientation::Vertical if c.width.is_none() => w.set_halign(align(*a)),
                         _ => {}
                     }
@@ -397,6 +402,11 @@ impl Builder<'_> {
                     l.set_wrap(true);
                     l.set_xalign(0.0);
                 }
+                // Marked `center`, its text centres in a label wider than it (a day in a circle).
+                if node.class.iter().any(|c| c == "center") {
+                    l.set_xalign(0.5);
+                    l.set_justify(gtk::Justification::Center);
+                }
                 Handle::Label(l)
             }
             NodeKind::Icon { name, size } => {
@@ -405,6 +415,30 @@ impl Builder<'_> {
                 let s = size.unwrap_or(16).clamp(8, ctx.max_height.unwrap_or(128));
                 i.set_pixel_size(s);
                 Handle::Icon(i)
+            }
+            // A square image (a tray icon's pixmap, album art) draws at its size, as an
+            // icon; a picture would grow to its own pixels. With a radius it's clipped to
+            // rounded corners.
+            NodeKind::Image { path, data, radius } if node.width.is_some() && node.width == node.height => {
+                let i = gtk::Image::new();
+                if let Some(t) = load_texture(ctx, path.as_deref(), data.as_deref()) {
+                    i.set_paintable(Some(&t));
+                }
+                i.set_pixel_size(node.width.unwrap_or(16).clamp(8, ctx.max_height.unwrap_or(256)));
+                match radius {
+                    None => Handle::Icon(i),
+                    Some(r) => {
+                        let b = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+                        b.set_overflow(gtk::Overflow::Hidden);
+                        b.set_halign(gtk::Align::Center);
+                        b.set_valign(gtk::Align::Center);
+                        let mut m = Map::new();
+                        m.insert("radius".into(), (*r).into());
+                        b.add_css_class(&style_class(&look_decls(&m, None)));
+                        b.append(&i);
+                        Handle::Framed(b, i)
+                    }
+                }
             }
             NodeKind::Image { path, data, radius } => {
                 let p = gtk::Picture::new();
@@ -832,6 +866,10 @@ fn apply(h: &Handle, set: &Map<String, Value>, ctx: &Ctx) {
             ("path" | "data", Handle::Image(p)) => {
                 let (path, data) = if k == "path" { (v.as_str(), None) } else { (None, v.as_str()) };
                 p.set_paintable(load_texture(ctx, path, data).as_ref());
+            }
+            ("path" | "data", Handle::Icon(i) | Handle::Framed(_, i)) => {
+                let (path, data) = if k == "path" { (v.as_str(), None) } else { (None, v.as_str()) };
+                i.set_paintable(load_texture(ctx, path, data).as_ref());
             }
             ("spinning", Handle::Spinner(s)) => s.set_spinning(v.as_bool().unwrap_or(true)),
             ("class", _) => {
