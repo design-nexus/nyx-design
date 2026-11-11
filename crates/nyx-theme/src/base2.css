@@ -471,13 +471,78 @@ window.@APP@ button.menu-item {
 
 window.@APP@ popover listview > row:hover,
 window.@APP@ popover list > row:hover,
-window.@APP@ popover listview > row:selected,
 window.@APP@ button.menu-item:hover {
   background: @row_hover;
 }
 
+/* The current choice in a dropdown's list reads as chosen, not as hovered. */
+window.@APP@ popover listview > row:selected {
+  background: @nav_active;
+}
+
+window.@APP@ popover listview > row,
+window.@APP@ popover list > row {
+  margin: 0;
+  box-shadow: none;
+}
+
+window.@APP@ popover listview > row:active,
+window.@APP@ popover list > row:active {
+  background: @nav_active;
+  box-shadow: none;
+}
+
 window.@APP@ popover separator {
   background: @theme_divider;
+}
+
+/* The arrow takes the panel's colour and hairline, not the GTK theme's. */
+window.@APP@ popover > arrow {
+  background: @theme_popover;
+  border: 1px solid alpha(@theme_text, 0.07);
+  box-shadow: none;
+}
+
+/* gio::Menu popovers (menu buttons, the text fields' right-click menu): their rows are
+   modelbuttons, drawn as Nyx's own menu rows. */
+window.@APP@ popover.menu modelbutton {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: var(--nyx-radius-small);
+  background: transparent;
+  box-shadow: none;
+  color: @theme_text;
+  font-weight: 400;
+}
+
+window.@APP@ popover.menu modelbutton:hover,
+window.@APP@ popover.menu modelbutton:selected {
+  background: @row_hover;
+  box-shadow: none;
+}
+
+window.@APP@ popover.menu modelbutton:active {
+  background: @nav_active;
+}
+
+window.@APP@ popover.menu modelbutton:disabled {
+  color: @theme_text_tertiary;
+}
+
+window.@APP@ popover.menu modelbutton arrow,
+window.@APP@ popover.menu accelerator {
+  color: @theme_text_tertiary;
+}
+
+window.@APP@ popover.menu check:checked,
+window.@APP@ popover.menu radio:checked,
+window.@APP@ dropdown popover listview > row image {
+  color: @theme_accent;
+}
+
+window.@APP@ popover.menu check,
+window.@APP@ popover.menu radio {
+  border-color: alpha(@theme_text, 0.3);
 }
 
 .dialog-card {
