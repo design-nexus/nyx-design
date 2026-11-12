@@ -244,6 +244,8 @@ pub fn icon_button(icon: &str, tooltip: &str) -> gtk::Button {
     b.add_css_class("flat");
     b.add_css_class("icon-button");
     b.set_tooltip_text(Some(tooltip));
+    // Its name for screen readers: GTK takes a tooltip only as the description.
+    b.update_property(&[gtk::accessible::Property::Label(tooltip)]);
     b.set_valign(gtk::Align::Center);
     b
 }
