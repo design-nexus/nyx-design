@@ -44,6 +44,10 @@ the sidebar and any bar across the foot stay one surface, the frame; the main bo
 inside it, with a thin line on all four sides, rounded corners, and 8 px clear of the window's
 right and bottom edges. Each app is shown today (blended, no lines) and as the sheet, in Nyx
 Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.</p>
+<p>New for Files and Git: a third shot, "padded, separators". The sheet has 8 px of room
+inside so nothing touches its line, and a thin line of the same colour separates each pane
+it holds: Git's file list and diff, a page and its inspector, Review's list; Files' columns
+and preview.</p>
 <div class="theme" id="theme"></div>
 <div id="out"></div>
 <script>
@@ -53,7 +57,16 @@ Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.<
     .map((v) => `<a class="${v === t ? "on" : ""}" href="?theme=${v}">${v[0].toUpperCase() + v.slice(1)}</a>`).join("");
   // [shot, app, layout, page in ../, its query]
   const sections = [
-    ["Explorer: Files", [["files", "Files", "Tabs and a column list", "polish/files.html", ""]]],
+    ["Explorer: Files", [
+      ["files", "Files", "Tabs and a column list", "polish/files.html", ""],
+      ["files-columns", "Files · columns", "A column per folder and a preview: four panes", "polish/files.html", "screen=columns"],
+    ]],
+    ["Panels and a canvas: Git", [
+      ["git", "Git · Changes", "Files, the diff and the composer", "git/screens.html", "screen=changes"],
+      ["git-history", "Git · History", "The graph and the inspector", "git/screens.html", "screen=history"],
+      ["git-review", "Git · Review", "The requests and the open request", "git/screens.html", "screen=review"],
+      ["git-flow", "Git · Flow", "The canvas and the inspector", "git/screens.html", "screen=flow"],
+    ]],
     ["List and reader: Mail", [["mail", "Mail", "A 360 px message list and the reader", "polish/mail.html", ""]]],
     ["Dashboard: Settings", [
       ["settings", "Settings · Sound", "Option cards in a 720 px column", "polish/settings.html", "screen=sound"],
@@ -68,10 +81,6 @@ Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.<
       ["theater", "Theater · Detail", "The backdrop clipped by the sheet's corners", "polish/theater.html", "screen=detail"],
       ["theater-library", "Theater · Library", "A poster grid", "polish/theater.html", "screen=library"],
     ]],
-    ["Panels and a canvas: Git", [
-      ["git", "Git · Changes", "Files, the diff and the composer", "git/screens.html", "screen=changes"],
-      ["git-flow", "Git · Flow", "The canvas and the inspector", "git/screens.html", "screen=flow"],
-    ]],
     ["Tiled at 800 px", [
       ["files-800", "Files at 800 px", "The icon rail", "polish/files.html", ""],
       ["mail-800", "Mail at 800 px", "No sidebar: the sheet is clear on both sides", "polish/mail.html", ""],
@@ -80,14 +89,18 @@ Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.<
       ["git-800", "Git at 800 px", "The rail, icon-only destinations", "git/screens.html", "screen=changes&w=800"],
     ]],
   ];
-  const look = (page, sheet) => page.startsWith("git/") ? (sheet ? "&div=c" : "") : sheet ? "&v=sheet" : "&v=blended";
+  // today, the sheet, and for Files and Git sheet2: padding inside and lines between panes.
+  const QUERY = { today: ["&v=blended", ""], sheet: ["&v=sheet", "&div=c"], sheet2: ["&v=sheet2", "&div=e"] };
+  const LABEL = { today: "today", sheet: "inset sheet", sheet2: "padded, separators" };
+  const looks = (s) => /^(files|git)/.test(s) ? ["today", "sheet", "sheet2"] : ["today", "sheet"];
   document.getElementById("out").innerHTML = sections.map(([title, shots]) =>
-    `<h2>${title}</h2><div class="grid">${shots.flatMap(([s, name, sub, page, q]) => [false, true].map((sheet) => {
-      const id = `${s}-${sheet ? "sheet" : "today"}`;
+    `<h2>${title}</h2><div class="grid">${shots.flatMap(([s, name, sub, page, q]) => looks(s).map((look) => {
+      const id = `${s}-${look}`;
       const img = `shots/${id}-${t}.png`;
-      const label = `${name} · ${sheet ? "inset sheet" : "today"}`;
-      const note = sheet ? sub : "Blended, no lines";
-      return `<figure><a href="${img}" data-shot="${id}" data-name="${label}" data-sub="${note}"><img src="${img}" loading="lazy" alt="${label}"></a><figcaption><b>${label}</b><span>${note}</span><a href="../${page}?theme=${t}${q ? `&${q}` : ""}${look(page, sheet)}">live</a></figcaption></figure>`;
+      const label = `${name} · ${LABEL[look]}`;
+      const note = { today: "Blended, no lines", sheet: sub, sheet2: "Room inside the sheet; a line between each pane" }[look];
+      const v = QUERY[look][page.startsWith("git/") ? 1 : 0];
+      return `<figure><a href="${img}" data-shot="${id}" data-name="${label}" data-sub="${note}"><img src="${img}" loading="lazy" alt="${label}"></a><figcaption><b>${label}</b><span>${note}</span><a href="../${page}?theme=${t}${q ? `&${q}` : ""}${v}">live</a></figcaption></figure>`;
     })).join("")}</div>`).join("");
 
   // Viewer: click a shot, then ← → through every shot, D / L for dark or light, Esc to close.

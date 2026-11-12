@@ -18,15 +18,22 @@ Calendar, Theater), `../lyra` (Lyra) and `../git` (Git). `?v=sheet` on a polish 
 page makes `../polish/mock.js` load `sheet.css`, the only styling added here; the Git pages
 draw the same sheet with `&div=c`. Each live page's switcher has "After C · inset sheet".
 
+**Padded, with separators (`sheet2`, Files and Git only).** The sheet has 8 px of room
+inside, so nothing touches its line, and a line in the same colour between each pane it
+holds: Git's file list and diff, a page and its inspector, Review's list and request;
+Files' folder columns and preview (the new `files-columns` shot, `?screen=columns`).
+`?v=sheet2` on a polish page, `&div=e` on a Git page.
+
 | Shot | Layout |
 | --- | --- |
-| `files` | Explorer: tabs and a column list |
+| `files`, `files-columns` | Explorer: tabs and a column list; the columns view with a preview |
 | `mail` | A message list and the reader |
 | `settings`, `settings-card` | Option cards in a 720 px column; the settings card over the window |
 | `calendar` | A tree sidebar with the mini month; the week grid |
 | `lyra`, `lyra-album` | The now-playing column and a grid, the player bar in the frame; an album |
 | `theater`, `theater-library` | A full-bleed backdrop clipped by the sheet's corners; a poster grid |
-| `git`, `git-flow` | Panels (files, diff, inspector); the Flow canvas |
+| `git`, `git-history`, `git-review`, `git-flow` | Panels: files and diff, graph and inspector, list and request; the Flow canvas |
 | `files-800`, `mail-800`, `calendar-800`, `lyra-800`, `git-800` | Tiled at 800 px: icon rails, hidden sidebars |
 
-Every shot comes as `<shot>-today-<theme>` and `<shot>-sheet-<theme>`.
+Every shot comes as `<shot>-today-<theme>` and `<shot>-sheet-<theme>`; Files and Git also
+as `<shot>-sheet2-<theme>`.

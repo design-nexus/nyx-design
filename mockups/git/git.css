@@ -317,12 +317,16 @@ body.narrow .canvas .stage { transform: scale(.82); width: 122%; height: 122%; }
 [data-theme="light"] .win[class*="div-"] { --divider-line: color-mix(in srgb, var(--text) 11%, transparent); }
 .div-a .page, .div-b .page, .div-d .page { border-top: 1px solid var(--divider-line); border-left: 1px solid var(--divider-line); }
 .div-b .page { border-top-left-radius: 12px; }
-.div-c .page { border: 1px solid var(--divider-line); border-radius: 12px; margin: 0 8px 8px 0; }
-.win.no-side[class*="div-"]:not(.div-c) .page { border-left: 0; border-radius: 0; }
-.win.no-side.div-c .page { margin-left: 8px; }
-.div-d .files { border-right: 1px solid var(--divider-line); padding-right: 12px; }
-.div-d .diffcol { padding-left: 16px; }
-.div-d .insp { border-left: 1px solid var(--divider-line); padding-top: 10px; }
-.div-d .rlist { border-right: 1px solid var(--divider-line); padding-right: 12px; }
-.div-d .detail { padding-left: 20px; }
-.div-d .cards { padding-right: 16px; }
+.div-c .page, .div-e .page { border: 1px solid var(--divider-line); border-radius: 12px; margin: 0 8px 8px 0; }
+.win.no-side[class*="div-"]:not(.div-c):not(.div-e) .page { border-left: 0; border-radius: 0; }
+.win.no-side.div-c .page, .win.no-side.div-e .page { margin-left: 8px; }
+.div-d .files, .div-e .files { border-right: 1px solid var(--divider-line); padding-right: 12px; }
+.div-d .diffcol, .div-e .diffcol { padding-left: 16px; }
+.div-d .insp, .div-e .insp { border-left: 1px solid var(--divider-line); padding-top: 10px; }
+.div-d .rlist, .div-e .rlist { border-right: 1px solid var(--divider-line); padding-right: 12px; }
+.div-d .detail, .div-e .detail { padding-left: 20px; }
+.div-d .cards, .div-e .cards { padding-right: 16px; }
+/* e: the inset sheet with room inside it, so nothing touches its line, and the lines of d
+ * between the panes it holds. */
+.div-e .page { padding: 8px; }
+.div-e .canvas { border-radius: 6px; }

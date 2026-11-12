@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Render the inset-sheet shots to shots/ with headless Chromium. Nothing opens on screen.
-# Each shot comes today (blended, no lines) and as the inset sheet, dark and light.
+# Each shot comes today (blended, no lines) and as the inset sheet, dark and light; Files
+# and Git also as sheet2, the sheet with padding inside and lines between its panes.
 # The pages are the polish, Lyra and Git mockups; ?v=sheet (Git: ?div=c) draws the sheet.
 # Usage: ./render.sh            every shot
 #        ./render.sh files mail only these shots (and their -800)
@@ -11,6 +12,7 @@ browser=$(command -v chromium || command -v google-chrome-stable || command -v c
 # name  page (in ../)  query  window size
 shots=(
   "files polish/files.html - 1280,800"
+  "files-columns polish/files.html screen=columns 1280,800"
   "mail polish/mail.html - 1280,800"
   "settings polish/settings.html screen=sound 1280,800"
   "settings-card polish/settings.html screen=card 1280,800"
@@ -21,6 +23,8 @@ shots=(
   "theater-library polish/theater.html screen=library 1280,800"
   "git git/screens.html screen=changes 1280,800"
   "git-flow git/screens.html screen=flow 1280,800"
+  "git-history git/screens.html screen=history 1280,800"
+  "git-review git/screens.html screen=review 1280,800"
   "files-800 polish/files.html - 800,800"
   "mail-800 polish/mail.html - 800,800"
   "calendar-800 polish/calendar.html - 800,800"
@@ -34,11 +38,14 @@ for s in "${shots[@]}"; do
   read -r name page query size <<<"$s"
   if ((${#want[@]})) && [[ ! " ${want[*]} " == *" ${name%-800} "* ]]; then continue; fi
   [[ $query == - ]] && query="" || query="&$query"
-  for look in today sheet; do
+  looks="today sheet"
+  # sheet2: padding inside the sheet and lines between its panes, tried on Files and Git.
+  [[ $name == files* || $name == git* ]] && looks+=" sheet2"
+  for look in $looks; do
     if [[ $page == git/* ]]; then
-      [[ $look == sheet ]] && v="&div=c" || v=""
+      case $look in sheet) v="&div=c" ;; sheet2) v="&div=e" ;; *) v="" ;; esac
     else
-      [[ $look == sheet ]] && v="&v=sheet" || v="&v=blended"
+      case $look in sheet) v="&v=sheet" ;; sheet2) v="&v=sheet2" ;; *) v="&v=blended" ;; esac
     fi
     for t in dark light; do
       "$browser" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \

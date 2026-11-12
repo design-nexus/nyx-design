@@ -15,5 +15,10 @@ body.v-sheet .win > .page {
 }
 body.v-sheet .win.no-side > .page { margin-left: var(--sheet-gap); }
 
+/* ?v=sheet2: room inside the sheet, so nothing touches its line, and a line between the
+ * panes it holds (Files' columns and preview). */
+body.v-sheet2 .win > .page { padding: 8px; }
+body.v-sheet2 .mcol + .mcol, body.v-sheet2 .mcol + .mprev { border-left: 1px solid var(--sheet-line); }
+
 /* Lyra's player bar sits in the frame below the sheet; its fade over the content goes. */
 body.v-sheet .pbar { box-shadow: none; }

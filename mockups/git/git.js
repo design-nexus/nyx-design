@@ -7,8 +7,8 @@ const ROOT = document.documentElement;
 const SCREEN = ROOT.dataset.screen;
 const SHOT = Q.get("shot") === "1";
 const NARROW = Q.get("w") === "800";
-// Divider lines between the main body and the header and sidebar: a, b, c or d (see git.css).
-const DIV = ["a", "b", "c", "d"].includes(Q.get("div")) ? Q.get("div") : "";
+// Divider lines between the main body and the header and sidebar: a, b, c, d or e (see git.css).
+const DIV = ["a", "b", "c", "d", "e"].includes(Q.get("div")) ? Q.get("div") : "";
 
 /* ── Icons mock.js doesn't have ─────────────────────────────────────────── */
 const GI = {
@@ -475,7 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const on = (Q.get(k) || { theme: "dark", screen: screens[0], w: "1280", div: "" }[k]) === v;
     return `<a class="${on ? "on" : ""}" href="?${p}">${label}</a>`;
   };
-  const divs = [["", "No lines"], ["a", "A"], ["b", "B"], ["c", "C"], ["d", "D"]].map(([v, l]) => link("div", v, l)).join("");
+  const divs = [["", "No lines"], ["a", "A"], ["b", "B"], ["c", "C"], ["d", "D"], ["e", "E"]].map(([v, l]) => link("div", v, l)).join("");
   const nav = document.createElement("nav");
   nav.className = "mock-switch";
   nav.innerHTML = screens.map((s) => link("screen", s, s)).join("") + "<span></span>" + link("theme", "dark", "Dark") + link("theme", "light", "Light") + "<span></span>" + link("w", "1280", "1280") + link("w", "800", "800") + "<span></span>" + divs + '<span></span><a href="index.html">Gallery</a>';
