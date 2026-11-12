@@ -83,6 +83,63 @@ pinned = "amber"
 folders = "teal"
 chats = "coral"
 
+[sections.activity]
+performance = "amber"
+system = "red"
+
+[sections.agents]
+needs-you = "amber"
+active = "green"
+recent = "graphite"
+
+[sections.calendar]
+sets = "violet"
+
+[sections.contacts]
+lists = "violet"
+online = "green"
+
+[sections.containers]
+resources = "teal"
+hosts = "amber"
+
+[sections.fonts]
+library = "violet"
+
+[sections.lyra]
+playlists = "pink"
+
+[sections.music]
+online = "teal"
+playlists = "blue"
+
+[sections.news]
+topics = "amber"
+
+[sections.passwords]
+types = "violet"
+templates = "teal"
+folders = "amber"
+collections = "green"
+other = "graphite"
+
+[sections.pdf]
+open-file = "violet"
+
+[sections.pulse]
+pinned = "amber"
+chats = "violet"
+
+[sections.torrents]
+categories = "violet"
+tags = "amber"
+discover = "green"
+
+[sections.weather]
+maps-radar = "teal"
+environment = "green"
+saved-locations = "amber"
+
 # Font names, preferred first: Inter goes by different names depending on how it was installed
 [font]
 ui = "Inter, Inter Variable, Inter 18pt"
