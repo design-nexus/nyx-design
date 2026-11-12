@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en" data-screens="flow,changes,changes-split,changes-rebase,history,timeline,review,review-empty,activity,rebase,conflicts,repo-switcher,branch-switcher,sync-menu,empty-repo,none,settings">
+<head>
+<meta charset="utf-8">
+<title>Screens — Nyx Git mockups</title>
+<link rel="stylesheet" href="../polish/tokens.css">
+<link rel="stylesheet" href="../polish/mock.css">
+<link rel="stylesheet" href="../polish/nyx-after.css">
+<link rel="stylesheet" href="git.css">
+<script src="../polish/mock.js"></script>
+</head>
+<body>
+<script src="git.js"></script>
+<script>
+  // Every screen in direction A: centred destinations, switchers on the left.
+  mount((PAGES[SCREEN] || PAGES.changes)());
+</script>
+</body>
+</html>

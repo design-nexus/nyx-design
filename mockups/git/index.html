@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Git mockups</title>
+<link rel="stylesheet" href="../polish/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 400 13px/1.45 "Inter", sans-serif; padding: 32px 40px 60px; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -.015em; }
+  h2 { font-size: 17px; font-weight: 600; margin: 34px 0 4px; }
+  p { color: var(--dim-text); max-width: 900px; margin-top: 6px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 18px; margin-top: 14px; }
+  figure { margin: 0; }
+  figure a { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px var(--border); }
+  figure img { display: block; width: 100%; }
+  figcaption { margin-top: 8px; display: flex; gap: 10px; align-items: baseline; }
+  figcaption b { font-weight: 600; }
+  figcaption span { color: var(--dim-text); font-size: 12px; }
+  figcaption a { margin-left: auto; color: var(--accent); font-size: 12px; text-decoration: none; }
+  .theme { display: flex; gap: 6px; margin-top: 14px; }
+  .theme a { padding: 5px 12px; border-radius: 7px; color: var(--dim-text); text-decoration: none; background: color-mix(in srgb, var(--text) 3.5%, transparent); }
+  .theme a.on { background: var(--accent); color: var(--on-accent); }
+</style>
+</head>
+<body>
+<h1>Nyx Git</h1>
+<p>A cleaner Nyx Git: the header with repository and branch switchers, the five destinations
+centred and one Sync control; the sidebar as the worktree and branch navigator; one page bar
+and one inspector pattern on every page. Three directions for the header and navigation (A is
+the suggestion), every screen drawn in A, and three at 800 px tiled. The content is nyx-git's
+own: its commits, files and the diff behind the last header change. Every shot comes in Nyx
+Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.</p>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const t = new URLSearchParams(location.search).get("theme") || "dark";
+  document.documentElement.dataset.theme = t;
+  document.getElementById("theme").innerHTML = ["dark", "light"]
+    .map((v) => `<a class="${v === t ? "on" : ""}" href="?theme=${v}">${v[0].toUpperCase() + v.slice(1)}</a>`).join("");
+  const sections = [
+    ["Header and navigation directions", "directions", [
+      ["a", "A · Centred destinations (suggested)", "Switchers left, destinations centred, Sync, Search, ⋯, Settings"],
+      ["b", "B · Destinations in the sidebar", "The header's middle is the command field"],
+      ["c", "C · Command field, tabs below", "Destinations as a tab row under the header"],
+      ["before", "Today, for comparison", "Readout, three sync buttons, Refresh, File details"],
+    ]],
+    ["Screens, in direction A", "screens", [
+      ["flow", "Flow", "Branches by ancestry, worktrees, agents, requests, shared files"],
+      ["flow-legend", "Flow · legend open", "What each line means, from the ? button"],
+      ["changes", "Changes", "Grouped files, the diff, the composer"],
+      ["changes-split", "Changes · split diff", "Old and new side by side"],
+      ["changes-rebase", "Changes · rebase stopped", "A banner with Continue, Skip, Abort; a conflict"],
+      ["history", "History", "The graph with ref chips, the commit inspector"],
+      ["timeline", "History · Timeline", "The same commits along time"],
+      ["review", "Review", "Requests with checks and reviews; Merge when allowed"],
+      ["review-empty", "Review · no account", "Connect an account"],
+      ["activity", "Activity", "By day; Nyx Git's records and Git's reflog told apart"],
+      ["rebase", "Rebase Studio", "Cards, actions, the proposed history and its warnings"],
+      ["conflicts", "Conflict Studio", "Base, Ours, Theirs and the result"],
+      ["repo-switcher", "Repository switcher", "Open, favorites, recent; Open, Clone, New"],
+      ["branch-switcher", "Branch switcher", "Local and remote branches; worktrees noted"],
+      ["sync-menu", "Sync menu", "Push, Pull, Fetch with their keys"],
+      ["empty-repo", "No commits yet", "A new repository"],
+      ["none", "No repository", "Open, Clone, New and recent repositories"],
+      ["settings", "Settings", "Git's own groups before the standard ones"],
+      ["changes-800", "Changes at 800 px", "Tiled: icon rail, icon-only destinations"],
+      ["history-800", "History at 800 px", "Tiled: fewer columns, no inspector"],
+      ["flow-800", "Flow at 800 px", "Tiled: the canvas zoomed to fit"],
+    ]],
+  ];
+  document.getElementById("out").innerHTML = sections.map(([title, page, shots]) =>
+    `<h2>${title}</h2><div class="grid">${shots.map(([s, name, sub]) => {
+      const img = `shots/${page}-${s}-${t}.png`;
+      const narrow = s.endsWith("-800");
+      const scr = s.replace(/-800$/, "").replace(/-legend$/, "");
+      const extra = narrow ? "&w=800" : s.endsWith("-legend") ? "&legend=1" : "";
+      return `<figure><a href="${img}"><img src="${img}" loading="lazy" alt="${name}"></a><figcaption><b>${name}</b><span>${sub}</span><a href="${page}.html?screen=${scr}&theme=${t}${extra}">live</a></figcaption></figure>`;
+    }).join("")}</div>`).join("");
+</script>
+</body>
+</html>

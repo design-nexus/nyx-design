@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" data-screens="a,b,c,before">
+<head>
+<meta charset="utf-8">
+<title>Directions — Nyx Git mockups</title>
+<link rel="stylesheet" href="../polish/tokens.css">
+<link rel="stylesheet" href="../polish/mock.css">
+<link rel="stylesheet" href="../polish/nyx-after.css">
+<link rel="stylesheet" href="git.css">
+<script src="../polish/mock.js"></script>
+</head>
+<body>
+<script src="git.js"></script>
+<script>
+  // The main window on Changes, three ways, and the header as it is today.
+  // A: the destinations centred in the header; repository and branch switchers on the left.
+  // B: the destinations as the sidebar's first group; the header's middle is the palette.
+  // C: a command field in the header; the destinations as a tab row under it.
+  if (SCREEN === "before") {
+    // Today's header and Changes, for comparison.
+    const old = `<header class="hdr">
+      <div class="hdr-id">${icon("git", "app-ic")}<span class="app-name">Git</span><span class="app-sub"><span class="sep">·</span>nyx-git · main</span></div>
+      <div class="hdr-start">${ib("sidebar", "Collapse the sidebar (Ctrl+B)")}</div>
+      <div class="hdr-center"><div class="seg">${DESTS.map(([k, l, ic]) => `<button class="${k === "changes" ? "on" : ""}">${icon(ic)}<span>${l}</span></button>`).join("")}</div></div>
+      <div class="hdr-end"><span class="readout" style="margin-right:6px">4 changed · 1 untracked · origin/main ↑2</span>${ib("sync")}${ib("down")}${ib("up")}<span class="xs acc">2</span>${ib("list")}<div class="search" style="width:170px">${icon("search")}<span>Filter changed files</span></div>${ib("refresh")}${ib("sliders")}</div></header>`;
+    const tabs = `<div style="height:34px;display:flex;align-items:center;gap:4px;padding:0 10px"><span class="chip on" style="box-shadow:none">nyx-git ${icon("x")}</span><span class="sp"></span>${ib("plus")}</div>`;
+    const sideOld = `<aside class="side"><div class="side-scroll"><div class="search side-filter">${icon("search")}<span>Filter loaded items…</span></div>
+      <div class="grp">▾ Local branches (5)</div>${BRANCHES.map((b) => `<a class="nav ${b.current ? "active" : ""}"><span>${b.current ? "● " : ""}${b.name}</span></a>`).join("")}<a class="nav" style="justify-content:center;background:var(--field)"><span style="text-align:center">Manage…</span></a>
+      <div class="grp">› Remote branches (2)</div><div class="grp">› Tags (4)</div><div class="grp">› Stashes (1)</div><div class="grp">› Worktrees (3)</div><div class="grp">› Remotes (1)</div>
+      <div class="grp">Recent repositories</div><a class="nav active">${icon("folder")}<span>nyx-git</span></a><a class="nav">${icon("folder")}<span>nyx-glimpse</span></a></div></aside>`;
+    const page = `${tabs}<div style="display:flex;gap:8px;align-items:center;padding:6px 12px"><span class="dd">All changes${icon("chev-d")}</span>${ib("columns")}<span class="sp"></span><button class="btn">Stage all</button><button class="btn">Unstage all</button></div>
+      <div class="body"><div class="col" style="flex:1;padding:0 12px">${[["Changed", "apps/git/src/ui/style.css"], ["Changed", "apps/git/src/ui/sidebar.rs"], ["Staged", "apps/git/src/ui/window.rs"], ["Added", "apps/git/src/ui/header.rs"], ["New", "apps/git/src/ui/pagebar.rs"]].map(([k, p], i) => `<div class="frow ${i === 0 ? "sel" : ""}" style="height:40px"><span class="dim" style="width:80px">${k}</span><span>${p}</span></div>`).join("")}
+        <span class="sp"></span><div class="lab">Commit message</div><div class="field area" style="height:80px"></div><div class="crow" style="margin:8px 0 12px"><span class="check"></span>Amend HEAD<button class="btn">Last message</button><span class="sp"></span><button class="btn primary">Commit 2 files</button></div></div>
+        <div class="col" style="width:300px;padding:0 16px"><div class="lab">File details</div><div>apps/git/src/ui/style.css</div><div class="dim">Not staged: modified</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:12px 0"><button class="btn">Stage file</button><button class="btn">Unstage file</button><button class="btn">Staged diff</button><button class="btn">Stage hunk</button><button class="btn">Stage lines</button>${ib("more")}</div>
+        <div class="diff" style="flex:none;height:320px">${DIFF.slice(0, 12).map(dline).join("")}</div></div></div>`;
+    mount(`<div class="win">${old}${sideOld}<main class="page">${page}</main></div>`);
+  } else {
+    mount(win({ dest: "changes", dir: SCREEN, page: changes() }));
+  }
+</script>
+</body>
+</html>
