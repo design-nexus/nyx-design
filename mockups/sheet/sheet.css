@@ -1,0 +1,19 @@
+/* Inset sheet (?v=sheet): the header, sidebar and any foot bar (a player bar) stay one
+ * surface, the frame; the page is a sheet inside it, with a 1 px line on all four sides,
+ * rounded, 8 px clear of the window's right and bottom edges. Loaded by ../polish/mock.js. */
+
+body.v-sheet {
+  --sheet-line: color-mix(in srgb, var(--text) 9%, transparent);
+  --sheet-gap: 8px;
+  --sheet-r: 12px;
+}
+[data-theme="light"] body.v-sheet { --sheet-line: color-mix(in srgb, var(--text) 11%, transparent); }
+
+body.v-sheet .win > .page {
+  border: 1px solid var(--sheet-line); border-radius: var(--sheet-r);
+  margin: 0 var(--sheet-gap) var(--sheet-gap) max(0px, calc(var(--sheet-gap) - var(--side-w, 212px)));
+}
+body.v-sheet .win.no-side > .page { margin-left: var(--sheet-gap); }
+
+/* Lyra's player bar sits in the frame below the sheet; its fade over the content goes. */
+body.v-sheet .pbar { box-shadow: none; }
