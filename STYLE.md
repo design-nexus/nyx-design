@@ -24,9 +24,11 @@ accepts the sheets with `cargo run -p nyx-theme --example check_css`. The mockup
 
 - **Compact, structured, breathable.** Dense enough to use a tiled half-screen window,
   with spacing doing the work lines used to do.
-- **One surface ("blended").** Header, sidebar, tabs, content and status bar share one
-  background. No border lines or different fills between areas. Structure comes from
-  spacing, alignment, the selection pill and cards.
+- **One frame, one sheet ("blended").** The header, the sidebar and any bar across the
+  foot are one surface, the frame, with no lines or different fills between them. The
+  page, the main body, is a sheet inset in the frame: one thin line around it, rounded
+  corners (see Window and header). That is the only line between areas; inside the page,
+  structure comes from spacing, alignment, the selection pill and cards.
 - **Solid.** Opaque surfaces by default. Frosted is a theme option, not the default.
 - **Neutral, with accent only for state.** Near-black (dark) or near-white (light) with
   no colour tint. The app's accent marks where you are and what is on: the selected nav
@@ -62,8 +64,8 @@ theme it overrides or `inherits`, or is derived from its core colours.
 | Keys | Meaning | In CSS |
 | --- | --- | --- |
 | `name`, `light`, `inherits` | Display name, light or dark, theme to start from | |
-| `bg` | Window and content | `@theme_bg` |
-| `panel` | Sidebar and header (equal to `bg` when blended) | `@theme_panel` |
+| `bg` | Window and content: the page's sheet | `@theme_bg` |
+| `panel` | The frame: header, sidebar, foot bar (equal to `bg` when blended) | `@theme_panel` |
 | `card`, `raised` | Cards and grouped rows; raised controls (selected segment) | `@theme_card`, `@theme_raised` |
 | `surface`, `popover` | Toasts; popovers, menus, dialogs | `@theme_surface`, `@theme_popover` |
 | `text`, `dim_text`, `text_tertiary` | Primary, secondary, hint text | `@theme_text`, … |
@@ -167,14 +169,27 @@ Density is a suite preference; **Balanced** is the default.
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
 │ ▣ Files  ‹ ›  ken › Projects › nyx-design      [⌕ Search  Ctrl F] ☰ ▦ ◉ ⋯ │ header 46
-│ ⌂ Recent          nyx-design ×  Downloads ×  +                           │
-│ ★ Starred         Name ▾                     Size   Modified     Kind     │
-│ ▌Projects ◀──     ▌README.md                 4.8 KB Today 13:40  Markdown │
-│ DEVICES           …                                                       │
-│ ▤ Samsung T7                                                              │
-│ 13 items · 1 selected               ● Copying 3 files ▬▬▬▬▭ 64%  212 GB free│ status 28
+│ ⌂ Recent        ╭────────────────────────────────────────────────────────╮ │
+│ ★ Starred       │ nyx-design ×  Downloads ×  +                           │ │
+│ ▌Projects ◀──   │ Name ▾                    Size   Modified     Kind     │ │ the page:
+│ DEVICES         │ ▌README.md                4.8 KB Today 13:40  Markdown │ │ a sheet
+│ ▤ Samsung T7    │ …                                                      │ │
+│                 ╰────────────────────────────────────────────────────────╯ │ 8 px
 └──────────────────────────────────────────────────────────────────────────┘
 ```
+
+- **The frame** (`nyx_ui::frame::AppFrame`): every main window is built on it. The
+  header runs across the top, the sidebar down the left, an optional foot bar (a player
+  bar) across the bottom under both; together they are one surface in `panel`. The page,
+  the main body, is a **sheet** inset in it: `bg`, a 1 px line all round
+  (`@sheet_line`: `text` at 9% in dark themes, 11% in light), `radius_card`, 8 px clear
+  of the window's right and bottom edges and of the foot bar. With the sidebar hidden (a
+  welcome page, an expanded player) the sheet is 8 px clear on the left too. Content that
+  reaches the page's edges (a backdrop, a map) is clipped to its corners. The sheet's line
+  is drawn whether or not the theme is blended; the frame's parts draw no lines of their
+  own. Apps put their content in the page (`set_page`), their sidebar beside it
+  (`set_sidebar`) and a foot bar under both (`set_foot`); the frame's look lives in
+  `base2.css` (`.app-frame`, `.app-page`), so it changes there for every app.
 
 - **One unified header** (46 px balanced) instead of a title bar plus toolbar:
   - **Left:** the symbolic app icon (20 px) and the app name in the app accent; an
@@ -190,8 +205,9 @@ Density is a suite preference; **Balanced** is the default.
 - **No status bar.** Counts, sync state and shortcuts hints don't get a bar of their
   own; settings is in the header, and anything that needs showing goes where it
   belongs (an account at the sidebar's foot, live activity as a toast or in the header).
-- **Tabs** (Files, Notes) sit in a 34 px row under the header; the active tab is a pill
-  in the hover tone; `+` opens one.
+  The foot bar is for controls used everywhere in the app, like a player bar.
+- **Tabs** (Files, Notes) sit in a 34 px row at the top of the page, inside the sheet;
+  the active tab is a pill in the hover tone; `+` opens one.
 - **Default size** 1280 × 800 floating; the layout must work at 800 px tiled.
 
 ---
@@ -210,7 +226,8 @@ Pick the archetype that fits; don't force an app into another's layout.
 
 ### Sidebar
 
-- 212 px, `bg` (blended), no line beside it. Rows are nav items: icon (17 px), label,
+- 212 px, part of the frame (`panel`, equal to `bg` when blended), with no line of its
+  own: the page's sheet edge is beside it. Rows are nav items: icon (17 px), label,
   optional count in `text_tertiary` or a badge (accent tint) for unread.
 - Group labels: small UPPERCASE, 14 px above, optional `+` at the right. A group that is a
   section of the app carries `.section-<name>`: its label takes the section's colour over a
@@ -356,7 +373,9 @@ noted in its shortcuts list.
   Hyprland's blur shows a darkened, desaturated desktop behind it. `see_through = false`
   keeps the frosted texture without showing the desktop. Without compositor blur it is
   solid. GTK can't blur its own content, so there is no per-panel glass.
-- **Blended** (`blended = true`, the default): one surface, as described in Principles.
+- **Blended** (`blended = true`, the default): the frame and the sheet share one fill,
+  as described in Principles. Unblended themes give the frame `panel` and keep the
+  sheet's line; lines inside cards and between rows come back as before.
 
 ---
 

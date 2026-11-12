@@ -4,6 +4,7 @@ pub mod chrome;
 pub mod clamp;
 pub mod commandbar;
 pub mod default_apps;
+pub mod frame;
 pub mod inspector;
 pub mod keys;
 pub mod menu;

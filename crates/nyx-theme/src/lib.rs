@@ -135,9 +135,10 @@ fn suite2_css(window_class: &str, suite: &Suite) -> String {
 }
 
 /// The mixes the 2.0 sheet uses, from the theme's tint strengths.
-fn defines2(look: &Look) -> String {
+fn defines2(look: &Look, light: bool) -> String {
     format!(
-        "@define-color hairline {hairline};\n\
+        "@define-color sheet_line alpha(@theme_text, {sheet});\n\
+         @define-color hairline {hairline};\n\
          @define-color divider {divider};\n\
          @define-color nav_active mix(@theme_bg, @theme_accent, {sel});\n\
          @define-color row_hover mix(@theme_bg, @theme_accent, {hover});\n\
@@ -146,6 +147,8 @@ fn defines2(look: &Look) -> String {
          @define-color veil alpha(mix(@theme_bg, @theme_shadow, 0.45), 0.82);\n\
          @define-color field alpha(@theme_text, 0.035);\n\
          @define-color track alpha(@theme_text, 0.1);\n",
+        // The page's sheet keeps its line when blended: it is the one line between areas.
+        sheet = if light { "0.11" } else { "0.09" },
         sel = look.selection,
         hover = look.hover,
         // Blended: the lines an app's own sheet still draws between areas and rows vanish.
@@ -165,7 +168,7 @@ pub fn sheet_for_check(window_class: &str, theme: &Theme, v2: bool) -> String {
             .map(|r| r.tokens)
             .unwrap_or_else(|| core::resolver::resolve_id(&Registry::builtin(), DEFAULT_THEME, None, &A11y::default()).unwrap().tokens);
         css.push_str(&tokens_css(window_class, &tokens));
-        css.push_str(&defines2(&theme.look));
+        css.push_str(&defines2(&theme.look, theme.palette.light));
         css.push_str(&without_defines(&base_css(window_class, &[])));
         css.push('\n');
         css.push_str(&BASE2_CSS.replace("@APP@", window_class));
@@ -814,7 +817,7 @@ pub fn apply() {
             if v2 {
                 css.push_str(&look_css(style.window_class, &accent, &look));
                 css.push_str(&tokens_css(style.window_class, &r.tokens));
-                css.push_str(&defines2(&look));
+                css.push_str(&defines2(&look, palette.light));
             }
             if let Some(extra) = style.extra_colors {
                 css.push_str(&extra(&palette));
@@ -1057,8 +1060,8 @@ mod tests {
         let base = without_defines(&base_css("files-window", &[]));
         assert!(!base.contains("@define-color"));
         let look = bundled().into_iter().find(|t| t.id == "nyx-dark").unwrap().look;
-        let defines = defines2(&look);
-        for name in ["hairline", "divider", "nav_active", "row_hover", "lift", "lift_active", "veil", "field", "track"] {
+        let defines = defines2(&look, false);
+        for name in ["sheet_line", "hairline", "divider", "nav_active", "row_hover", "lift", "lift_active", "veil", "field", "track"] {
             assert!(defines.contains(&format!("@define-color {name} ")), "{name}");
         }
         let used = ["@field", "@track", "@theme_panel", "@theme_card", "@theme_raised", "@theme_popover", "@theme_text_tertiary"];
