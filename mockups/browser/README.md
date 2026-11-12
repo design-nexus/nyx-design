@@ -9,7 +9,7 @@ Browser's own settings panes. Nothing outside this folder changed.
 Open `index.html` for the gallery, or `browser.html?screen=<name>&theme=mocha|dark|light` for one
 screen. `./render.sh` re-renders every shot into `shots/` with headless Chromium (nothing opens on
 screen); `./render.sh newtab settings` renders only those. Windows are 1440 × 900, and the narrow
-one 800 × 800 (tiled). Colors are `../polish/tokens.css` (Nyx Dark and Light) and Catppuccin Mocha
+one 800 × 800 (tiled). Colors are `tokens.css` (Nyx Dark and Light, copied from the polish mockups) and Catppuccin Mocha
 in `browser.css`, NyxOS's default.
 
 ## What the shots settle
