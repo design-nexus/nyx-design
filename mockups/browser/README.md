@@ -27,6 +27,8 @@ in `browser.css`, NyxOS's default.
 - **Bookmarks bar:** under the top bar (with horizontal tabs, under the tab row), on the same
   frame surface: bookmarks and folders, separators, Other bookmarks at the end, and » for what
   doesn't fit. Firefox's choice stays: shown on new tabs only (the default), always, or never.
+  **Icons only** (Settings › Toolbar) shows bookmarks as just their icon, with the name on hover;
+  folders always keep their names.
 - **Security:** a page that isn't secure says so in words in the address field.
 - **Frosted menus:** an option; solid is the default.
 
@@ -42,6 +44,8 @@ in `browser.css`, NyxOS's default.
 | `horizontal-bookmarks` | The bookmarks bar under the tab row |
 | `bookmarks-folder` | A bookmarks folder open |
 | `compact-bookmarks` | A narrow window: » holds the rest |
+| `bookmarks-icons` | The bookmarks bar with Icons only on |
+| `settings-toolbar` | Settings, Toolbar: when the bar shows, and Icons only |
 | `newtab-bookmarks` | The bookmarks bar on the new tab page |
 | `workspaces` | The workspace menu |
 | `split` | Split view, the focused page outlined |

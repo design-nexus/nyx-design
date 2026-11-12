@@ -119,13 +119,13 @@ const site = (kind = "") => kind === "docs"
      <div class="cards"><div class="card"></div><div class="card"></div><div class="card"></div></div></div>`;
 
 PATHS.chevrons = "M7 7l5 5-5 5M13 7l5 5-5 5";
-function bookmarks({ open = false, overflow = false } = {}) {
-  const b = (k, label, cls = "") => `<span class="bm ${cls}">${SITES[k][3]}${label}</span>`;
-  const f = (label, cls = "") => `<span class="bm ${cls}">${icon("folder")}${label}</span>`;
-  return `<div class="bmarks">
+function bookmarks({ open = false, overflow = false, iconsOnly = false } = {}) {
+  const b = (k, label, cls = "") => `<span class="bm ${cls}" title="${label}">${SITES[k][3]}<span class="label">${label}</span></span>`;
+  const f = (label, cls = "") => `<span class="bm folder ${cls}">${icon("folder")}<span class="label">${label}</span></span>`;
+  return `<div class="bmarks ${iconsOnly ? "icons" : ""}">
     ${b("mail", "Fastmail")}${b("cal", "Calendar")}${b("gh", "GitHub")}
     ${f("Trips", open ? "open" : "")}${f("Reading")}<span class="bsep"></span>
-    ${b("news", "Hacker News")}${b("docs", "Firefox Docs")}${overflow ? "" : b("wiki", "Wikipedia") + b("maps", "Maps")}
+    ${b("news", "Hacker News")}${b("docs", "Firefox Docs")}${overflow ? "" : b("wiki", "Wikipedia") + b("maps", "Maps") + (iconsOnly ? b("music", "Music") + b("journal", "Field Notes") : "")}
     <span class="gap"></span>${overflow ? `<span class="bm more">${icon("chevrons")}</span>` : ""}${f("Other bookmarks")}
   </div>`;
 }
@@ -186,19 +186,19 @@ function newtab() {
   </div>`;
 }
 
-function prefs() {
+function prefs(pane = "tabs") {
   return `<div class="prefs"><nav>
     <div class="grp">Browser</div>
     <div class="tab">${icon("home")}<span class="t">General</span></div>
     <div class="tab">${icon("settings")}<span class="t">Appearance</span></div>
-    <div class="tab on">${icon("sidebar")}<span class="t">Tabs & Sidebar</span></div>
-    <div class="tab">${icon("menu")}<span class="t">Toolbar</span></div>
+    <div class="tab ${pane === "tabs" ? "on" : ""}">${icon("sidebar")}<span class="t">Tabs & Sidebar</span></div>
+    <div class="tab ${pane === "toolbar" ? "on" : ""}">${icon("menu")}<span class="t">Toolbar</span></div>
     <div class="tab">${icon("assistant")}<span class="t">Nyx Integrations</span></div>
     <div class="grp">Firefox</div>
     <div class="tab">${icon("search")}<span class="t">Search</span></div>
     <div class="tab">${icon("lock")}<span class="t">Privacy & Security</span></div>
     <div class="tab">${icon("puzzle")}<span class="t">Extensions</span></div>
-  </nav><main>
+  </nav><main>${pane === "toolbar" ? toolbarPane() : `
     <h2>Tabs & Sidebar</h2>
     <div class="gtitle">Tabs</div>
     <div class="groupcard">
@@ -213,8 +213,22 @@ function prefs() {
     <div class="gtitle">Workspaces</div>
     <div class="groupcard">
       <div class="prow"><div class="tx">Show workspace icons at the sidebar's foot</div><span class="switch on"></span></div>
-    </div>
+    </div>`}
   </main></div>`;
+}
+
+function toolbarPane() {
+  return `<h2>Toolbar</h2>
+    <div class="gtitle">Top bar</div>
+    <div class="groupcard">
+      <div class="prow"><div class="tx">Buttons<small>Choose and arrange them; those without room go into More tools</small></div><span class="bm" style="background:var(--tile)">Customize…</span></div>
+      <div class="prow"><div class="tx">Show the QR code button in the address field</div><span class="switch on"></span></div>
+    </div>
+    <div class="gtitle">Bookmarks bar</div>
+    <div class="groupcard">
+      <div class="prow"><div class="tx">Show the bookmarks bar</div><div class="seg"><span>Always</span><span class="on">New tab only</span><span>Never</span></div></div>
+      <div class="prow"><div class="tx">Icons only<small>Bookmarks show just their icon, with the name on hover; folders keep their names</small></div><span class="switch on"></span></div>
+    </div>`;
 }
 
 function overflowMenu() {
@@ -244,6 +258,8 @@ const SCREENS = {
   "horizontal-bookmarks": () => `<div class="win nosidebar">${bar()}${hrow()}${bookmarks()}<div class="body">${page()}</div></div>`,
   "bookmarks-folder": () => `<div class="win">${win(sidebar(), bar() + bookmarks({ open: true }))}${bookmarkFolder()}</div>`,
   "compact-bookmarks": () => `<div class="win rail">${win(rail(), bar() + bookmarks({ overflow: true }))}</div>`,
+  "bookmarks-icons": () => `<div class="win">${win(sidebar(), bar() + bookmarks({ iconsOnly: true }))}<div class="tip" style="left:300px;top:78px">Calendar</div></div>`,
+  "settings-toolbar": () => `<div class="win">${win(sidebar({ active: "" }), bar({ address: { icon: "browser", text: "about:preferences#nyxToolbar" } }) + bookmarks({ iconsOnly: true }), `<main class="page">${prefs("toolbar")}</main>`)}</div>`,
   "newtab-bookmarks": () => `<div class="win">${win(sidebar({ active: "" }), bar({ address: { icon: "search", text: "Search or enter an address", placeholder: true } }) + bookmarks(), `<main class="page">${newtab()}</main>`)}</div>`,
   overflow: () => `<div class="win rail">${win(rail(), bar({ overflow: true }))}${overflowMenu()}</div>`,
 };
