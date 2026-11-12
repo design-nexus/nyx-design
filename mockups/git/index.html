@@ -45,6 +45,9 @@ and one inspector pattern on every page. Three directions for the header and nav
 the suggestion), every screen drawn in A, and three at 800 px tiled. The content is nyx-git's
 own: its commits, files and the diff behind the last header change. Every shot comes in Nyx
 Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.</p>
+<p>New first: a thin divider line that sets the main body off from the header and sidebar,
+which stay one surface. Four ways to draw it on Changes and History beside today's, then
+the other screens in A.</p>
 <div class="theme" id="theme"></div>
 <div id="out"></div>
 <script>
@@ -52,7 +55,29 @@ Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.<
   document.documentElement.dataset.theme = t;
   document.getElementById("theme").innerHTML = ["dark", "light"]
     .map((v) => `<a class="${v === t ? "on" : ""}" href="?theme=${v}">${v[0].toUpperCase() + v.slice(1)}</a>`).join("");
+  // A shot is [name in shots/, title, note], plus its live query when the name doesn't give it.
   const sections = [
+    ["Divider lines (2.0 change): four ways", "screens", [
+      ["changes", "Today · no lines", "Header, sidebar and page on one surface"],
+      ["changes-div-a", "A · Edge lines (suggested)", "A line along the page's top and left, square corner", "screen=changes&div=a"],
+      ["changes-div-b", "B · Rounded corner", "The same lines, curving at the page's corner", "screen=changes&div=b"],
+      ["changes-div-c", "C · Inset sheet", "The page as a sheet, the line on all sides", "screen=changes&div=c"],
+      ["changes-div-d", "D · Edge lines and columns", "A, plus lines between the page's columns", "screen=changes&div=d"],
+      ["history", "History today · no lines", "For comparison"],
+      ["history-div-a", "History · A", "Edge lines", "screen=history&div=a"],
+      ["history-div-b", "History · B", "Rounded corner", "screen=history&div=b"],
+      ["history-div-c", "History · C", "Inset sheet", "screen=history&div=c"],
+      ["history-div-d", "History · D", "Edge lines; the inspector set off too", "screen=history&div=d"],
+    ]],
+    ["Divider lines: screens in A", "screens", [
+      ["flow-div-a", "Flow", "The canvas and inspector inside the lines", "screen=flow&div=a"],
+      ["review-div-a", "Review", "Requests and the open request", "screen=review&div=a"],
+      ["activity-div-a", "Activity", "By day, with the inspector", "screen=activity&div=a"],
+      ["rebase-div-a", "Rebase Studio", "Cards and the proposed history", "screen=rebase&div=a"],
+      ["none-div-a", "No repository", "No sidebar: only the line under the header", "screen=none&div=a"],
+      ["changes-800-div-a", "Changes at 800 px", "The icon rail keeps the line", "screen=changes&w=800&div=a"],
+      ["history-800-div-a", "History at 800 px", "Tiled, no inspector", "screen=history&w=800&div=a"],
+    ]],
     ["Header and navigation directions", "directions", [
       ["a", "A · Centred destinations (suggested)", "Switchers left, destinations centred, Sync, Search, ⋯, Settings"],
       ["b", "B · Destinations in the sidebar", "The header's middle is the command field"],
@@ -84,12 +109,13 @@ Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.<
     ]],
   ];
   document.getElementById("out").innerHTML = sections.map(([title, page, shots]) =>
-    `<h2>${title}</h2><div class="grid">${shots.map(([s, name, sub]) => {
+    `<h2>${title}</h2><div class="grid">${shots.map(([s, name, sub, q]) => {
       const img = `shots/${page}-${s}-${t}.png`;
       const narrow = s.endsWith("-800");
       const scr = s.replace(/-800$/, "").replace(/-legend$/, "");
       const extra = narrow ? "&w=800" : s.endsWith("-legend") ? "&legend=1" : "";
-      return `<figure><a href="${img}" data-shot="${page}-${s}" data-name="${name}" data-sub="${sub}"><img src="${img}" loading="lazy" alt="${name}"></a><figcaption><b>${name}</b><span>${sub}</span><a href="${page}.html?screen=${scr}&theme=${t}${extra}">live</a></figcaption></figure>`;
+      const live = q ? `${q}&theme=${t}` : `screen=${scr}&theme=${t}${extra}`;
+      return `<figure><a href="${img}" data-shot="${page}-${s}" data-name="${name}" data-sub="${sub}"><img src="${img}" loading="lazy" alt="${name}"></a><figcaption><b>${name}</b><span>${sub}</span><a href="${page}.html?${live}">live</a></figcaption></figure>`;
     }).join("")}</div>`).join("");
 
   // Viewer: click a shot, then ← → through every shot, D / L for dark or light, Esc to close.

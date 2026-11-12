@@ -12,7 +12,7 @@ Open `index.html` for a gallery of every shot, or a page directly: `directions.h
 `&legend=1` on Flow. Each page has a switcher at the bottom (left out of shots).
 
 `./render.sh` re-renders every shot into `shots/` with headless Chromium (nothing opens on
-screen); `./render.sh screens` renders one page. Windows are 1280 × 800 (the default size),
+screen); `./render.sh screens` renders one page and `./render.sh div` the divider-line shots. Windows are 1280 × 800 (the default size),
 with Changes, History and Flow also at 800 × 800 (tiled). The pages use the polish mockups'
 2.0 look (`../polish/tokens.css`, `mock.css`, `mock.js`, `nyx-after.css`); `git.js` and
 `git.css` add Git's parts. Git has no accent of its own, so it takes the theme's.
@@ -35,6 +35,28 @@ with Changes, History and Flow also at 800 × 800 (tiled). The pages use the pol
   summary and a description. The File details text and its seven buttons go.
 - **History:** ref chips by kind, hash, author and time columns, the commit in the
   inspector with its message, files and diff.
+
+## Divider lines (a 2.0 change)
+
+2.0 draws the header, sidebar and page on one surface with no line between them. These
+shots try a thin line that sets the main body off from the header and sidebar, which stay
+one surface. Any screen takes `&div=a|b|c|d` (the live switcher has the links), and
+`./render.sh div` renders only these shots. The line is `--divider-line`, 1 px of `text`
+at 9% (dark) or 11% (light), a step stronger than `--hair`.
+
+- **A. Edge lines** (suggested): the page's top and left edges, square corner. The line
+  under the header starts where the sidebar ends; with no sidebar it runs the full width.
+- **B. Rounded corner:** the same lines, curving at the page's top-left corner (12 px).
+- **C. Inset sheet:** the line on all four sides, rounded, 8 px clear of the window's
+  right and bottom edges.
+- **D. Edge lines and columns:** A, plus the same line between a page's columns (Changes'
+  files and diff, the inspector, Review's list).
+
+| Shot | Shows |
+| --- | --- |
+| `screens-changes-div-a` … `-div-d`, `screens-history-div-a` … `-div-d` | Changes and History in each of the four directions, beside `screens-changes` and `screens-history` (no lines). |
+| `screens-flow-div-a`, `-review-`, `-activity-`, `-rebase-`, `-none-div-a` | Other screens in A; `none` has no sidebar, so only the line under the header. |
+| `screens-changes-800-div-a`, `screens-history-800-div-a` | Tiled at 800 px: the icon rail keeps the line. |
 
 ## Shots
 
