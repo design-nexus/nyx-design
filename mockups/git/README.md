@@ -5,7 +5,7 @@ changes. The content is nyx-git's own: its commits, its files and the diff behin
 header change, with the worktrees, branches, agents and requests Flow and Review would show
 around it. Nothing outside this folder changed.
 
-**Chosen:** not yet. Direction **A** is the suggestion.
+**Chosen:** direction **A** (centred destinations), with the header's search opening the Go to palette (Ctrl+Shift+P) rather than taking a large field. Built in nyx-git as `ui::header`, `ui::pagebar`, `ui::inspector`, `ui::changes` and the sidebar.
 
 Open `index.html` for a gallery of every shot, or a page directly: `directions.html` and
 `screens.html` take `?screen=<name>&theme=dark|light`, plus `&w=800` for the tiled width and
