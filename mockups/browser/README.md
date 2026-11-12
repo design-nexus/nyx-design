@@ -24,6 +24,9 @@ in `browser.css`, NyxOS's default.
   Compact is the 56 px icon rail; hidden reveals at the window's edge.
 - **Horizontal tabs:** the workspace chip, pinned tabs, folders and split groups lie in one row
   under the top bar, and a drag's marker stands between tabs.
+- **Bookmarks bar:** under the top bar (with horizontal tabs, under the tab row), on the same
+  frame surface: bookmarks and folders, separators, Other bookmarks at the end, and » for what
+  doesn't fit. Firefox's choice stays: shown on new tabs only (the default), always, or never.
 - **Security:** a page that isn't secure says so in words in the address field.
 - **Frosted menus:** an option; solid is the default.
 
@@ -35,6 +38,11 @@ in `browser.css`, NyxOS's default.
 | `horizontal` | Tabs in a row |
 | `horizontal-drag` | Dragging a tab in the row |
 | `overflow` | 800 px: Automatic chose the rail; More tools open |
+| `vertical-bookmarks` | The bookmarks bar with vertical tabs |
+| `horizontal-bookmarks` | The bookmarks bar under the tab row |
+| `bookmarks-folder` | A bookmarks folder open |
+| `compact-bookmarks` | A narrow window: » holds the rest |
+| `newtab-bookmarks` | The bookmarks bar on the new tab page |
 | `workspaces` | The workspace menu |
 | `split` | Split view, the focused page outlined |
 | `frosted` | The workspace menu, frosted |

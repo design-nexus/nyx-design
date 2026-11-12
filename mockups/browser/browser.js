@@ -118,6 +118,29 @@ const site = (kind = "") => kind === "docs"
      <p>Cedar Spring is the only reliable water in late autumn. The creek at the second switchback runs until the first hard frost, and the trough by the old gate is for cattle.</p></div>
      <div class="cards"><div class="card"></div><div class="card"></div><div class="card"></div></div></div>`;
 
+PATHS.chevrons = "M7 7l5 5-5 5M13 7l5 5-5 5";
+function bookmarks({ open = false, overflow = false } = {}) {
+  const b = (k, label, cls = "") => `<span class="bm ${cls}">${SITES[k][3]}${label}</span>`;
+  const f = (label, cls = "") => `<span class="bm ${cls}">${icon("folder")}${label}</span>`;
+  return `<div class="bmarks">
+    ${b("mail", "Fastmail")}${b("cal", "Calendar")}${b("gh", "GitHub")}
+    ${f("Trips", open ? "open" : "")}${f("Reading")}<span class="bsep"></span>
+    ${b("news", "Hacker News")}${b("docs", "Firefox Docs")}${overflow ? "" : b("wiki", "Wikipedia") + b("maps", "Maps")}
+    <span class="gap"></span>${overflow ? `<span class="bm more">${icon("chevrons")}</span>` : ""}${f("Other bookmarks")}
+  </div>`;
+}
+
+function bookmarkFolder() {
+  return `<div class="pop menu" style="left:524px;top:76px">
+    <div class="mi">${SITES.maps[3]}Trailheads near Calera</div>
+    <div class="mi hover">${SITES.journal[3]}Water on the ridge</div>
+    <div class="mi">${icon("folder")}Gear lists<span class="k">${icon("fwd")}</span></div>
+    <div class="mline"></div>
+    <div class="mi">${icon("folderopen")}Open all in tabs</div>
+    <div class="mi">${icon("folderopen")}Open all in a split view</div>
+  </div>`;
+}
+
 const page = (inner = site()) => `<main class="page">${inner}</main>`;
 
 function workspacesMenu() {
@@ -217,6 +240,11 @@ const SCREENS = {
   settings: () => `<div class="win">${win(sidebar({ active: "" }), bar({ address: { icon: "browser", text: "about:preferences#nyxTabs" } }), `<main class="page">${prefs()}</main>`)}</div>`,
   insecure: () => `<div class="win">${win(sidebar(), bar({ insecure: true }))}<div class="tip" style="left:236px;top:46px">The connection to this site isn't secure</div></div>`,
   frosted: () => `<div class="win frost">${win(sidebar(), bar())}${workspacesMenu()}<div class="note">Frosted menus: an option, solid by default</div></div>`,
+  "vertical-bookmarks": () => `<div class="win">${win(sidebar(), bar() + bookmarks())}</div>`,
+  "horizontal-bookmarks": () => `<div class="win nosidebar">${bar()}${hrow()}${bookmarks()}<div class="body">${page()}</div></div>`,
+  "bookmarks-folder": () => `<div class="win">${win(sidebar(), bar() + bookmarks({ open: true }))}${bookmarkFolder()}</div>`,
+  "compact-bookmarks": () => `<div class="win rail">${win(rail(), bar() + bookmarks({ overflow: true }))}</div>`,
+  "newtab-bookmarks": () => `<div class="win">${win(sidebar({ active: "" }), bar({ address: { icon: "search", text: "Search or enter an address", placeholder: true } }) + bookmarks(), `<main class="page">${newtab()}</main>`)}</div>`,
   overflow: () => `<div class="win rail">${win(rail(), bar({ overflow: true }))}${overflowMenu()}</div>`,
 };
 

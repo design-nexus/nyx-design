@@ -11,6 +11,8 @@ shots=(
   "vertical 1440,900" "compact 1280,800" "hidden 1280,800" "horizontal 1440,900" "horizontal-drag 1440,900"
   "workspaces 1440,900" "split 1440,900" "newtab 1440,900" "appearance 1440,900" "settings 1440,900"
   "insecure 1440,900" "frosted 1440,900" "overflow 800,800"
+  "vertical-bookmarks 1440,900" "horizontal-bookmarks 1440,900" "bookmarks-folder 1440,900"
+  "compact-bookmarks 1100,800" "newtab-bookmarks 1440,900"
 )
 want=("$@")
 tmp=$(mktemp -d)
