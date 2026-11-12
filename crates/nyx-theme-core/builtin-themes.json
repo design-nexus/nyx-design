@@ -10,7 +10,7 @@
       "accent.subtle": "#3f4761",
       "border.default": "#414559",
       "border.focus": "#8caaee",
-      "border.strong": "#626880",
+      "border.strong": "#7a7f93",
       "border.subtle": "#3c4054",
       "brand.logo": "#8caaee",
       "scrim.color": "#2a2e3e",
@@ -32,18 +32,18 @@
       "surface.primary": "#303446",
       "surface.secondary": "#34384a",
       "surface.tertiary": "#383d50",
-      "text.disabled": "#53586e",
+      "text.disabled": "#6d738d",
       "text.inverse": "#303446",
       "text.onAccent": "#303446",
       "text.primary": "#c6d0f5",
-      "text.secondary": "#737994",
-      "text.tertiary": "#666b84"
+      "text.secondary": "#a5adce",
+      "text.tertiary": "#a3aac1"
     },
     "swatches": {
       "amber": "#e5c890",
       "blue": "#8caaee",
       "coral": "#ef9f76",
-      "graphite": "#737994",
+      "graphite": "#a5adce",
       "green": "#a6d189",
       "pink": "#ca9ee6",
       "red": "#e78284",
@@ -71,7 +71,7 @@
       "accent.subtle": "#d2def5",
       "border.default": "#dce0e8",
       "border.focus": "#1e66f5",
-      "border.strong": "#acb0be",
+      "border.strong": "#81848f",
       "border.subtle": "#e2e4ea",
       "brand.logo": "#1e66f5",
       "scrim.color": "#e4e6ea",
@@ -93,18 +93,18 @@
       "surface.primary": "#eff1f5",
       "surface.secondary": "#ebedf2",
       "surface.tertiary": "#e6e8ed",
-      "text.disabled": "#c4c7d1",
+      "text.disabled": "#abadbb",
       "text.inverse": "#eff1f5",
       "text.onAccent": "#ffffff",
       "text.primary": "#4c4f69",
-      "text.secondary": "#9ca0b0",
-      "text.tertiary": "#adb0be"
+      "text.secondary": "#626478",
+      "text.tertiary": "#656774"
     },
     "swatches": {
       "amber": "#df8e1d",
       "blue": "#1e66f5",
       "coral": "#d84e2b",
-      "graphite": "#9ca0b0",
+      "graphite": "#6c6f85",
       "green": "#40a02b",
       "pink": "#ea76cb",
       "red": "#d20f39",
@@ -132,7 +132,7 @@
       "accent.subtle": "#343c58",
       "border.default": "#363a4f",
       "border.focus": "#8aadf4",
-      "border.strong": "#5b6078",
+      "border.strong": "#6b7086",
       "border.subtle": "#313549",
       "brand.logo": "#8aadf4",
       "scrim.color": "#1f2131",
@@ -154,18 +154,18 @@
       "surface.primary": "#24273a",
       "surface.secondary": "#282b3f",
       "surface.tertiary": "#2d3044",
-      "text.disabled": "#4a4f65",
+      "text.disabled": "#676d85",
       "text.inverse": "#24273a",
       "text.onAccent": "#24273a",
       "text.primary": "#cad3f5",
-      "text.secondary": "#6e738d",
-      "text.tertiary": "#5f647c"
+      "text.secondary": "#a5adcb",
+      "text.tertiary": "#9197b2"
     },
     "swatches": {
       "amber": "#eed49f",
       "blue": "#8aadf4",
       "coral": "#f5a97f",
-      "graphite": "#6e738d",
+      "graphite": "#a5adcb",
       "green": "#a6da95",
       "pink": "#c6a0f6",
       "red": "#ed8796",
@@ -193,13 +193,13 @@
       "accent.subtle": "#2f364f",
       "border.default": "#313244",
       "border.focus": "#89b4fa",
-      "border.strong": "#585b70",
+      "border.strong": "#696b7e",
       "border.subtle": "#2c2d3e",
       "brand.logo": "#89b4fa",
       "scrim.color": "#181825",
       "selection.background": "#3e4b6b",
       "selection.foreground": "#cdd6f4",
-      "shadow.color": "#101019",
+      "shadow.color": "#11111b",
       "state.disabled": "#29293a",
       "state.hover": "#24273a",
       "state.pressed": "#363f5b",
@@ -208,25 +208,25 @@
       "status.info": "#94e2d5",
       "status.success": "#a6e3a1",
       "status.warning": "#f9e2af",
-      "surface.alternate": "#161622",
+      "surface.alternate": "#181825",
       "surface.elevated": "#2e2f40",
       "surface.inverse": "#cdd6f4",
-      "surface.overlay": "#161622",
+      "surface.overlay": "#181825",
       "surface.primary": "#1e1e2e",
       "surface.secondary": "#222333",
       "surface.tertiary": "#282839",
-      "text.disabled": "#46495c",
+      "text.disabled": "#65687e",
       "text.inverse": "#1e1e2e",
       "text.onAccent": "#1e1e2e",
       "text.primary": "#cdd6f4",
-      "text.secondary": "#6c7086",
-      "text.tertiary": "#5c6074"
+      "text.secondary": "#a6adc8",
+      "text.tertiary": "#8b90a9"
     },
     "swatches": {
       "amber": "#f9e2af",
       "blue": "#89b4fa",
-      "coral": "#f6b6ab",
-      "graphite": "#6c7086",
+      "coral": "#fab387",
+      "graphite": "#a6adc8",
       "green": "#a6e3a1",
       "pink": "#f5c2e7",
       "red": "#f38ba8",
@@ -280,8 +280,8 @@
       "text.inverse": "#282a36",
       "text.onAccent": "#282a36",
       "text.primary": "#f8f8f2",
-      "text.secondary": "#6272a4",
-      "text.tertiary": "#56648e"
+      "text.secondary": "#959fc1",
+      "text.tertiary": "#959db8"
     },
     "swatches": {
       "amber": "#f1fa8c",
@@ -315,7 +315,7 @@
       "accent.subtle": "#3a4a4e",
       "border.default": "#343f44",
       "border.focus": "#7fbbb3",
-      "border.strong": "#475258",
+      "border.strong": "#7e868a",
       "border.subtle": "#3a4144",
       "brand.logo": "#7fbbb3",
       "scrim.color": "#242a2f",
@@ -341,8 +341,8 @@
       "text.inverse": "#2d353b",
       "text.onAccent": "#2d353b",
       "text.primary": "#d3c6aa",
-      "text.secondary": "#4f585e",
-      "text.tertiary": "#485157"
+      "text.secondary": "#a3a8aa",
+      "text.tertiary": "#a4a9ac"
     },
     "swatches": {
       "amber": "#dbbc7f",
@@ -376,7 +376,7 @@
       "accent.subtle": "#363d3c",
       "border.default": "#3c3836",
       "border.focus": "#7daea3",
-      "border.strong": "#665c54",
+      "border.strong": "#7d746e",
       "border.subtle": "#363431",
       "brand.logo": "#7daea3",
       "scrim.color": "#202020",
@@ -402,8 +402,8 @@
       "text.inverse": "#282828",
       "text.onAccent": "#282828",
       "text.primary": "#d4be98",
-      "text.secondary": "#7c6f64",
-      "text.tertiary": "#6b6158"
+      "text.secondary": "#a29891",
+      "text.tertiary": "#9c9690"
     },
     "swatches": {
       "amber": "#d8a657",
@@ -437,7 +437,7 @@
       "accent.subtle": "#3d3c3f",
       "border.default": "#223249",
       "border.focus": "#dcd7ba",
-      "border.strong": "#54546D",
+      "border.strong": "#6e6e83",
       "border.subtle": "#2e2e34",
       "brand.logo": "#dcd7ba",
       "scrim.color": "#191920",
@@ -463,8 +463,8 @@
       "text.inverse": "#1f1f28",
       "text.onAccent": "#1f1f28",
       "text.primary": "#dcd7ba",
-      "text.secondary": "#727169",
-      "text.tertiary": "#61615c"
+      "text.secondary": "#94938d",
+      "text.tertiary": "#959591"
     },
     "swatches": {
       "amber": "#c0a36e",
@@ -498,7 +498,7 @@
       "accent.subtle": "#3b4555",
       "border.default": "#3b4252",
       "border.focus": "#81a1c1",
-      "border.strong": "#4c566a",
+      "border.strong": "#79808f",
       "border.subtle": "#3c424e",
       "brand.logo": "#81a1c1",
       "scrim.color": "#252933",
@@ -524,8 +524,8 @@
       "text.inverse": "#2e3440",
       "text.onAccent": "#2e3440",
       "text.primary": "#d8dee9",
-      "text.secondary": "#667080",
-      "text.tertiary": "#5b6473"
+      "text.secondary": "#a6abb4",
+      "text.tertiary": "#a7abb3"
     },
     "swatches": {
       "amber": "#ebcb8b",
@@ -559,7 +559,7 @@
       "accent.subtle": "#152234",
       "border.default": "#2b2d37",
       "border.focus": "#3d8ae8",
-      "border.strong": "#2b2d37",
+      "border.strong": "#606269",
       "border.subtle": "#1d1e26",
       "brand.logo": "#3d8ae8",
       "scrim.color": "#0a0a0e",
@@ -620,7 +620,7 @@
       "accent.subtle": "#cedbed",
       "border.default": "#cfd1db",
       "border.focus": "#136dcd",
-      "border.strong": "#c8cad5",
+      "border.strong": "#82838a",
       "border.subtle": "#dadce4",
       "brand.logo": "#136dcd",
       "scrim.color": "#d4d5de",
@@ -647,7 +647,7 @@
       "text.onAccent": "#ffffff",
       "text.primary": "#171820",
       "text.secondary": "#50546c",
-      "text.tertiary": "#6a6e90"
+      "text.tertiary": "#606482"
     },
     "swatches": {
       "amber": "#a87012",
@@ -681,7 +681,7 @@
       "accent.subtle": "#314152",
       "border.default": "#2c313c",
       "border.focus": "#61afef",
-      "border.strong": "#4b5263",
+      "border.strong": "#6f7582",
       "border.subtle": "#32373f",
       "brand.logo": "#61afef",
       "scrim.color": "#22262d",
@@ -707,8 +707,8 @@
       "text.inverse": "#282c34",
       "text.onAccent": "#282c34",
       "text.primary": "#abb2bf",
-      "text.secondary": "#5c6370",
-      "text.tertiary": "#525864"
+      "text.secondary": "#9a9fa7",
+      "text.tertiary": "#9a9ca4"
     },
     "swatches": {
       "amber": "#e5c07b",
@@ -742,7 +742,7 @@
       "accent.subtle": "#2e3441",
       "border.default": "#1f1d2e",
       "border.focus": "#9ccfd8",
-      "border.strong": "#524f67",
+      "border.strong": "#6c697e",
       "border.subtle": "#292735",
       "brand.logo": "#9ccfd8",
       "scrim.color": "#15141f",
@@ -768,8 +768,8 @@
       "text.inverse": "#191724",
       "text.onAccent": "#191724",
       "text.primary": "#e0def4",
-      "text.secondary": "#6e6a86",
-      "text.tertiary": "#5d5972"
+      "text.secondary": "#908ca2",
+      "text.tertiary": "#8b899a"
     },
     "swatches": {
       "amber": "#f6c177",
@@ -803,7 +803,7 @@
       "accent.subtle": "#063a4f",
       "border.default": "#073642",
       "border.focus": "#268bd2",
-      "border.strong": "#586e75",
+      "border.strong": "#60757c",
       "border.subtle": "#0a333e",
       "brand.logo": "#268bd2",
       "scrim.color": "#00252f",
@@ -827,10 +827,10 @@
       "surface.tertiary": "#07313b",
       "text.disabled": "#2e4e57",
       "text.inverse": "#002b36",
-      "text.onAccent": "#002b36",
+      "text.onAccent": "#002029",
       "text.primary": "#839496",
-      "text.secondary": "#586e75",
-      "text.tertiary": "#466168"
+      "text.secondary": "#88979d",
+      "text.tertiary": "#84969a"
     },
     "swatches": {
       "amber": "#b58900",
@@ -864,7 +864,7 @@
       "accent.subtle": "#293147",
       "border.default": "#24283b",
       "border.focus": "#7aa2f7",
-      "border.strong": "#414868",
+      "border.strong": "#676d86",
       "border.subtle": "#252734",
       "brand.logo": "#7aa2f7",
       "scrim.color": "#15151e",
@@ -890,8 +890,8 @@
       "text.inverse": "#1a1b26",
       "text.onAccent": "#1a1b26",
       "text.primary": "#a9b1d6",
-      "text.secondary": "#565f89",
-      "text.tertiary": "#4a5175"
+      "text.secondary": "#868dab",
+      "text.tertiary": "#868ba3"
     },
     "swatches": {
       "amber": "#e0af68",
@@ -925,7 +925,7 @@
       "accent.subtle": "#313956",
       "border.default": "#2f334d",
       "border.focus": "#82aaff",
-      "border.strong": "#444a73",
+      "border.strong": "#696e8f",
       "border.subtle": "#2f3245",
       "brand.logo": "#82aaff",
       "scrim.color": "#1e2030",
@@ -951,8 +951,8 @@
       "text.inverse": "#222436",
       "text.onAccent": "#222436",
       "text.primary": "#c8d3f5",
-      "text.secondary": "#636da6",
-      "text.tertiary": "#565e90"
+      "text.secondary": "#8e96bf",
+      "text.tertiary": "#9599b9"
     },
     "swatches": {
       "amber": "#ffc777",
@@ -986,7 +986,7 @@
       "accent.subtle": "#323c59",
       "border.default": "#292e42",
       "border.focus": "#7aa2f7",
-      "border.strong": "#414868",
+      "border.strong": "#71768e",
       "border.subtle": "#2f3347",
       "brand.logo": "#7aa2f7",
       "scrim.color": "#202435",
@@ -1012,8 +1012,8 @@
       "text.inverse": "#24283b",
       "text.onAccent": "#24283b",
       "text.primary": "#a9b1d6",
-      "text.secondary": "#565f89",
-      "text.tertiary": "#4c5479"
+      "text.secondary": "#959ab4",
+      "text.tertiary": "#979bb0"
     },
     "swatches": {
       "amber": "#e0af68",

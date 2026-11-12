@@ -14,7 +14,7 @@ use crate::layer::Layer;
 use crate::model::Theme;
 use crate::registry::{Entry, Registry};
 use crate::schema::{Diag, Issue, Meta};
-use crate::tokens::{A11y, Tokens, apply_a11y, check_explicit, derive, sync_legacy};
+use crate::tokens::{A11y, Tokens, apply_a11y, apply_readability, check_explicit, derive, sync_legacy};
 use std::collections::BTreeMap;
 
 /// Longest inheritance chain followed.
@@ -83,6 +83,7 @@ fn build(meta: Meta, layers: &[Layer], user: Option<&BTreeMap<String, String>>, 
     let mut theme = merged.file.theme(&meta.id, diag);
     theme.name = meta.name.clone();
     let mut tokens = derive(&mut theme, &explicit, &merged.typography, &merged.geometry, &merged.motion, &merged.effects, diag);
+    apply_readability(&mut tokens);
     apply_a11y(&mut tokens, a11y);
     sync_legacy(&mut theme, &tokens);
     theme.look.material.blended = tokens.effects.blended;

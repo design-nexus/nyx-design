@@ -1,5 +1,5 @@
 # Catppuccin Frappé (catppuccin/palette, MIT) in Omarchy's colour format, laid out as
-# Omarchy's Catppuccin (Mocha) is.
+# Omarchy's Catppuccin (Mocha) is. dark_foreground, the secondary text, is subtext0.
 mode = "dark"
 
 accent = "#8caaee"
@@ -12,7 +12,7 @@ darker_background = "#232634"
 lighter_background = "#414559"
 
 foreground = "#c6d0f5"
-dark_foreground = "#737994"
+dark_foreground = "#a5adce"
 light_foreground = "#b5bfe2"
 bright_foreground = "#c6d0f5"
 
@@ -23,7 +23,6 @@ green = "#a6d189"
 cyan = "#81c8be"
 blue = "#8caaee"
 magenta = "#f4b8e4"
-brown = "#80625b"
 
 bright_red = "#e78284"
 bright_yellow = "#e5c890"

@@ -380,6 +380,26 @@ pub(crate) fn sync_legacy(theme: &mut Theme, tokens: &Tokens) {
     }
 }
 
+/// What every theme keeps, whatever its palette: secondary and tertiary text readable at
+/// body size (WCAG 1.4.3, 4.5:1) on the surfaces text sits on, the outline that marks a
+/// control visible (1.4.11, 3:1), and labels on accent buttons readable. A colour that
+/// passes stays as the theme has it; one that doesn't moves towards black or white, its
+/// hue kept, until it does.
+pub(crate) fn apply_readability(tokens: &mut Tokens) {
+    let c = &mut tokens.colors;
+    let raise = |c: &mut BTreeMap<String, String>, token: &str, against: &str, ratio: f64| {
+        if let (Some(v), Some(bg)) = (c.get(token).cloned(), c.get(against).cloned()) {
+            c.insert(token.to_string(), with_contrast(&v, &bg, ratio));
+        }
+    };
+    for surface in ["surface.primary", "surface.secondary", "surface.tertiary"] {
+        raise(c, "text.secondary", surface, 4.5);
+        raise(c, "text.tertiary", surface, 4.5);
+    }
+    raise(c, "border.strong", "surface.primary", 3.0);
+    raise(c, "text.onAccent", "accent.primary", 4.5);
+}
+
 /// Accessibility over the theme: reduced motion stops animation; high contrast
 /// raises text and lines to WCAG AAA/AA levels and keeps areas separated, without
 /// replacing the theme's colours wholesale.

@@ -1,4 +1,5 @@
-# Omarchy's catppuccin-latte theme colours (github.com/basecamp/omarchy, MIT), as Omarchy ships them.
+# Omarchy's catppuccin-latte theme colours (github.com/basecamp/omarchy, MIT), as Omarchy ships them,
+# except dark_foreground, the secondary text: Catppuccin's subtext0.
 mode = "light"
 
 accent = "#1e66f5"
@@ -11,7 +12,7 @@ darker_background = "#d7d8dc"
 lighter_background = "#dce0e8"
 
 foreground = "#4c4f69"
-dark_foreground = "#9ca0b0"
+dark_foreground = "#6c6f85"
 light_foreground = "#5c5f77"
 bright_foreground = "#4c4f69"
 
@@ -22,7 +23,6 @@ green = "#40a02b"
 cyan = "#179299"
 blue = "#1e66f5"
 magenta = "#ea76cb"
-brown = "#6c2715"
 
 bright_red = "#d20f39"
 bright_yellow = "#df8e1d"

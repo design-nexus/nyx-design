@@ -377,8 +377,12 @@ mod tests {
         let resolved = crate::resolver::resolve_layers("x", &[Layer::from_package(&pkg)], &crate::A11y::default());
         let p = from_omarchy_colors(MOCHA).unwrap();
         let r = &resolved.theme.palette;
-        assert_eq!((&r.bg, &r.surface, &r.text, &r.dim_text), (&p.bg, &p.surface, &p.text, &p.dim_text));
-        assert_eq!((&r.border, &r.muted, &r.highlight, &r.danger, &r.shadow), (&p.border, &p.muted, &p.highlight, &p.danger, &p.shadow));
+        assert_eq!((&r.bg, &r.surface, &r.text), (&p.bg, &p.surface, &p.text));
+        assert_eq!((&r.border, &r.highlight, &r.danger, &r.shadow), (&p.border, &p.highlight, &p.danger, &p.shadow));
+        // Too faint in Omarchy's palette, so raised until they read: secondary text and
+        // the outline of a control.
+        assert!(crate::color::contrast(&r.dim_text, &r.bg) >= 4.5 && r.dim_text != p.dim_text);
+        assert!(crate::color::contrast(&r.muted, &r.bg) >= 3.0 && r.muted != p.muted);
         assert_eq!(resolved.tokens.color("status.success"), "#a6e3a1", "named colours fill tokens Omarchy has");
         assert!(resolved.theme.look.material.blended, "the look is Nyx's");
         assert!(resolved.theme.look.swatches.iter().any(|(n, c)| n == "violet" && c == "#f5c2e7"));
