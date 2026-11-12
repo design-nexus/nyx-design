@@ -1131,6 +1131,7 @@ mod tests {
         assert_eq!(dark.look.sections["settings"]["connections"], blue);
         let css = look_css("settings-window", &blue, &dark.look);
         assert!(css.contains(".nav-group.section-connections { border-bottom-color: alpha("));
+        assert!(css.contains(&format!(".section-swatch-blue {{ color: {blue}; }}")));
         let t = bundled().into_iter().find(|t| t.id == "nyx-dark").unwrap();
         let css = look_css("files-window", &t.look.accents["files"], &t.look);
         assert!(css.contains("font-family: \"Inter\", \"Inter Variable\", \"Inter 18pt\", sans-serif;"));

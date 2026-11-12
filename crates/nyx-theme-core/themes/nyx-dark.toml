@@ -65,6 +65,27 @@ accounts = "green"
 assistant = "teal"
 system = "red"
 
+# Each app's sidebar groups (nyx_ui::sidebar::set_section). Headings that come from
+# accounts take rotating swatches instead.
+[sections.git]
+worktrees = "blue"
+branches = "violet"
+remotes = "green"
+tags = "amber"
+stashes = "pink"
+
+[sections.mail]
+mailboxes = "teal"
+pinned = "amber"
+
+[sections.chat]
+chat = "blue"
+models = "violet"
+library = "green"
+pinned = "amber"
+folders = "teal"
+chats = "coral"
+
 # Font names, preferred first: Inter goes by different names depending on how it was installed
 [font]
 ui = "Inter, Inter Variable, Inter 18pt"

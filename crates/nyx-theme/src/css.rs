@@ -53,8 +53,12 @@ pub fn look_css(window_class: &str, app_accent: &str, look: &Look) -> String {
     css.push_str(" }\n");
     // Each section's colour on what carries its class (`.section-network`): the
     // sidebar's group heading, its line, and the divider of the icon-only sidebar.
+    // Every swatch is a section too (`.section-swatch-blue`), for headings that come
+    // from accounts and sources rather than the app's fixed groups.
     let app = window_class.strip_suffix("-window").unwrap_or(window_class);
-    for (name, c) in look.sections.get(app).into_iter().flatten() {
+    let swatches = look.swatches.iter().map(|(name, c)| (format!("swatch-{name}"), c));
+    let sections = look.sections.get(app).into_iter().flatten().map(|(name, c)| (name.clone(), c));
+    for (name, c) in swatches.chain(sections) {
         let name: String = name.chars().filter(|ch| ch.is_ascii_alphanumeric() || *ch == '-').collect();
         css.push_str(&format!(
             "window.{window_class} .section-{name} {{ color: {c}; }}\n\

@@ -89,6 +89,40 @@ pub fn group_label(text: &str, first: bool) -> gtk::Box {
     row
 }
 
+/// Colour a group's heading, and the line under it, as its section: a name from
+/// the theme's `[sections.<app>]` (`"branches"`), or a swatch from
+/// [`rotating_section`]. `heading` is the label or the row that holds it.
+pub fn set_section(heading: &impl IsA<gtk::Widget>, section: &str) {
+    let class = format!("section-{section}");
+    let heading = heading.as_ref();
+    heading.add_css_class(&class);
+    fn first_label(w: &gtk::Widget) -> Option<gtk::Widget> {
+        let mut child = w.first_child();
+        while let Some(c) = child {
+            if c.is::<gtk::Label>() {
+                return Some(c);
+            }
+            if let Some(l) = first_label(&c) {
+                return Some(l);
+            }
+            child = c.next_sibling();
+        }
+        None
+    }
+    if !heading.is::<gtk::Label>()
+        && let Some(label) = first_label(heading)
+    {
+        label.add_css_class(&class);
+    }
+}
+
+/// The section for the `index`th heading that comes from an account or a source
+/// (Mail's accounts, Calendar's): a swatch, in the same order every time.
+pub fn rotating_section(index: usize) -> String {
+    const ORDER: [&str; 8] = ["blue", "violet", "green", "pink", "coral", "teal", "red", "amber"];
+    format!("swatch-{}", ORDER[index % ORDER.len()])
+}
+
 /// A heading with a `+` at its right.
 pub fn group_label_with_add(text: &str, first: bool, tooltip: &str, add: impl Fn() + 'static) -> gtk::Box {
     let row = group_label(text, first);
