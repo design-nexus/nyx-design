@@ -164,6 +164,18 @@ window.@APP@ popover.window-controls-popover > contents {
   padding-top: 2px;
 }
 
+/* The icon-only sidebar hides group headings (compact-hide). base.css's v1 way,
+ * font-size 0, isn't needed and can leave them invisible after the rail widens. */
+.settings-navigation.compact .nav-group {
+  margin: 14px 4px 4px;
+  padding: 2px 6px 5px;
+  font-size: 0.846em;
+}
+
+.settings-navigation.compact .nav-group.first {
+  margin-top: 0;
+}
+
 .settings-navigation button.nav-item {
   padding: 0 10px;
   margin: 0;
