@@ -82,7 +82,8 @@ fn is_zero(v: &u32) -> bool {
 impl Default for Suite {
     fn default() -> Self {
         Self {
-            mode: ThemeMode::Omarchy,
+            // Follow Omarchy where there is one (it answers live), else the theme itself.
+            mode: if crate::omarchy::live().is_some() { ThemeMode::Omarchy } else { ThemeMode::Theme },
             theme: DEFAULT_THEME.into(),
             density: "comfortable".into(),
             text_scale: 1.0,
@@ -180,6 +181,14 @@ fn write_suite(suite: &Suite) -> std::io::Result<()> {
 /// Change the shared settings atomically. Unchanged settings aren't rewritten.
 pub fn update_suite(change: impl FnOnce(&mut Suite)) -> std::io::Result<Suite> {
     let before = read_suite();
+    // A file there that doesn't parse isn't written over without a copy: its overrides
+    // and token choices stay in theme.toml.broken, to put back by hand.
+    let path = crate::paths::suite_file();
+    if before.is_none() && path.exists() {
+        let kept = path.with_extension("toml.broken");
+        std::fs::copy(&path, &kept)?;
+        eprintln!("nyx-theme: {} couldn't be read; it's kept as {}", path.display(), kept.display());
+    }
     let mut suite = before.clone().unwrap_or_else(|| Suite { theme: system_default(), ..Suite::default() });
     change(&mut suite);
     if before.as_ref() != Some(&suite) {
