@@ -706,6 +706,12 @@ window.@APP@ button.dialog-nav.active {
   box-shadow: none;
 }
 
+/* In the frame's sheet it is a pane like any other: the pane line beside it. */
+window.@APP@ .app-page .inspector:not(.floating) {
+  border-left: 1px solid @sheet_line;
+  margin-left: 6px;
+}
+
 /* ---------- Tab row (nyx_ui::tabs) ---------- */
 
 .tab-row {
