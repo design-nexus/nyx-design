@@ -689,6 +689,13 @@ fn resolve_app_accent(app: &str, palette: &Palette, look: &Look, suite: &Suite) 
         .unwrap_or_else(|| palette.accent.clone())
 }
 
+/// The swatch this app's accent is now (`"violet"`), if it is one of the theme's.
+pub fn accent_swatch() -> Option<String> {
+    let class = STYLE.with(|s| s.borrow().as_ref().map(|style| style.window_class))?;
+    let accent = app_accent(class.strip_suffix("-window").unwrap_or(class));
+    look().swatches.into_iter().find(|(_, c)| c.eq_ignore_ascii_case(&accent)).map(|(name, _)| name)
+}
+
 /// The accents to offer in an app's settings: `(name, colour)` from the active theme.
 pub fn swatches() -> Vec<(String, String)> {
     look().swatches
@@ -1132,6 +1139,9 @@ mod tests {
         let css = look_css("settings-window", &blue, &dark.look);
         assert!(css.contains(".nav-group.section-connections, window.settings-window .nav-group-row.section-connections { border-bottom-color: alpha("));
         assert!(css.contains(&format!(".section-swatch-blue {{ color: {blue}; }}")));
+        let violet = dark.look.swatches.iter().find(|(n, _)| n == "violet").unwrap().1.clone();
+        let mail = look_css("mail-window", &violet, &dark.look);
+        assert!(mail.contains(&format!(".section-accent {{ color: {violet}; }}")), "the first group takes the app's accent");
         let t = bundled().into_iter().find(|t| t.id == "nyx-dark").unwrap();
         let css = look_css("files-window", &t.look.accents["files"], &t.look);
         assert!(css.contains("font-family: \"Inter\", \"Inter Variable\", \"Inter 18pt\", sans-serif;"));

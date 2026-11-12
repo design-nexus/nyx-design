@@ -239,11 +239,14 @@ Pick the archetype that fits; don't force an app into another's layout.
   with two or more groups, every group is a section and its label is coloured: the
   section's colour over a thin line of it (35%), and in the icon-only sidebar the divider
   where the label was is a short bar in that colour. `nyx_ui::sidebar::set_section(&label,
-  name)` tags it; the theme's `[sections.<app>]` gives each name a swatch. Groups that come
-  from accounts or sources (Mail's accounts, Calendar's) take
-  `nyx_ui::sidebar::rotating_section(i)`: swatches in a fixed order (blue, violet, green,
-  pink, coral, teal, red, amber). A sidebar with one group, and a group with no section
-  (search results, an archive), stays `text_tertiary`.
+  name)` tags it. **The first group is always the app's accent**
+  (`nyx_ui::sidebar::ACCENT_SECTION`), so it follows the theme and the app's Accent row.
+  The theme's `[sections.<app>]` gives the other groups their swatches; choose ones that
+  aren't the app's accent. Groups that come from accounts or sources (Mail's accounts,
+  Calendar's) take `nyx_ui::sidebar::rotating_section(i)`: swatches in a fixed order
+  (blue, violet, green, pink, coral, teal, red, amber), leaving out the app's accent. A
+  sidebar with one group, and a group with no section (search results, an archive),
+  stays `text_tertiary`.
 - **Selected:** a pill in `mix(bg, app accent, selection)` with a 2 px accent bar at the
   left edge and the icon in the accent. Hover: the `--nyx-hover` tint.
 - Collapses to 56 px icons below 980 px window width or with <kbd>Ctrl</kbd>+<kbd>B</kbd>

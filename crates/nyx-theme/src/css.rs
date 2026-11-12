@@ -55,10 +55,13 @@ pub fn look_css(window_class: &str, app_accent: &str, look: &Look) -> String {
     // sidebar's group heading, its line, and the divider of the icon-only sidebar.
     // Every swatch is a section too (`.section-swatch-blue`), for headings that come
     // from accounts and sources rather than the app's fixed groups.
+    // `.section-accent` is the app's own accent (whatever the theme or the app's Accent
+    // row makes it): the first group of every sidebar takes it.
     let app = window_class.strip_suffix("-window").unwrap_or(window_class);
-    let swatches = look.swatches.iter().map(|(name, c)| (format!("swatch-{name}"), c));
-    let sections = look.sections.get(app).into_iter().flatten().map(|(name, c)| (name.clone(), c));
-    for (name, c) in swatches.chain(sections) {
+    let swatches = look.swatches.iter().map(|(name, c)| (format!("swatch-{name}"), c.as_str()));
+    let sections = look.sections.get(app).into_iter().flatten().map(|(name, c)| (name.clone(), c.as_str()));
+    let accent = std::iter::once(("accent".to_string(), app_accent));
+    for (name, c) in swatches.chain(sections).chain(accent) {
         let name: String = name.chars().filter(|ch| ch.is_ascii_alphanumeric() || *ch == '-').collect();
         css.push_str(&format!(
             "window.{window_class} .section-{name} {{ color: {c}; }}\n\

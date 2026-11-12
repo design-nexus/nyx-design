@@ -89,9 +89,13 @@ pub fn group_label(text: &str, first: bool) -> gtk::Box {
     row
 }
 
-/// Colour a group's heading, and the line under it, as its section: a name from
-/// the theme's `[sections.<app>]` (`"branches"`), or a swatch from
-/// [`rotating_section`]. `heading` is the label or the row that holds it.
+/// The first group's section: the app's own accent.
+pub const ACCENT_SECTION: &str = "accent";
+
+/// Colour a group's heading, and the line under it, as its section: [`ACCENT_SECTION`]
+/// for the sidebar's first group, a name from the theme's `[sections.<app>]`
+/// (`"branches"`) for the others, or a swatch from [`rotating_section`]. `heading` is
+/// the label or the row that holds it.
 pub fn set_section(heading: &impl IsA<gtk::Widget>, section: &str) {
     let class = format!("section-{section}");
     let heading = heading.as_ref();
@@ -117,10 +121,13 @@ pub fn set_section(heading: &impl IsA<gtk::Widget>, section: &str) {
 }
 
 /// The section for the `index`th heading that comes from an account or a source
-/// (Mail's accounts, Calendar's): a swatch, in the same order every time.
+/// (Mail's accounts, Calendar's): a swatch, in the same order every time, leaving
+/// out the app's accent, which is the first group's.
 pub fn rotating_section(index: usize) -> String {
     const ORDER: [&str; 8] = ["blue", "violet", "green", "pink", "coral", "teal", "red", "amber"];
-    format!("swatch-{}", ORDER[index % ORDER.len()])
+    let accent = nyx_theme::accent_swatch();
+    let order: Vec<&str> = ORDER.iter().copied().filter(|s| Some(*s) != accent.as_deref()).collect();
+    format!("swatch-{}", order[index % order.len()])
 }
 
 /// A heading with a `+` at its right.

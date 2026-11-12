@@ -65,21 +65,18 @@ accounts = "green"
 assistant = "teal"
 system = "red"
 
-# Each app's sidebar groups (nyx_ui::sidebar::set_section). Headings that come from
-# accounts take rotating swatches instead.
+# Each app's sidebar groups after the first (nyx_ui::sidebar::set_section); the first
+# takes the app's accent, and headings from accounts take rotating swatches.
 [sections.git]
-worktrees = "blue"
 branches = "violet"
 remotes = "green"
 tags = "amber"
 stashes = "pink"
 
 [sections.mail]
-mailboxes = "teal"
 pinned = "amber"
 
 [sections.chat]
-chat = "blue"
 models = "violet"
 library = "green"
 pinned = "amber"
