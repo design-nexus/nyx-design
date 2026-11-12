@@ -1130,7 +1130,7 @@ mod tests {
         let blue = dark.look.swatches.iter().find(|(n, _)| n == "blue").unwrap().1.clone();
         assert_eq!(dark.look.sections["settings"]["connections"], blue);
         let css = look_css("settings-window", &blue, &dark.look);
-        assert!(css.contains(".nav-group.section-connections { border-bottom-color: alpha("));
+        assert!(css.contains(".nav-group.section-connections, window.settings-window .nav-group-row.section-connections { border-bottom-color: alpha("));
         assert!(css.contains(&format!(".section-swatch-blue {{ color: {blue}; }}")));
         let t = bundled().into_iter().find(|t| t.id == "nyx-dark").unwrap();
         let css = look_css("files-window", &t.look.accents["files"], &t.look);

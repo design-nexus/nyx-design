@@ -62,7 +62,7 @@ pub fn look_css(window_class: &str, app_accent: &str, look: &Look) -> String {
         let name: String = name.chars().filter(|ch| ch.is_ascii_alphanumeric() || *ch == '-').collect();
         css.push_str(&format!(
             "window.{window_class} .section-{name} {{ color: {c}; }}\n\
-             window.{window_class} .nav-group.section-{name} {{ border-bottom-color: alpha({c}, 0.35); }}\n\
+             window.{window_class} .nav-group.section-{name}, window.{window_class} .nav-group-row.section-{name} {{ border-bottom-color: alpha({c}, 0.35); }}\n\
              window.{window_class} separator.nav-divider.section-{name} {{ background: alpha({c}, 0.6); }}\n"
         ));
     }
