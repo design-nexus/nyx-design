@@ -39,6 +39,7 @@ photos = "coral"
 mail = "violet"
 calendar = "red"
 music = "pink"
+lyra = "violet"
 home = "green"
 
 # Accent choices offered in each app's settings (same names in every theme)

@@ -178,6 +178,7 @@ var snapshot = {
     "chat": "#94e2d5",
     "files": "#89b4fa",
     "home": "#a6e3a1",
+    "lyra": "#f5c2e7",
     "mail": "#f5c2e7",
     "music": "#f5c2e7",
     "notes": "#f9e2af",
