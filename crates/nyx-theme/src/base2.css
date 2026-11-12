@@ -47,10 +47,43 @@ window.@APP@ .status-bar {
   border: 1px solid @sheet_line;
   border-radius: var(--nyx-radius-card);
   margin: 0 8px 8px 0;
+  padding: 8px;
+}
+
+/* Content that reaches the sheet's edges (a backdrop, a map): AppFrame::set_flush. */
+.app-page.flush {
+  padding: 0;
 }
 
 .app-frame.no-sidebar .app-page {
   margin-left: 8px;
+}
+
+/* The panes in the sheet (a list and its detail, a page and its inspector) are split
+ * by a line in the sheet's colour, with room on both sides; a split still drags. */
+window.@APP@ .app-page paned > separator,
+window.@APP@ .app-page separator.pane-line {
+  min-width: 1px;
+  min-height: 1px;
+  background: @sheet_line;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+window.@APP@ .app-page paned.horizontal > separator,
+window.@APP@ .app-page separator.pane-line.vertical {
+  margin: 0 6px;
+}
+
+window.@APP@ .app-page paned.vertical > separator,
+window.@APP@ .app-page separator.pane-line.horizontal {
+  margin: 6px 0;
+}
+
+window.@APP@ .app-page paned > separator:hover {
+  background: alpha(@theme_accent, 0.45);
 }
 
 /* ---------- Header ---------- */

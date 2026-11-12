@@ -8,8 +8,19 @@
 //! sidebar | page
 //! foot
 //! ```
+//!
+//! The panes inside the page are split by a line: a `gtk::Paned`'s handle draws it,
+//! and [`pane_line`] gives one to panes laid out side by side in a box.
 
 use gtk::prelude::*;
+
+/// The line between two panes in the page, for panes that aren't in a `gtk::Paned`.
+/// `Vertical` stands between panes side by side.
+pub fn pane_line(orientation: gtk::Orientation) -> gtk::Separator {
+    let line = gtk::Separator::new(orientation);
+    line.add_css_class("pane-line");
+    line
+}
 
 pub struct AppFrame {
     /// The whole frame: the window's child, or inside the app's own overlay or stack.
@@ -66,6 +77,16 @@ impl AppFrame {
             self.page.remove(&child);
         }
         self.page.append(content);
+    }
+
+    /// Content that reaches the sheet's edges (a backdrop, a map) instead of the room
+    /// inside it every other page keeps.
+    pub fn set_flush(&self, flush: bool) {
+        if flush {
+            self.page.add_css_class("flush");
+        } else {
+            self.page.remove_css_class("flush");
+        }
     }
 
     /// A bar across the foot of the window, under the sidebar and the page.

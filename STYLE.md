@@ -184,8 +184,14 @@ Density is a suite preference; **Balanced** is the default.
   the main body, is a **sheet** inset in it: `bg`, a 1 px line all round
   (`@sheet_line`: `text` at 9% in dark themes, 11% in light), `radius_card`, 8 px clear
   of the window's right and bottom edges and of the foot bar. With the sidebar hidden (a
-  welcome page, an expanded player) the sheet is 8 px clear on the left too. Content that
-  reaches the page's edges (a backdrop, a map) is clipped to its corners. The sheet's line
+  welcome page, an expanded player) the sheet is 8 px clear on the left too. Inside, the
+  sheet keeps 8 px of room so nothing touches its line; content meant to reach its edges
+  (a backdrop, a map) turns that off (`set_flush`) and is clipped to the corners.
+- **Panes in the sheet** (a list and its detail, a page and its inspector, Files'
+  columns) are split by a 1 px line in `@sheet_line` with 6 px of room on each side. A
+  `gtk::Paned`'s handle draws it and still drags; panes side by side in a box put
+  `nyx_ui::frame::pane_line` between them. A bar across the top of the panes (a page
+  bar, tabs) has no line under it. The sheet's line
   is drawn whether or not the theme is blended; the frame's parts draw no lines of their
   own. Apps put their content in the page (`set_page`), their sidebar beside it
   (`set_sidebar`) and a foot bar under both (`set_foot`); the frame's look lives in
