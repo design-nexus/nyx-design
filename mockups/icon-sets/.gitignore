@@ -1,0 +1,3 @@
+# Written by render.py; ./render.sh rebuilds them and the shots.
+pages/
+__pycache__/
