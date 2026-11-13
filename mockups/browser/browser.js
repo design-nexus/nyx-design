@@ -106,7 +106,7 @@ function hrow({ drop = false } = {}) {
     ${tab("gh")}${tab("music", "", `<span class="sound">${icon("sound")}</span>`)}
     <div class="newtab">${icon("plus")}</div><span class="gap"></span>
     <div class="btn">${icon("search")}</div>
-  </div>${drop ? `<div class="drop" style="left:578px;top:${46 + 4}px;height:28px"></div>` : ""}`;
+  </div>${drop ? `<div class="drop" style="left:578px;top:4px;height:28px"></div>` : ""}`;
 }
 
 const site = (kind = "") => kind === "docs"
@@ -245,8 +245,8 @@ const SCREENS = {
   vertical: () => `<div class="win">${win(sidebar(), bar())}</div>`,
   compact: () => `<div class="win rail">${win(rail(), bar())}</div>`,
   hidden: () => `<div class="win nosidebar">${bar({ sidebarButton: true })}<div class="body">${page()}</div><div class="edge"></div></div>`,
-  horizontal: () => `<div class="win nosidebar">${bar({ sidebarButton: false })}${hrow()}<div class="body">${page()}</div></div>`,
-  "horizontal-drag": () => `<div class="win nosidebar">${bar()}${hrow({ drop: true }).replace('class="tab on"', 'class="tab on" style="opacity:.55"')}<div class="body">${page()}</div><div class="note">Dragging a tab: the marker stands between tabs</div></div>`,
+  horizontal: () => `<div class="win nosidebar">${hrow()}${bar({ sidebarButton: false })}<div class="body">${page()}</div></div>`,
+  "horizontal-drag": () => `<div class="win nosidebar">${hrow({ drop: true }).replace('class="tab on"', 'class="tab on" style="opacity:.55"')}${bar()}<div class="body">${page()}</div><div class="note">Dragging a tab: the marker stands between tabs</div></div>`,
   workspaces: () => `<div class="win">${win(sidebar(), bar())}${workspacesMenu()}</div>`,
   split: () => `<div class="win">${win(sidebar({ active: "split" }), bar({ url: "docs" }), `<main class="page split"><div class="pane">${site()}</div><div class="pane focused">${site("docs")}</div></main>`)}</div>`,
   newtab: () => `<div class="win">${win(sidebar({ active: "" }), bar({ address: { icon: "search", text: "Search or enter an address", placeholder: true } }), `<main class="page">${newtab()}</main>`)}</div>`,
@@ -255,7 +255,7 @@ const SCREENS = {
   insecure: () => `<div class="win">${win(sidebar(), bar({ insecure: true }))}<div class="tip" style="left:236px;top:46px">The connection to this site isn't secure</div></div>`,
   frosted: () => `<div class="win frost">${win(sidebar(), bar())}${workspacesMenu()}<div class="note">Frosted menus: an option, solid by default</div></div>`,
   "vertical-bookmarks": () => `<div class="win">${win(sidebar(), bar() + bookmarks())}</div>`,
-  "horizontal-bookmarks": () => `<div class="win nosidebar">${bar()}${hrow()}${bookmarks()}<div class="body">${page()}</div></div>`,
+  "horizontal-bookmarks": () => `<div class="win nosidebar">${hrow()}${bar()}${bookmarks()}<div class="body">${page()}</div></div>`,
   "bookmarks-folder": () => `<div class="win">${win(sidebar(), bar() + bookmarks({ open: true }))}${bookmarkFolder()}</div>`,
   "compact-bookmarks": () => `<div class="win rail">${win(rail(), bar() + bookmarks({ overflow: true }))}</div>`,
   "bookmarks-icons": () => `<div class="win">${win(sidebar(), bar() + bookmarks({ iconsOnly: true }))}<div class="tip" style="left:300px;top:78px">Calendar</div></div>`,
