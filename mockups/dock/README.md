@@ -4,11 +4,14 @@ Mockups for the dock in the new bar's style (`../bar`, direction A) and features
 improve it. Nothing in `nyx-dock/` changed.
 
 Open `index.html` for a gallery of every shot, or a page directly: `directions.html`,
-`features.html` and `ideas.html` take `?screen=<name>&theme=dark|light`. Each page has a
-switcher at the bottom (left out of shots).
+`features.html`, `ideas.html` and `click.html` take `?screen=<name>&theme=dark|light`. Each
+page has a switcher at the bottom (left out of shots). In the gallery, click a shot to see it
+full-window; ← and → step through every shot, D and L switch dark and light, Esc closes. The
+click animations play live there instead of their still.
 
 `./render.sh` re-renders every shot into `shots/` with headless Chromium (nothing opens on
-screen); `./render.sh ideas` renders one page. The pages use the bar mockups' tokens,
+screen); `./render.sh ideas` renders one page. `click.html` takes `&shot=1&t=<ms>` to hold
+its motion at one moment, which `render.sh` uses for the click stills. The pages use the bar mockups' tokens,
 styles, icons and bar (`../bar/tokens.css`, `bar.css`, `parts.js`); `dock.js` and
 `dock.css` add the dock. Nyx apps show their real icons (`crates/nyx-icons/apps`); others
 are drawn in the same satin style. The sample state is the bar mockups': Tuesday
@@ -42,6 +45,15 @@ Every shot comes in `-dark` and `-light`.
 | `ideas-drop` | **Dropping files**: apps that can't open the file fade; the one under the pointer lights and says what happens (Open with Firefox, Attach to a new email, Copy to Projects, Move to Trash). |
 | `ideas-minimized` | **Minimized windows** as thumbnails before the folders (an option, as macOS). |
 | `ideas-hidden` | **Hidden**: a short line where the dock is while windows fill the screen; it fades while typing and isn't shown for fullscreen apps. |
+| `click-bounce` | **Bounce**: two hops (14 px, then 5 px; 620 ms). An app that isn't running hops until its first window opens (Calendar, three hops), up to about 5 s. |
+| `click-squish` | **Squish**: 85% while the button is down (110 ms), springs to 106% and settles on release (380 ms). |
+| `click-ripple` | **Ripple**: an accent ring the icon's shape spreads to 1.6× and fades (450 ms). |
+| `click-pop` | **Pop**: grows to 115% and settles (260 ms). |
+| `click-glow` | **Glow**: an accent glow behind the icon flashes and fades (500 ms). |
+| `click-depress` | **Depress**: sinks 3 px and darkens while the button is down (80 ms), back up on release (160 ms). |
+
+Each click page loops its animation on Notes, in a 2.5× close-up and on the dock at real
+size; click any icon on the live page to try it. None move under Reduce motion.
 
 ## What it would take
 
@@ -69,3 +81,14 @@ The dock is QML (`nyx-dock/qml/Dock`) with a Rust backend (`nyx-dock-backend`).
 - **Minimized windows**: the minimized list the previews already use, drawn as tiles.
 - **Hidden line**: a small layer surface (or the hidden bar drawn 4 px tall) shown while
   hidden.
+- **Click animations**, all in `AppTile.qml` on the `Icon` and its `MouseArea`, none under
+  `Style.reducedMotion`:
+  - Bounce: a `SequentialAnimation` on the icon's `y`, started from `onClicked` and
+    `activate()`; launching repeats it until `windows` goes above 0, or about 5 s.
+  - Squish: `scale` bound to `area.pressed` (not while dragging), with a spring-like
+    `Behavior` (an `OutBack` easing) on release.
+  - Ripple: an accent `Rectangle` (radius, border) behind the icon, scaled and faded by a
+    `ParallelAnimation`.
+  - Pop: a `SequentialAnimation` on `scale`.
+  - Glow: the urgent glow's `MultiEffect` in the accent, its opacity animated.
+  - Depress: `y` and a `MultiEffect` brightness bound to `area.pressed`.

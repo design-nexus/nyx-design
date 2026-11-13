@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Render the Nyx Dock mockups to shots/ with headless Chromium. Nothing opens on screen.
 # Usage: ./render.sh                 every page
-#        ./render.sh ideas           only these pages (directions, features, ideas)
+#        ./render.sh ideas           only these pages (directions, features, ideas, click)
+# A screen written name@ms (the click animations) is held that far into its motion.
 set -euo pipefail
 cd "$(dirname "$0")"
 mkdir -p shots
@@ -19,6 +20,7 @@ pages=(
   directions:current,a,b,c,d,e,v
   features:indicators,preview,card,folder,apps,menu
   ideas:keys,recent,media,drives,downloads,drop,minimized,hidden
+  click:bounce@200,squish@200,ripple@140,pop@90,glow@130,depress@150
 )
 want=("$@")
 tmp=$(mktemp -d)
@@ -28,11 +30,13 @@ for entry in "${pages[@]}"; do
   if ((${#want[@]})) && [[ ! " ${want[*]} " == *" $page "* ]]; then continue; fi
   IFS=, read -ra screens <<<"${entry#*:}"
   for s in "${screens[@]}"; do
+    hold=""
+    if [[ $s == *@* ]]; then hold="&t=${s#*@}"; s=${s%@*}; fi
     for t in dark light; do
       "$browser" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
         --no-first-run --no-default-browser-check --user-data-dir="$tmp" --allow-file-access-from-files \
         --window-size=1920,1080 --virtual-time-budget=1500 \
-        --screenshot="shots/$page-$s-$t.png" "file://$PWD/$page.html?theme=$t&screen=$s&shot=1" >/dev/null 2>&1
+        --screenshot="shots/$page-$s-$t.png" "file://$PWD/$page.html?theme=$t&screen=$s&shot=1$hold" >/dev/null 2>&1
     done
     echo "rendered $page-$s"
   done
