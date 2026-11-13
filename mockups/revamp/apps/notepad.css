@@ -1,0 +1,43 @@
+/* Nyx Notepad mockups */
+.np-ed { flex: 1; min-height: 0; overflow: hidden; padding: 18px 0; font-family: "JetBrains Mono", monospace; font-size: 13.5px; line-height: 1.75; }
+.np-ed.col { padding: 34px 0; }
+.np-ed.col .np-lines { max-width: 660px; margin: 0 auto; }
+.np-l { display: flex; align-items: baseline; padding-right: 24px; }
+.np-l.on { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.np-l .no { width: 56px; flex: none; text-align: right; padding-right: 20px; color: var(--text-tertiary); opacity: .7; font-size: .9em; }
+.np-l.on .no { color: var(--text); opacity: 1; }
+.np-ed.nonum .np-l { padding: 0 24px; }
+.np-l .tx { white-space: pre; }
+.np-l .caret { display: inline-block; width: 1.6px; height: 17px; background: var(--accent); vertical-align: -3px; margin-left: 1px; }
+.np-l mark { background: color-mix(in srgb, var(--warning) 30%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+.np-l mark.cur { background: var(--warning); color: #1a1406; }
+.np-foot { height: 32px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 18px; border-top: 1px solid var(--divider-line); color: var(--text-tertiary); font-size: .846em; font-feature-settings: "tnum"; }
+.np-foot .sp { flex: 1; }
+.np-pill { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 6px 0 8px; border-radius: 6px; color: var(--dim-text); }
+.np-pill i { width: 11px; height: 11px; }
+.np-pill:first-of-type { background: var(--row-hover); }
+.np-clear { font-size: .9em; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--text-tertiary); }
+.side .navx .badge { font-size: 1.2em; }
+
+/* Find strip */
+.np-find { height: 48px; flex: none; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 12px; border-bottom: 1px solid var(--divider-line); background: color-mix(in srgb, var(--text) 1.5%, var(--bg)); }
+.np-find .field { height: 30px; width: 240px; }
+.np-find .field span:not(.np-cnt) { flex: 1; }
+.np-find .sp { flex: 1; }
+.np-cnt { color: var(--text-tertiary); font-size: .846em; white-space: nowrap; }
+
+/* Option B */
+.np-tabs { display: flex; align-items: center; gap: 2px; margin-left: 6px; min-width: 0; }
+.np-tabs .tab { height: 28px; }
+.np-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+.np-tabs .tab .np-dot + .x { margin-left: -2px; }
+.np-tabs .plus { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; color: var(--dim-text); }
+.np-tabs .plus i { width: 15px; height: 15px; }
+.np-more { height: 24px; padding: 0 8px; border-radius: 12px; display: inline-flex; align-items: center; font-size: .846em; font-weight: 600; color: var(--dim-text); background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); margin: 0 2px; }
+.hdr .newbtn .cv { width: 12px; height: 12px; color: var(--dim-text); }
+.hdr .newbtn + .ib { margin-left: 4px; }
+.page .menu .mi.dim span { color: var(--text-tertiary); }
+.np-fcard { position: absolute; z-index: 10; top: 10px; right: 12px; width: 340px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.np-fcard .r { display: flex; align-items: center; gap: 4px; }
+.np-fcard .field { flex: 1; height: 30px; min-width: 0; }
+.np-fcard .field span:not(.np-cnt) { flex: 1; }

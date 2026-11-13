@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx apps revamp mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="gallery.css">
+<script>
+  // Every app on the page, in tab order: [id, name].
+  const ORDER = [
+    ["mail", "Mail"], ["calendar", "Calendar"], ["chat", "Chat"],
+    ["music", "Music"], ["theater", "Theater"], ["media-player", "Media Player"], ["photos", "Photos"],
+    ["settings", "Settings"], ["files", "Files"], ["office", "Office"],
+    ["passwords", "Passwords"], ["store", "Store"], ["home", "Home"], ["weather", "Weather"],
+    ["news", "News"], ["pdf", "PDF"], ["pulse", "Pulse"], ["torrents", "Torrents"],
+    ["activity", "Activity"], ["archive", "Archive"], ["capture", "Capture"], ["fonts", "Fonts"],
+    ["maps", "Maps"], ["transfer", "Transfer"], ["calculator", "Calculator"], ["clipboard", "Clipboard"],
+    ["notepad", "Notepad"], ["welcome", "Welcome"],
+  ];
+  const APPS = {};
+  const REG = (id, def) => { APPS[id] = def; };
+  const PICKS = {};
+  for (const [id] of ORDER) document.write(`<script src="apps/${id}.js" onerror="void 0"><\/script>`);
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="title"><h1>Nyx apps revamp</h1><span class="lede">Mockups only. Each tab shows the app today, what's wrong with it, and its options. Where one option has choices inside it (sidebar or tabs, say), they're named under it: say "A with tabs".</span></div>
+  <div class="theme" id="theme"></div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main id="out"></main>
+<script>
+  // Ken's picks (picks.json), kept inline so the page works from file://.
+  Object.assign(PICKS, {"mail":"a","calendar":"a","chat":"b","music":"b","theater":"a","media-player":"d","photos":"f","settings":"a","files":"a","office":"b","passwords":"a","store":"a","home":"a","weather":"a","news":"a:As a front page","pdf":"a","pulse":"a","torrents":"b","activity":"b","archive":"c","capture":"a","fonts":"c","maps":"a","transfer":"a","calculator":"b","clipboard":"a:With a list and preview","notepad":"b","welcome":"a"});
+</script>
+<script src="gallery.js"></script>
+</body>
+</html>

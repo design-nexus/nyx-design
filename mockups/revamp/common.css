@@ -1,0 +1,75 @@
+/* Parts shared by every app on the revamp page (common.js). */
+
+.page { display: flex; flex-direction: column; min-height: 0; overflow: hidden; position: relative; }
+
+/* Smart tiles */
+.stiles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 4px 0 6px; }
+.stile { border-radius: var(--r-card); background: var(--card); box-shadow: inset 0 0 0 1px var(--hair); padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
+.stile.on { background: color-mix(in srgb, var(--tc) 16%, var(--card)); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--tc) 60%, transparent); }
+.stile .r1 { display: flex; align-items: center; justify-content: space-between; }
+.stile .ic { width: 24px; height: 24px; border-radius: 50%; background: var(--tc); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+.stile .ic i { width: 14px; height: 14px; }
+.stile .n { font-size: 1.385em; font-weight: 600; font-feature-settings: "tnum"; }
+.stile .nm { font-weight: 500; color: var(--dim-text); font-size: 0.923em; }
+body.narrow .stiles { grid-template-columns: 1fr; }
+body.narrow .stile { padding: 6px; align-items: center; }
+body.narrow .stile .n, body.narrow .stile .nm { display: none; }
+
+/* List rows */
+.lrow { min-height: 52px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; border-radius: var(--r-small); margin: 0 6px; }
+.lrow.sel { background: var(--nav-active); }
+.lrow .tx { flex: 1; min-width: 0; }
+.lrow .t1 { display: flex; align-items: baseline; gap: 8px; }
+.lrow .tt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lrow.unread .tt { font-weight: 600; }
+.lrow .meta { flex: none; color: var(--text-tertiary); font-size: 0.846em; font-feature-settings: "tnum"; }
+.lrow .t2 { color: var(--dim-text); font-size: 0.923em; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lrow.unread::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; margin-left: -4px; }
+
+/* Tables */
+.tbl { display: flex; flex-direction: column; font-feature-settings: "tnum"; }
+.tbl .th, .tbl .tr { display: flex; gap: 12px; padding: 0 14px; align-items: center; }
+.tbl .th { height: 30px; color: var(--text-tertiary); font-size: 0.846em; font-weight: 600; border-bottom: 1px solid var(--divider-line); }
+.tbl .tr { min-height: 34px; border-bottom: 1px solid color-mix(in srgb, var(--divider-line) 60%, transparent); }
+.tbl .tr.sel { background: var(--nav-active); }
+.tbl .tr > span, .tbl .th > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+
+/* Art and media */
+.art { display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.85); flex: none; overflow: hidden; position: relative; }
+.art i { width: 30%; height: 30%; max-width: 40px; max-height: 40px; opacity: .8; }
+.art span { position: absolute; left: 10px; bottom: 8px; right: 10px; font-weight: 600; font-size: .92em; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+
+/* Progress, charts, rings */
+.prog { display: inline-block; height: 6px; border-radius: 3px; background: var(--field); overflow: hidden; width: 100%; }
+.prog b { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.prog.ok b { background: var(--success); } .prog.warn b { background: var(--warning); } .prog.bad b { background: var(--danger); }
+.bars { display: flex; align-items: flex-end; }
+.bars b { flex: 1; border-radius: 2px 2px 0 0; opacity: .85; }
+.ring { position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.ring svg { position: absolute; inset: 0; }
+.ring b { font-weight: 600; font-size: .92em; font-feature-settings: "tnum"; }
+
+/* Pops: menus and dialogs look raised */
+.pop { background: var(--popover); border-radius: var(--r-card); box-shadow: var(--lift-shadow), inset 0 0 0 1px var(--hair); }
+
+/* Cards in a page */
+.cardgrid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(var(--cw, 180px), 1fr)); }
+.kcard { background: var(--card); border-radius: var(--r-card); box-shadow: inset 0 0 0 1px var(--hair); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.kcard .k { color: var(--text-tertiary); font-size: .846em; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.kcard .k i { width: 13px; height: 13px; }
+.kcard .v { font-size: 1.538em; font-weight: 600; letter-spacing: -.01em; font-feature-settings: "tnum"; }
+.kcard .s { color: var(--dim-text); font-size: .923em; }
+.sechead { display: flex; align-items: center; gap: 8px; margin: 18px 2px 8px; font-weight: 600; }
+.sechead:first-child { margin-top: 0; }
+.sechead .more { margin-left: auto; color: var(--accent); font-weight: 500; font-size: .923em; }
+
+body.narrow .wide-only { display: none; }
+
+/* A window whose sidebar is the icon rail at any width: win({ … }) wrapped as railed(). */
+.win.rail { --side-w: 56px; }
+.win.rail .side .navx span:not(.cdot), .win.rail .side .navx .cnt, .win.rail .side .navx .badge, .win.rail .side .navx .sub, .win.rail .side .grp2, .win.rail .side .foot, .win.rail .side .hide-narrow { display: none; }
+.win.rail .side .navx { justify-content: center; padding: 0; }
+.win.rail .side .grp2.sec { display: block; height: 2px; padding: 0; margin: 8px 14px 6px; border: 0; border-radius: 1px; font-size: 0; overflow: hidden; background: color-mix(in srgb, var(--sc) 60%, transparent); }
+.win.rail .stiles { grid-template-columns: 1fr; }
+.win.rail .stile { padding: 6px; align-items: center; }
+.win.rail .stile .n, .win.rail .stile .nm { display: none; }

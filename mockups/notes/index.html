@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Notes mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+<h1>Nyx Notes</h1>
+<p>A simpler Notes with nothing taken away. The 55-item menu becomes a command palette
+("Go to a note or do anything", Ctrl+K) and a short menu grouped into Note, View and Vault.
+A note list sits beside the editor and doubles as search results, with highlighted matches
+and query chips. The editor keeps its reading column; Source, Live and Read are a switch
+above it; formatting floats over a selection. The status bar goes: words and reading time
+move to the inspector's Info tab. Graph, Collections and History open as tabs in the window
+instead of separate windows; Assist proposes edits in the inspector for review; a sync
+conflict compares both versions side by side; first run is one card. Every shot comes in Nyx
+Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.</p>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const GALLERY = [
+    ["Suggested", [
+      ["editor", "Folder, note list, editor", "The list beside the note; Outline and Backlinks in the inspector"],
+      ["reading", "Reading", "The same column, larger type, no inspector"],
+      ["source", "Source, unsaved", "The Markdown itself; the save dot by the title; Info tab"],
+      ["format", "Formatting a selection", "Bold, italic, link, heading, list, task, quote, code, Assist"],
+      ["palette", "Command palette", "Notes, headings and every command in one place"],
+      ["menu", "The menu, grouped", "Note, View and Vault; everything else in the palette"],
+      ["search", "Search results", "In the note list, with matches highlighted and query chips"],
+    ]],
+    ["Inside the window, not new windows", [
+      ["graph", "Graph as a tab", "This note or the whole vault; links in the inspector"],
+      ["collections", "Collections as a tab", "Board by status; Table, List and Gallery too"],
+      ["history", "History as a tab", "A timeline and the change; restore lines or the version"],
+      ["assist", "Assist in the inspector", "A proposed edit to apply, retry or discard"],
+      ["split", "Split editor", "Two notes side by side, each with its own bar"],
+    ]],
+    ["States", [
+      ["conflict", "Sync conflict", "Both versions side by side; the other stays in History"],
+      ["welcome", "First run", "One card: choose a folder, create a vault, or reopen one"],
+    ]],
+    ["At 800 px (tiled)", [
+      ["editor-800", "Editor at 800 px", "The tree hides; the list and the note stay"],
+      ["reading-800", "Reading at 800 px", "The column fits"],
+    ]],
+    ["Other ideas", [
+      ["live", "Tree only (B)", "Today's layout without the list, cleaned up"],
+      ["library", "A Library home (C)", "Pinned, recent and saved searches when the vault opens"],
+    ]],
+    ["Today, for comparison", [
+      ["before", "Today's app", "The 55-item menu, the status bar, no note list"],
+    ]],
+  ];
+</script>
+<script src="gallery.js"></script>
+</body>
+</html>

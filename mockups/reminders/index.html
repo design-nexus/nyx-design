@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Reminders mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+<h1>Nyx Reminders</h1>
+<p>A simpler Reminders with nothing taken away. One field to search in the header, and quick
+add at the top of the list, saying what it understood and which list the reminder goes to.
+The smart lists become tiles with counts; sync state shows once, at the sidebar's foot.
+Rows carry their date, repeat, list and #tags as chips, a flag icon for flagged and a thin
+bar for priority instead of !!!. The details inspector shows every field all the time, with
+a time dropdown, a List dropdown (so a reminder can move) and Delete as a labelled button.
+Scheduled is grouped by when. Every shot comes in Nyx Dark and Nyx Light. Click a shot for
+the full size, or "live" to open the page.</p>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const GALLERY = [
+    ["Suggested", [
+      ["today", "Today", "Overdue first, then today; quick add with its destination list"],
+      ["detail", "Details", "Every field shown; time and repeat dropdowns; List; subtasks open; Delete"],
+      ["quickadd", "Quick add while typing", "What it understood as chips, and where it goes"],
+      ["scheduled", "Scheduled", "Grouped: Overdue, Today, Tomorrow, This week, Later"],
+      ["list", "A list", "Manual order, subtasks under their reminder"],
+      ["flagged", "Flagged", "Adding here flags it; it goes to the list shown"],
+      ["completed", "Completed", "By day, with a tidy-up action"],
+      ["menu", "Right-click", "Complete, Flag, Due, Priority, Move to list, Copy, Delete"],
+    ]],
+    ["States", [
+      ["nomatch", "No matches", "Says it was a search, with a way out"],
+      ["empty", "An empty list", "What to type, and Show completed"],
+      ["signin", "Sign in again", "One banner; the foot says offline once"],
+    ]],
+    ["At 800 px (tiled)", [
+      ["today-800", "Today at 800 px", "The tiles become an icon rail"],
+      ["detail-800", "Details at 800 px", "The inspector keeps its width"],
+    ]],
+    ["Other ideas", [
+      ["expand", "Rows that open in place", "Things-style: no inspector, chips open pickers"],
+      ["overview", "A day at a glance", "Counts and the day by morning and evening"],
+    ]],
+    ["Today, for comparison", [
+      ["before", "Today's app", "Search in the sidebar, quick add in the header, !!!, a lone trash icon"],
+    ]],
+  ];
+</script>
+<script src="gallery.js"></script>
+</body>
+</html>

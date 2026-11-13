@@ -1,0 +1,86 @@
+/* Mockup skeleton shared by every variant: resets, the window grid, art, the switcher.
+ * Looks live in nyx-before.css (body.before) and nyx-after.css (body.after). */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 400 13px/1.3 "Inter", "Inter Variable", sans-serif;
+  font-feature-settings: "calt", "cv05";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button { font: inherit; color: inherit; border: 0; background: none; cursor: default; }
+a { color: inherit; text-decoration: none; }
+i[data-i] { display: inline-flex; flex: none; width: 16px; height: 16px; }
+i[data-i] svg { width: 100%; height: 100%; }
+.tnum { font-feature-settings: "tnum"; }
+.mono { font-family: "JetBrains Mono", monospace; }
+.grow { flex: 1; min-width: 0; }
+.row-flex { display: flex; align-items: center; }
+.ellipsis { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+::-webkit-scrollbar { display: none; }
+
+/* Window grid. The header spans the window; the tinted variant moves the sidebar
+ * beside it (see nyx-after.css). */
+.win {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: var(--side-w, 212px) minmax(0, 1fr);
+  grid-template-rows: var(--hdr-h, 46px) minmax(0, 1fr) auto;
+  grid-template-areas: "hdr hdr" "side page" "foot foot";
+  position: relative;
+}
+.win.no-side { grid-template-columns: 0 minmax(0, 1fr); }
+.hdr { grid-area: hdr; display: flex; align-items: center; min-width: 0; position: relative; z-index: 2; }
+.hdr-id, .hdr-start, .hdr-end, .hdr-center { display: flex; align-items: center; min-width: 0; }
+.hdr-center { flex: 1; justify-content: center; }
+.side { grid-area: side; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.side-scroll { flex: 1; overflow: auto; min-height: 0; }
+.side-id { display: none; align-items: center; }
+.page { grid-area: page; min-width: 0; min-height: 0; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+.status { grid-area: foot; }
+
+.only-before, .only-after, .only-tinted { display: none !important; }
+body.before .only-before, body.after .only-after, body.v-tinted .only-tinted { display: revert !important; }
+body.before .only-before.flex, body.after .only-after.flex, body.v-tinted .only-tinted.flex { display: flex !important; }
+body.before .not-before, body.after .not-after, body.v-tinted .not-tinted { display: none !important; }
+
+/* Art: generated covers and posters (no images needed). */
+.art { position: relative; overflow: hidden; background: var(--g, linear-gradient(135deg, #333, #111)); }
+.art::after { content: ""; position: absolute; inset: 0; background: var(--fx, none); }
+.art .art-t {
+  position: absolute; left: 10px; right: 10px; bottom: 10px;
+  font-family: "Inter Display", "Inter", sans-serif; font-weight: 600; color: #fff;
+  font-size: 15px; line-height: 1.1; letter-spacing: -0.01em; text-shadow: 0 1px 8px rgba(0,0,0,.35); z-index: 1;
+}
+.g1 { --g: linear-gradient(140deg, #ff8a5b, #c2185b 60%, #4a148c); --fx: radial-gradient(circle at 70% 30%, rgba(255,255,255,.35) 0 14%, transparent 15%); }
+.g2 { --g: linear-gradient(160deg, #0f2027, #2c5364); --fx: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 2px, transparent 2px 14px); }
+.g3 { --g: linear-gradient(135deg, #f6d365, #fda085); --fx: radial-gradient(circle at 30% 70%, rgba(0,0,0,.18) 0 30%, transparent 31%); }
+.g4 { --g: linear-gradient(200deg, #232526, #414345); --fx: linear-gradient(45deg, transparent 45%, rgba(255,255,255,.18) 45% 55%, transparent 55%); }
+.g5 { --g: linear-gradient(135deg, #43cea2, #185a9d); --fx: radial-gradient(circle at 50% 50%, transparent 0 28%, rgba(255,255,255,.22) 28% 30%, transparent 30%); }
+.g6 { --g: linear-gradient(160deg, #e0c3fc, #8ec5fc); --fx: linear-gradient(0deg, rgba(0,0,0,.2) 0 35%, transparent 35%); }
+.g7 { --g: linear-gradient(135deg, #1d0b3a, #6a1b9a 55%, #ff6f91); --fx: radial-gradient(circle at 75% 75%, rgba(255,214,102,.8) 0 10%, transparent 11%); }
+.g8 { --g: linear-gradient(120deg, #c9d6ff, #e2e2e2); --fx: repeating-radial-gradient(circle at 20% 20%, rgba(0,0,0,.06) 0 3px, transparent 3px 12px); }
+.g9 { --g: linear-gradient(160deg, #134e5e, #71b280); --fx: linear-gradient(120deg, transparent 60%, rgba(0,0,0,.25) 60%); }
+.g10 { --g: linear-gradient(135deg, #2b1055, #7597de); --fx: radial-gradient(circle at 40% 35%, rgba(255,255,255,.9) 0 3%, transparent 4%), radial-gradient(circle at 65% 60%, rgba(255,255,255,.6) 0 2%, transparent 3%); }
+.g11 { --g: linear-gradient(135deg, #ff512f, #dd2476); --fx: repeating-linear-gradient(-45deg, rgba(255,255,255,.08) 0 6px, transparent 6px 18px); }
+.g12 { --g: linear-gradient(160deg, #0b0b0d, #3a3a40); --fx: radial-gradient(circle at 50% 40%, rgba(242,181,69,.85) 0 16%, transparent 17%); }
+.g13 { --g: linear-gradient(180deg, #2c3e50, #000); --fx: radial-gradient(ellipse at 50% 110%, rgba(255,122,89,.7), transparent 60%); }
+.g14 { --g: linear-gradient(135deg, #614385, #516395); --fx: linear-gradient(0deg, rgba(0,0,0,.45), transparent 50%); }
+.g15 { --g: linear-gradient(160deg, #3e5151, #decba4); --fx: linear-gradient(0deg, rgba(0,0,0,.4), transparent 45%); }
+.g16 { --g: linear-gradient(135deg, #000428, #004e92); --fx: radial-gradient(circle at 80% 20%, rgba(76,201,214,.6) 0 12%, transparent 13%), linear-gradient(0deg, rgba(0,0,0,.45), transparent 45%); }
+
+/* The switcher (hidden in screenshots). */
+.mock-switch {
+  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 100;
+  display: flex; gap: 2px; align-items: center; padding: 4px;
+  background: rgba(20,20,22,.92); color: #ddd; border-radius: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 10px 30px rgba(0,0,0,.4);
+  font-size: 12px;
+}
+.mock-switch a { padding: 5px 10px; border-radius: 7px; }
+.mock-switch a:hover { background: rgba(255,255,255,.08); }
+.mock-switch a.on { background: #fff; color: #111; font-weight: 500; }
+.mock-switch span { width: 1px; height: 16px; background: rgba(255,255,255,.15); margin: 0 4px; }

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Screens — Nyx revamp mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="nyx-after.css">
+<link rel="stylesheet" href="kit.css">
+<link rel="stylesheet" href="common.css">
+<script>
+  // screens.html?app=mail&screen=a-inbox&theme=dark[&w=800][&shot=1]
+  const APP = new URLSearchParams(location.search).get("app") || "mail";
+  const APPS = {};
+  const REG = (id, def) => { APPS[id] = def; };
+  document.write(`<link rel="stylesheet" href="apps/${APP}.css">`);
+</script>
+<script src="mock.js"></script>
+</head>
+<body>
+<script src="kit.js"></script>
+<script src="common.js"></script>
+<script>document.write(`<script src="apps/${APP}.js"><\/script>`);</script>
+<script>
+  const DEF = APPS[APP];
+  Object.assign(KI, DEF.icons || {});
+  if (DEF.accent) ROOT.style.setProperty("--app-accent", `var(--sw-${DEF.accent})`);
+  ROOT.dataset.screens = Object.keys(DEF.pages).join(",");
+  mount((DEF.pages[SCREEN] || Object.values(DEF.pages)[0])());
+</script>
+</body>
+</html>

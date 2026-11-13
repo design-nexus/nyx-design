@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" data-accent="amber" data-screens="editor,live,reading,source,format,palette,menu,search,graph,collections,history,assist,conflict,split,welcome,library,before" data-narrow="editor,reading">
+<head>
+<meta charset="utf-8">
+<title>Screens — Nyx Notes mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="nyx-after.css">
+<link rel="stylesheet" href="kit.css">
+<link rel="stylesheet" href="notes.css">
+<script src="mock.js"></script>
+</head>
+<body>
+<script src="kit.js"></script>
+<script src="notes.js"></script>
+<script>
+  mount((PAGES[SCREEN] || PAGES.editor)());
+</script>
+</body>
+</html>

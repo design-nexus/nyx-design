@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Contacts mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+<h1>Nyx Contacts</h1>
+<p>A simpler Contacts with nothing taken away. The header has search and a labelled New; the
+"…" menu of ten mixed actions goes. The sidebar sorts contacts, lists, accounts (with each
+book's sync state and read-only mark) and a Tidy up group for Birthdays and Duplicates. Rows
+get avatars and a favourite star; selecting several brings up a bar with what you can do to
+them. The details open with Email, Call, Message, Edit and More; fields copy and open on
+hover; birthday shows the age and countdown; lists are chips. Edit happens in place, with a
+date picker and the rarely used name fields folded away. Duplicates compare side by side and
+imports let you leave people out. Every shot comes in Nyx Dark and Nyx Light. Click a shot
+for the full size, or "live" to open the page.</p>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const GALLERY = [
+    ["Suggested", [
+      ["all", "All contacts", "Avatars, letters, the details with their actions"],
+      ["detail", "Details, a field hovered", "Copy and Email on hover, nothing repeated on every row"],
+      ["edit", "Editing in place", "Label dropdowns, single-line values, a date picker"],
+      ["new", "A new contact", "From a list: it joins that list"],
+      ["select", "Several selected", "Checkboxes and the selection bar"],
+      ["listmenu", "A list's menu", "Only what applies to the list"],
+    ]],
+    ["Tidy up", [
+      ["bdays", "Birthdays", "By month, today first, age and countdown; Add to Calendar"],
+      ["dups", "Duplicates", "Side by side, choose per field, everything else kept"],
+      ["import", "Import preview", "Leave people out; see who updates and who may be a duplicate"],
+    ]],
+    ["States", [
+      ["online", "A read-only book, syncing", "Read only said once; sync at the foot"],
+      ["empty", "An empty book", "New contact and Import"],
+    ]],
+    ["At 800 px (tiled)", [
+      ["all-800", "All at 800 px", "The sidebar becomes a rail"],
+      ["edit-800", "Editing at 800 px", "The form keeps its column"],
+    ]],
+    ["Other ideas", [
+      ["favgrid", "Favorites as cards", "One click from Email, Call or Message"],
+    ]],
+    ["Today, for comparison", [
+      ["before", "Today's app", "Four icon buttons, the ten-item menu, no avatars"],
+    ]],
+  ];
+</script>
+<script src="gallery.js"></script>
+</body>
+</html>
