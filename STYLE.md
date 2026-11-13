@@ -372,11 +372,22 @@ noted in its shortcuts list.
   swatch; fallback logos retain their original colors on the theme's tile.
 - **Umbra** (design-nexus/umbra-icons) is the suite's icon theme for everything that
   isn't an app: folders, file types, devices, status and the symbolic set, drawn in the
-  theme's colours. Three looks: **Tile** (the default: the app-icon tile holding a
+  theme's colours. Six looks: **Tile** (the default: the app-icon tile holding a
   folder or page outline with its mark), **Solid** (satin folder and page shapes, a
-  coloured type badge) and **Line** (coloured outlines, thinner at large sizes). Code
-  files carry their language's mark; cloud-drive folders their brand's, in its colours.
-  Settings → Theme → Icons picks Umbra and its look.
+  coloured type badge), **Line** (coloured outlines, thinner at large sizes), **Tinted**
+  (Tile with the tile washed in the icon's colour), **Frame** (Tile's lines in an
+  outlined tile of their colour, no satin) and **Colour** (a tile in the icon's colour
+  holding a white folder, page or glyph). Code files carry their language's mark;
+  cloud-drive folders their brand's, in its colours.
+- **Vellum** (design-nexus/vellum-icons) is a second icon set drawn from Umbra's catalog
+  and glyphs, with the same coverage and symbolic set. Two looks: **Paper** (pastel paper
+  in tints of the icon's colour, a crisp fold and a soft shadow; raised surfaces on dark
+  themes) and **Mono** (the theme's greys, colour only on the mark; status icons keep
+  theirs).
+- Settings → Theme → Icons picks Umbra or Vellum and its look. App icons follow the
+  look: Tinted, Frame, Colour, Paper and Mono each have an app-icon style
+  (`make_icons.styled`), which `nyx icons` draws in; Tile, Solid and Line keep the Nyx
+  tile. Mockups: `mockups/icon-sets/`.
 
 ---
 
