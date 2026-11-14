@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Browser feature mockups</title>
+<link rel="stylesheet" href="../browser/tokens.css">
+<link rel="stylesheet" href="../browser/browser.css">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  /* browser.css is for the mockup pages, which don't scroll; this page does. */
+  html, body { height: auto; overflow: auto; }
+  body { background: var(--bg); color: var(--text); font: 400 13px/1.45 "Inter", sans-serif; padding: 32px 40px 60px; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -.015em; }
+  h2 { font-size: 17px; font-weight: 600; margin: 34px 0 4px; }
+  p { color: var(--dim-text); max-width: 900px; margin-top: 6px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 18px; margin-top: 14px; }
+  figure { margin: 0; }
+  figure a { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px var(--border); }
+  figure img { display: block; width: 100%; }
+  figcaption { margin-top: 8px; display: flex; gap: 10px; align-items: baseline; }
+  figcaption b { font-weight: 600; }
+  figcaption span { color: var(--dim-text); font-size: 12px; }
+  figcaption a { margin-left: auto; color: var(--accent); font-size: 12px; text-decoration: none; }
+  .theme { display: flex; gap: 6px; margin-top: 14px; }
+  .theme a { padding: 5px 12px; border-radius: 7px; color: var(--dim-text); text-decoration: none; background: color-mix(in srgb, var(--text) 3.5%, transparent); }
+  .theme a.on { background: var(--accent); color: var(--on-accent); }
+  /* The viewer: one shot at a time, full window; arrows step through every shot. */
+  .viewer { position: fixed; inset: 0; z-index: 10; display: none; flex-direction: column; background: color-mix(in srgb, #000 88%, transparent); color: #eee; }
+  .viewer.on { display: flex; }
+  .viewer .stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 16px 64px 0; }
+  .viewer img { max-width: 100%; max-height: 100%; border-radius: 8px; box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 20px 60px rgba(0,0,0,.6); }
+  .viewer .bar { height: 56px; flex: none; display: flex; align-items: center; gap: 14px; padding: 0 24px; font-size: 13px; }
+  .viewer .bar b { font-weight: 600; }
+  .viewer .bar .sub { color: #aaa; }
+  .viewer .bar .keys { margin-left: auto; color: #888; font-size: 12px; }
+  .viewer .bar .n { color: #888; font-feature-settings: "tnum"; }
+  .viewer .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 64px; border: 0; border-radius: 10px; background: rgba(255,255,255,.08); color: #fff; font-size: 26px; cursor: pointer; }
+  .viewer .nav:hover { background: rgba(255,255,255,.16); }
+  .viewer .prev { left: 12px; } .viewer .next { right: 12px; }
+  .viewer .close { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border: 0; border-radius: 8px; background: rgba(255,255,255,.08); color: #fff; font-size: 18px; cursor: pointer; }
+</style>
+</head>
+<body>
+<h1>Nyx Browser · new features</h1>
+<p>Proposals before any code: Swift Selection Search's popup built in (the text box on top, engines
+below), video downloads with yt-dlp, browser-only VPNs (NordVPN and others without their extension),
+opening a page in another browser, uBlock Origin underneath a Nyx shield, Nyx Passwords built in
+instead of an extension and instead of Firefox's own autofill, Vivaldi's tab settings, a redesigned
+Share dropdown, and a few suggestions (Quick Commands, mouse gestures, tab hibernation). The new
+settings panes sit in Browser's settings beside the approved ones. Every shot comes in Catppuccin
+Mocha, Nyx Dark and Nyx Light. Click a shot for the full size, or "live" to open the page.</p>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const t = new URLSearchParams(location.search).get("theme") || "mocha";
+  const NAMES = { mocha: "Catppuccin Mocha", dark: "Nyx Dark", light: "Nyx Light" };
+  document.documentElement.dataset.theme = t;
+  document.getElementById("theme").innerHTML = Object.keys(NAMES)
+    .map((v) => `<a class="${v === t ? "on" : ""}" href="?theme=${v}">${NAMES[v]}</a>`).join("");
+  const sections = [
+    ["The Passwords icon", [
+      ["pwicon-board", "Six options side by side", "Each in the top bar, inside a login field and in Settings"],
+      ["pwicon-a", "A · Shield and lock", "The Passwords app's own icon as a line drawing; content blocking's shield becomes a ban sign"],
+      ["pwicon-b", "B · Password field", "A field of hidden characters, like a login form's"],
+      ["pwicon-c", "C · Padlock with a password", "A lock with hidden characters inside it"],
+      ["pwicon-d", "D · Key", "A plain key, drawn level so it reads at toolbar size"],
+      ["pwicon-e", "E · Account and lock", "A person with a lock: your logins"],
+      ["pwicon-f", "F · The app's tile", "Nyx Passwords' own icon in colour, as extensions show theirs"],
+    ]],
+    ["Selection search", [
+      ["selection-popup", "Selecting text", "The selection in a text box on top to edit; Copy, Open as link and the engines below; middle-click for a background tab"],
+      ["settings-selection", "Settings · Selection Search", "When it shows, the text box, icon size, engines for the popup and the context menu, where results open, sites where it's off"],
+    ]],
+    ["Video downloads (yt-dlp)", [
+      ["video-panel", "Downloading a video", "The icon in the address field on sites yt-dlp supports: video or audio, the quality with sizes, subtitles, the folder"],
+      ["video-progress", "Downloads panel", "yt-dlp jobs with progress and merging, beside ordinary downloads"],
+      ["settings-downloads", "Settings · Downloads", "Default quality and audio format, folder, file names, videos that need sign-in, yt-dlp's version"],
+    ]],
+    ["VPN, browser only", [
+      ["vpn-panel", "VPN panel", "Connected state, address and latency, locations with flags, the fastest server, every workspace or only this one"],
+      ["vpn-favorites", "VPN · Favourites (new)", "As Control Center has it: Fastest, then your starred countries and cities, a check where you are; the search field and every country below"],
+      ["vpn-countries", "VPN · A country's cities (new)", "The chevron opens a country's cities, indented; a star on any of them makes it a favourite"],
+      ["vpn-search", "VPN · Searching (new)", "Countries, then cities, as you type (\"san\"); a place without a NordVPN proxy right now says so in its row"],
+      ["vpn-add", "Adding a VPN", "NordVPN, Surfshark, PIA, Windscribe; Mullvad, Proton or any WireGuard file; or a SOCKS5 or HTTPS proxy"],
+      ["settings-vpn", "Settings · VPN", "Connections, a VPN per workspace, stop if it drops, DNS and WebRTC through it, sites that skip it"],
+    ]],
+    ["Open in another browser", [
+      ["open-in", "Open in", "One click opens the page in your chosen browser; the dropdown has the others, private windows and per-site rules"],
+      ["open-in-link", "Links", "Open link in Firefox, or in any other installed browser, from the context menu"],
+    ]],
+    ["Content blocking (uBlock Origin)", [
+      ["shield-panel", "Shield panel", "The count in the address field; the site's switch, picker and zapper, uBlock's per-site switches, its dashboard"],
+      ["shield-picker", "Picking an element", "The element outlined, its filter, broader or exact, preview, hide"],
+      ["settings-blocking", "Settings · Content Blocking", "Filter lists, sites not blocked, my filters, cookie banners, tracking in links"],
+    ]],
+    ["Passwords, built in", [
+      ["passwords-field", "Login fields", "The key in each field; the menu as the extension draws it: this site's logins, a strong password, Passwords"],
+      ["passwords-panel", "Passwords panel", "The extension's popup, unchanged, from Browser's own button"],
+      ["passwords-save", "Saving a login", "After signing in: save, not now, never for this site"],
+      ["passkey", "Passkeys", "Nyx Passwords answers first; a security key only if you choose one"],
+      ["settings-passwords", "Settings · Passwords", "Filling, saving, passkeys, cards and addresses; importing Firefox's saved logins"],
+    ]],
+    ["Tabs, as Vivaldi has them", [
+      ["settings-tabs", "Settings · Tabs & Sidebar", "Where new tabs, bookmarks, searches and other apps' links open; the tab you land on after closing one"],
+      ["settings-tabs-2", "Settings · Tabs & Sidebar, further down", "Double-click, close buttons, the wheel, previews; Ctrl+Tab order; hibernation; startup and saved sessions"],
+      ["tab-hibernated", "Hibernated tabs", "Dimmed with a moon; Hibernate in the tab's menu, and Open in Firefox"],
+    ]],
+    ["Share", [
+      ["share", "Share, redesigned", "The page on top with Copy link; round app tiles; nearby devices; More in Share"],
+      ["share-qr", "Share · QR code", "The code in the dropdown itself, to copy or save"],
+    ]],
+    ["Suggestions", [
+      ["quick-commands", "Quick Commands (F2)", "From Vivaldi: one search over open tabs, bookmarks, history, commands and settings"],
+      ["settings-gestures", "Settings · Gestures", "From Vivaldi: mouse gestures with the right button, each drawn, any command assignable"],
+    ]],
+  ];
+  document.getElementById("out").innerHTML = sections.map(([title, shots]) =>
+    `<h2>${title}</h2><div class="grid">${shots.map(([s, name, sub]) => {
+      const img = `shots/${s}-${t}.png`;
+      return `<figure><a href="${img}" data-shot="${s}" data-name="${name}" data-sub="${sub}"><img src="${img}" loading="lazy" alt="${name}"></a><figcaption><b>${name}</b><span>${sub}</span><a href="browser.html?screen=${s}&theme=${t}">live</a></figcaption></figure>`;
+    }).join("")}</div>`).join("");
+
+  // Viewer: click a shot, then ← → through every shot, D / L for dark or light, Esc to close.
+  const shots = [...document.querySelectorAll("a[data-shot]")];
+  let at = -1, theme = t;
+  const v = document.createElement("div");
+  v.className = "viewer";
+  v.innerHTML = `<div class="stage"><img alt=""></div><button class="nav prev" title="Previous (←)">‹</button><button class="nav next" title="Next (→)">›</button><button class="close" title="Close (Esc)">×</button>
+    <div class="bar"><span class="n"></span><b></b><span class="sub"></span><span class="keys">← → next and previous · D dark · L light · M Mocha · Esc close</span></div>`;
+  document.body.append(v);
+  const show = (i) => {
+    at = (i + shots.length) % shots.length;
+    const a = shots[at];
+    v.querySelector("img").src = `shots/${a.dataset.shot}-${theme}.png`;
+    v.querySelector(".n").textContent = `${at + 1} / ${shots.length}`;
+    v.querySelector("b").textContent = a.dataset.name;
+    v.querySelector(".sub").textContent = `${a.dataset.sub} · ${NAMES[theme]}`;
+    v.classList.add("on");
+  };
+  const close = () => { v.classList.remove("on"); at = -1; };
+  shots.forEach((a, i) => a.addEventListener("click", (e) => { e.preventDefault(); show(i); }));
+  v.querySelector(".prev").onclick = () => show(at - 1);
+  v.querySelector(".next").onclick = () => show(at + 1);
+  v.querySelector(".close").onclick = close;
+  v.querySelector(".stage").onclick = (e) => { if (e.target === e.currentTarget) close(); };
+  document.addEventListener("keydown", (e) => {
+    if (at < 0) return;
+    if (e.key === "ArrowRight" || e.key === " ") show(at + 1);
+    else if (e.key === "ArrowLeft") show(at - 1);
+    else if (e.key === "Escape") close();
+    else if (e.key === "d" || e.key === "l" || e.key === "m") { theme = { d: "dark", l: "light", m: "mocha" }[e.key]; show(at); }
+    else return;
+    e.preventDefault();
+  });
+</script>
+</body>
+</html>
