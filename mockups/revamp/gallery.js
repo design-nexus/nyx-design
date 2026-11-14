@@ -45,7 +45,7 @@
       const L = o.id.toUpperCase();
       const say = o.variants ? `<p class="say">Choices inside it: ${o.variants.map((v) => `<b>${L} ${v.toLowerCase()}</b>`).join(" or ")}</p>` : "";
       const pick = (PICKS[id] || "").split(":");
-      const chosen = pick[0] === o.id ? `<span class="picked">Picked${pick[1] ? ` · ${pick[1].toLowerCase()}` : ""}</span>` : "";
+      const chosen = pick[0].split("+").includes(o.id) ? `<span class="picked">Picked${pick[1] ? ` · ${pick[1].toLowerCase()}` : ""}</span>` : "";
       h += `<h3><span class="tag">Option ${L}</span>${o.name}${chosen}</h3><p>${o.idea}</p>${say}<div class="grid">${os.map((s) => fig(s, theme0)).join("")}</div>`;
     }
     out.innerHTML = h;

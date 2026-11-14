@@ -18,7 +18,7 @@
   "pdf": "a",
   "pulse": "a",
   "torrents": "b",
-  "activity": "b",
+  "activity": "b+e",
   "archive": "c",
   "capture": "a",
   "fonts": "c",
