@@ -303,6 +303,80 @@
     return `${byBar(by)}<div class="cols">${NARROW ? `<div class="main">${map}<div class="ac-drawer an2-dr">${aic("Blender", "amber")}<div class="tx"><b>Blender</b><span>3 processes · 3.8 GB · 41% CPU</span></div>${btn("Switch to", "", "window")}${ib("pause", "Pause")}${ib("chev-u", "Show graphs and processes")}${btn("End task", "danger")}</div></div>` : `<div class="main">${map}</div>${panelN2(o)}`}</div>`;
   };
 
+  /* ── Processes choices (E, F, G), on option B's sidebar and header ──── */
+  const sideP = () => `
+    ${navx("grid", "Dashboard")}
+    ${navx("listic", "Processes", { active: true, cnt: 312 })}
+    ${grp("Performance", false, "", "accent")}
+    ${navx("cpu", "CPU", { sub: "36%" })}${navx("memory", "Memory", { sub: "83%" })}${navx("drive", "Storage", { sub: "71%" })}${navx("wifi", "Network", { sub: "3.9 MB/s" })}${navx("gpu", "GPU", { sub: "21%" })}${navx("thermo", "Sensors", { sub: "64 °C" })}
+    ${grp("System", false, "", "violet")}
+    ${navx("rocket", "Startup")}${navx("cog", "Services", { badge: 1 })}`;
+  // [name, colour, cpu %, memory, disk, network, gpu %, processes, user, note, cpu history seed]
+  const PAPPS = [
+    ["Blender", "amber", 41.2, "3.8 GB", "12 MB/s", "–", 62, 3, "you", "Using a lot of the processor", 1],
+    ["Firefox", "coral", 8.4, "2.1 GB", "1.2 MB/s", "3.4 MB/s", 4, 14, "you", "Using a lot of memory", 2],
+    ["ffmpeg", "green", 6.9, "412 MB", "38 MB/s", "–", 18, 1, "you", "Writing to disk", 3],
+    ["Code - OSS", "blue", 3.1, "1.4 GB", "–", "12 KB/s", 1, 9, "you", "", 4],
+    ["kitty", "pink", 0.3, "120 MB", "–", "–", 0, 2, "you", "", 5],
+  ];
+  const PBG = [
+    ["Syncthing", "graphite", 0.6, "96 MB", "420 KB/s", "180 KB/s", 0, 1, "you", "Syncing 2 folders", 6],
+    ["PipeWire", "violet", 0.9, "48 MB", "–", "–", 0, 3, "you", "", 7],
+    ["Hyprland", "teal", 1.8, "310 MB", "–", "–", 6, 1, "you", "", 8],
+  ];
+  const PSYS = [
+    ["systemd-journald", "graphite", 0.2, "38 MB", "88 KB/s", "–", 0, 1, "root", "", 9],
+    ["NetworkManager", "green", 0.1, "22 MB", "–", "6 KB/s", 0, 1, "root", "", 10],
+  ];
+  const KIDS = [["blender", "4211", 38.9, "3.6 GB"], ["blender-softwaregl", "4230", 2.1, "180 MB"], ["python3.12", "4262", 0.2, "42 MB"]];
+  // A letter on an Umbra tile: the satin tile, a glow and edge in the app's colour, the
+  // letter in it (the icon theme's app style).
+  const uic = (name, c) => `<span class="u-aic" style="--uc: var(--sw-${c})">${name[0].toUpperCase()}</span>`;
+  const cpuBar = (v) => `<span class="p-cbar"><b style="width:${Math.min(100, v * 1.6)}%"></b></span><span class="p-num">${v.toFixed(1)}%</span>`;
+
+  /* E: apps and what they run */
+  const eRow = ([n, c, cpu, mem, disk, net, , procs], o = {}) => `<div class="p-er ${o.sel ? "sel" : ""} ${o.open ? "open" : ""}">
+    <span class="p-tw">${procs > 1 ? icon(o.open ? "chev-d" : "chev-r") : ""}</span>${uic(n, c)}<span class="p-nm"><b>${n}</b>${procs > 1 ? `<span>${procs} processes</span>` : ""}</span>
+    <span class="p-c cpu">${cpuBar(cpu)}</span><span class="p-c">${mem}</span><span class="p-c w">${disk}</span><span class="p-c w">${net}</span></div>`;
+  const eKid = ([n, pid, cpu, mem]) => `<div class="p-er kid"><span class="p-tw"></span><span class="p-kidl"></span><span class="p-nm"><span class="k">${n}</span><span>PID ${pid}</span></span><span class="p-c cpu"><span class="p-num">${cpu.toFixed(1)}%</span></span><span class="p-c">${mem}</span><span class="p-c w">–</span><span class="p-c w">–</span></div>`;
+  const eGroup = (title, sw, rows, count, o = {}) => `<div class="p-gh" style="--sc: var(--${sw === "accent" ? "accent" : "sw-" + sw})"><b>${title}</b><span>${count}</span></div>${rows.map((r, i) => eRow(r, { sel: o.sel && i === 0, open: o.open && i === 0 }) + (o.open && i === 0 ? KIDS.map(eKid).join("") : "")).join("")}`;
+  const inspector = () => `<aside class="insp p-insp">
+    <div class="ihead"><div class="p-ih">${uic("Blender", "amber")}<div><b>Blender</b><span>3 processes · you · since 14:02</span></div></div></div>
+    <div class="ibody">
+      <div class="lab">Processor <span class="cnt">41.2%</span></div><div class="card p-gcard">${gline(series(1, 40, .45, .25), "var(--sw-amber)", 46)}</div>
+      <div class="lab">Memory <span class="cnt">3.8 GB</span></div><div class="card p-gcard">${gline(series(2, 40, .6, .1), "var(--sw-violet)", 46)}</div>
+      <div class="lab">About it</div>
+      <div class="card">${[["Started", "Today 14:02"], ["Threads", "48"], ["Disk", "12 MB/s write"], ["GPU", "62%"], ["Command", "blender ~/Renders/harbour.blend"]].map(([k, v]) => `<div class="row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}</div>
+    </div>
+    <div class="ifoot">${btn("Switch to", "", "window")}${ib("pause", "Pause")}${ib("more", "Priority, open location, copy command, force quit")}<span class="grow"></span>${btn("End task", "danger")}</div></aside>`;
+  const eTool = () => `<div class="p-tool">${seg(["Apps", "All", "Mine"], "Apps")}<div class="field p-filter">${icon("filter")}<span class="ph">Filter by name, command or PID</span></div><span class="sp"></span><span class="p-tot">312 processes · 2,966 threads</span></div>`;
+  const pageE = () => `${eTool()}<div class="cols"><div class="main"><div class="p-eh"><span class="p-tw"></span><span class="nm">Name</span><span class="p-c cpu">CPU ${icon("chev-d")}</span><span class="p-c">Memory</span><span class="p-c w">Disk</span><span class="p-c w">Network</span></div>
+    <div class="scroll p-elist">${eGroup("Apps", "accent", PAPPS, 5, { sel: true, open: true })}${eGroup("Background", "green", PBG, 41)}${eGroup("System", "violet", PSYS, 263)}</div></div>${NARROW ? "" : inspector()}</div>
+    ${NARROW ? `<div class="p-foot">${uic("Blender", "amber")}<div class="tx"><b>Blender</b><span>3 processes · 41% CPU · 3.8 GB</span></div>${btn("Switch to", "", "window")}${ib("pause", "Pause")}${btn("End task", "danger")}</div>` : ""}`;
+
+  /* F: a clean table */
+  const fCell = (v, pct) => `<span class="p-c" ${pct ? heat(pct) : ""}>${v}</span>`;
+  const fRow = ([n, c, cpu, mem, disk, net, gpu, procs], sel) => `<div class="p-fr ${sel ? "sel" : ""}">${aic(n, c)}<span class="p-nm"><b>${n}</b>${procs > 1 ? `<span class="p-cnt">${procs}</span>` : ""}</span>${fCell(cpu.toFixed(1) + "%", cpu)}${fCell(mem, parseFloat(mem) > 1 && mem.includes("GB") ? parseFloat(mem) * 12 : 0)}<span class="p-c w">${disk}</span><span class="p-c w">${net}</span><span class="p-c w">${gpu ? gpu + "%" : "–"}</span></div>`;
+  const fGroup = (title, rows, count, sel) => `<div class="p-fg">${icon("chev-d")}<b>${title}</b><span>${count}</span></div>${rows.map((r, i) => fRow(r, sel && i === 0)).join("")}`;
+  const pageF = () => `<div class="p-tool">${seg(["Apps", "All", "Mine"], "Apps")}<div class="field p-filter">${icon("filter")}<span class="ph">Filter by name, command or PID</span></div><span class="sp"></span>${btn("Columns", "ghost", "columns")}</div>
+    <div class="p-fh">${"<span class='lead'></span>"}<span class="nm">Name</span><span class="p-c on">CPU 36% ${icon("chev-d")}</span><span class="p-c">Memory 83%</span><span class="p-c w">Disk</span><span class="p-c w">Network</span><span class="p-c w">GPU 21%</span></div>
+    <div class="scroll p-flist">${fGroup("Apps", PAPPS, 5, true)}${fGroup("Background", PBG, 41)}${fGroup("System", PSYS, 263)}</div>
+    <div class="p-foot">${aic("Blender", "amber")}<div class="tx"><b>Blender</b><span>3 processes · PID 4211 · you</span></div>${btn("Switch to", "", "window")}${btn("Pause", "", "pause")}${NARROW ? "" : dd("Priority: normal")}${ib("more", "Open location, copy command, force quit")}${btn("End task", "danger")}</div>`;
+
+  /* G: sorted by impact */
+  const ALL = [...PAPPS, ...PBG, ...PSYS].sort((a, b) => b[2] - a[2]);
+  const gRow = ([n, c, cpu, mem, , , , procs, , note, seed], sel) => `<div class="p-gr ${sel ? "sel" : ""}">${aic(n, c)}<div class="tx"><b>${n}${procs > 1 ? `<span class="p-sub"> · ${procs} processes</span>` : ""}</b><span class="${note ? "note" : ""} ${note.startsWith("Using a lot") ? "warn" : ""}">${note || "Quiet"}</span></div>
+    <span class="p-spark">${gline(series(seed, 30, Math.min(.9, cpu / 50 + .08), Math.min(.25, cpu / 120 + .04)), cpu > 5 ? "var(--sw-amber)" : "var(--dim-text)", 24)}</span><span class="p-num big">${cpu.toFixed(1)}%</span><span class="p-num mem">${mem}</span></div>`;
+  const sheet = () => `<aside class="p-sheet">
+    <div class="sh">${aic("Blender", "amber")}<div><b>Blender</b><span>Using a lot of the processor for 6 minutes</span></div>${ib("x", "Close")}</div>
+    <div class="p-big">${gline(series(1, 60, .5, .25), "var(--sw-amber)", 90)}<div class="lg"><span>Last minute</span><span>41.2% now</span></div></div>
+    <div class="p-kv">${[["Memory", "3.8 GB"], ["Disk", "12 MB/s"], ["GPU", "62%"], ["Threads", "48"]].map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join("")}</div>
+    <div class="lab">Its processes</div><div class="card">${KIDS.map(([n, pid, c, m]) => `<div class="row"><span class="k">${n}</span><span class="v">${c.toFixed(1)}%</span><span class="v">${m}</span></div>`).join("")}</div>
+    <div class="bt">${btn("Switch to", "", "window")}${btn("Pause", "", "pause")}<span class="grow"></span>${btn("End task", "danger")}</div></aside>`;
+  const pageG = () => `<div class="p-tool">${["All", "Apps", "Background", "Mine", "Busy"].map((c, i) => chip(c + (i === 4 ? " · 3" : ""), i === 0 ? "on" : "")).join("")}<span class="sp"></span><div class="field p-filter s">${icon("filter")}<span class="ph">Filter</span></div></div>
+    <div class="cols"><div class="main"><div class="p-gh2"><span>Busiest first · 312 processes</span><span class="sp"></span><span class="c">CPU, last minute</span><span class="c n">Now</span><span class="c m">Memory</span></div><div class="scroll p-glist">${ALL.map((r, i) => gRow(r, i === 0)).join("")}</div></div>${NARROW ? "" : sheet()}</div>
+    ${NARROW ? `<div class="p-foot">${aic("Blender", "amber")}<div class="tx"><b>Blender</b><span>Using a lot of the processor</span></div>${btn("Details", "", "chev-u")}${btn("End task", "danger")}</div>` : ""}`;
+
   REG("activity", {
     name: "Activity",
     summary: "Activity measures everything a task manager should, in depth, but the Overview hides it: the graphs are thumbnail squiggles in each tile's corner, the busiest list shows thread names twice over, and the detail pages are a click away with nothing pointing to them.",
@@ -315,8 +389,12 @@
       "<b>Two searches:</b> Ctrl+F filters processes and Ctrl+K goes to anything, but the header has one magnifier icon for both.",
       "<b>Processes' details panel has eight buttons</b> in a row (Switch to, Close window, Pause, Priority, Open location, Copy command, Kill, End task), with the dangerous ones next to the harmless ones.",
       "<b>At 800 px</b> the rail is ten grey icons with no break between Monitor, Performance and System.",
+      "<b>Processes looks scattered:</b> rows that open and rows that don't start at different places, so names zig-zag; group counts float in the middle of the Name column; PIDs show for some rows and are blank for others.",
+      "<b>Columns don't line up with their headings:</b> the totals are crammed into the headings (“Disk 73.1 MiB”), Disk and GPU sit off to the left with empty space after them, and one random cell is highlighted.",
+      "<b>Names without faces:</b> most rows have no icon, a few have a red placeholder, one has an emoji, and threads like “MainThread” appear as if they were apps.",
+      "<b>Five ways to filter</b> (Apps, All, Tree, Mine, Group by app) in one row, and a lone icon button for columns; at 800 px Disk and GPU just vanish and names are cut off.",
     ],
-    today: [["activity-1280", "Today at 1280 px", "Overview: tiles with tiny graphs, two busiest lists"], ["activity-800", "Today at 800 px", "Battery stretched across; busiest lists cut off"]],
+    today: [["activity-1280", "Today at 1280 px", "Overview: tiles with tiny graphs, two busiest lists"], ["activity-800", "Today at 800 px", "Battery stretched across; busiest lists cut off"], ["activity-proc-1280", "Processes today at 1280 px", "Ragged names, floating counts, columns adrift"], ["activity-proc-800", "Processes today at 800 px", "Columns drop out; names cut off"]],
     options: [
       { id: "a", name: "Task manager with tabs", idea: "Four tabs in the header instead of a sidebar: Processes, Performance, Startup and Services. Processes is the full-width table with busy cells shaded, and the selected process's actions in a drawer at the foot. Performance lists every device with a small live graph down the left; pick one to see its big graph and numbers. Services shows the log beside the list, with Restart and Stop labelled.",
         shots: [
@@ -342,6 +420,21 @@
           ["n2-cpu", "Map by CPU", "Blender opened into its processes; ending one asks first"],
           ["n2-map-800", "At 800 px", "The map fills the window; the app in a bar below"],
         ] },
+      { id: "e", name: "Processes: apps and what they run", idea: "For the picked dashboard (B): its Processes page as one row per app, with its icon (Umbra's tile, or a letter on one for apps without their own), a CPU bar, memory, disk and network in aligned columns. An app opens to show its own processes, indented under it. Apps, Background and System sit under their own coloured headings with counts, and the chosen app's graphs, facts and labelled actions (Switch to, Pause, End task) are in an inspector on the right. Best if you think in apps, not process names.",
+        shots: [
+          ["e-list", "Processes", "Apps first, Blender opened into its processes, details on the right"],
+          ["e-list-800", "At 800 px", "Rail; Name, CPU and Memory; the app's actions in a bar below"],
+        ] },
+      { id: "f", name: "Processes: a clean table", idea: "For the picked dashboard (B): its Processes page as a tidy table. Six columns by default (Name, CPU, Memory, Disk, Network, GPU), every number lined up, busy cells softly tinted, and the headings with the totals beside them and an arrow for the sort. Apps, Background and System are headed groups you can fold. The selected process's actions, Priority included, sit in a bar along the foot. Best if you like a classic task manager.",
+        shots: [
+          ["f-table", "Processes", "Six aligned columns, headed groups, actions along the foot"],
+          ["f-table-800", "At 800 px", "Rail; Name, CPU and Memory; the foot bar keeps its actions"],
+        ] },
+      { id: "g", name: "Processes: sorted by impact", idea: "For the picked dashboard (B): its Processes page as one calm list, busiest first. Each row says in plain words what it's doing (“Using a lot of memory”, “Writing to disk”, “Syncing 2 folders”), with a small graph of its last minute, CPU now and memory. Chips filter All, Apps, Background, Mine and Busy, and the chosen one opens in a sheet beside the list with its graph, its processes and End task. Best if you open Activity to find out what's slowing things down.",
+        shots: [
+          ["g-impact", "Processes", "Busiest first, in plain words, each with its last minute"],
+          ["g-impact-800", "At 800 px", "Rail; the list fills the window, the chosen one in a bar below"],
+        ] },
     ],
     pages: {
       "a-overview": () => win({ hdr: hdr(), side: sideA("overview"), page: overviewA() }),
@@ -354,6 +447,9 @@
       "n1-past": () => win({ hdr: hdrN({ paused: true }), side: "", page: pageN1({ at: 0.71, menu: true }) }),
       "n2-map": () => win({ hdr: hdrN(), side: "", page: pageN2() }),
       "n2-cpu": () => win({ hdr: hdrN(), side: "", page: pageN2({ by: "CPU", confirm: true }) }),
+      "e-list": () => win({ hdr: hdr(), side: sideP(), page: pageE() }),
+      "f-table": () => win({ hdr: hdr(), side: sideP(), page: pageF() }),
+      "g-impact": () => win({ hdr: hdr(), side: sideP(), page: pageG() }),
       "c-edit": () => railed(win({ hdr: hdr(), side: sideC(), page: `<div class="cols"><div class="main">${dashC({ edit: true })}</div>${editPanel()}</div>` })),
     },
     icons: {
