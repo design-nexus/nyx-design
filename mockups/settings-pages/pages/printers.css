@@ -1,0 +1,52 @@
+/* Hardware › Printers */
+/* A printer, drawn */
+.pr-dev { --s: 1; position: relative; flex: none; width: calc(34px * var(--s)); height: calc(30px * var(--s)); display: inline-block; }
+.pr-dev.sm { --s: 1; } .pr-dev.md { --s: 2; } .pr-dev.lg { --s: 4; }
+.pr-dev .pr-top { position: absolute; left: 18%; right: 18%; top: 0; height: 30%; border-radius: calc(2px * var(--s)) calc(2px * var(--s)) 0 0; background: color-mix(in srgb, var(--text) 22%, var(--card)); }
+.pr-dev .pr-body { position: absolute; left: 0; right: 0; top: 24%; height: 52%; border-radius: calc(4px * var(--s)); background: linear-gradient(180deg, color-mix(in srgb, var(--text) 30%, var(--card)), color-mix(in srgb, var(--text) 16%, var(--card))); box-shadow: inset 0 calc(-1px * var(--s)) 0 color-mix(in srgb, var(--shadow) 40%, transparent); }
+.pr-dev.ink .pr-body { background: linear-gradient(180deg, color-mix(in srgb, var(--sw-blue) 45%, var(--card)), color-mix(in srgb, var(--sw-blue) 25%, var(--card))); }
+.pr-dev .pr-led { position: absolute; right: 10%; top: 22%; width: calc(3px * var(--s)); height: calc(3px * var(--s)); border-radius: 50%; background: var(--success); box-shadow: 0 0 calc(3px * var(--s)) var(--success); }
+.pr-dev .pr-led.off { background: var(--warning); box-shadow: 0 0 calc(3px * var(--s)) var(--warning); }
+.pr-dev .pr-paper { position: absolute; left: 24%; right: 24%; top: 66%; bottom: 0; border-radius: 0 0 calc(1px * var(--s)) calc(1px * var(--s)); background: #f4f5f8; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
+.pr-dev .pr-paper::before { content: ""; position: absolute; left: 18%; right: 30%; top: 35%; height: calc(1px * var(--s)); background: #9aa0b4; box-shadow: 0 calc(3px * var(--s)) 0 #c3c7d4; }
+
+.pr-st { display: inline-flex; align-items: center; gap: 6px; color: var(--dim-text); }
+.pr-st i { width: 7px; height: 7px; border-radius: 50%; background: var(--tc); }
+.pr-def { display: inline-flex; height: 18px; padding: 0 7px; margin-left: 6px; border-radius: 9px; align-items: center; font-size: .77em; font-weight: 600; background: color-mix(in srgb, var(--sec-hardware) 18%, transparent); color: var(--sec-hardware); vertical-align: 1px; }
+.pr-addr { height: 30px; width: 170px; }
+
+/* A: the chosen printer */
+.pr-hero { display: flex; align-items: center; gap: 34px; padding: 28px 30px; }
+.pr-ht { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.pr-ht > b { font-size: 1.385em; font-weight: 600; letter-spacing: -.01em; margin-top: 2px; }
+.pr-ht > span:not(.pr-st) { color: var(--dim-text); }
+.pr-bts { display: flex; gap: 8px; margin-top: 12px; }
+.pr-facts { display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px 18px; padding: 14px 16px; }
+.pr-facts div { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.pr-facts small { color: var(--text-tertiary); font-size: .846em; } .pr-facts span { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pr-q .gtitle.pr-qh { margin: 12px 14px 2px !important; display: flex; align-items: center; font-size: .923em; }
+.pr-q .gtitle .note { display: inline; margin: 0; }
+.pr-prog { width: 110px; display: inline-flex; }
+.pr-foot { display: flex; margin-top: auto; }
+.pr-foot .sp { flex: 1; }
+body.narrow .split2 .pv .pr-facts, body.narrow .split2 .pv .pr-foot { display: none; }
+body.narrow .pr-hero { padding: 14px 20px; }
+body.narrow .pr-dev.lg { --s: 2.8; }
+
+/* B: found nearby */
+.pr-menu { position: relative; z-index: 2; margin-top: -48px; margin-left: 170px; margin-right: 6px; padding: 6px; background: var(--popover) !important; box-shadow: var(--lift-shadow) !important; }
+.pr-mi { height: 32px; padding: 0 10px; border-radius: var(--r-small); display: flex; align-items: center; gap: 10px; }
+.pr-mi:first-child { background: var(--row-hover); }
+.pr-mi i { width: 15px; height: 15px; color: var(--dim-text); }
+.pr-mi.dtext, .pr-mi.dtext i { color: var(--danger); }
+.pr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; min-height: 0; }
+.pr-fc { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 18px 14px 16px; text-align: center; }
+.pr-fc .pr-dev { margin-bottom: 12px; }
+.pr-fc b { font-weight: 600; } .pr-fc > span { color: var(--dim-text); font-size: .846em; margin-bottom: 10px; }
+.pr-fc .btn { min-width: 90px; justify-content: center; }
+.pr-fc.added { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--success) 50%, transparent); }
+.pr-done { display: inline-flex; align-items: center; gap: 5px; height: 24px; color: var(--success); font-weight: 600; font-size: .923em; }
+.pr-done i { width: 14px; height: 14px; }
+.pr-adding { width: 120px; height: 24px; display: flex; flex-direction: column; justify-content: center; gap: 4px; } .pr-adding small { color: var(--dim-text); font-size: .77em; }
+.pr-byaddr { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 14px; }
+.pr-byaddr .opt-text .d { font-size: .923em; color: var(--dim-text); margin-top: 2px; }

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Screens — Nyx Settings pages mockups</title>
+<link rel="stylesheet" href="../revamp/tokens.css">
+<link rel="stylesheet" href="../revamp/mock.css">
+<link rel="stylesheet" href="../revamp/nyx-after.css">
+<link rel="stylesheet" href="../revamp/kit.css">
+<link rel="stylesheet" href="../revamp/common.css">
+<link rel="stylesheet" href="../revamp/apps/settings.css">
+<link rel="stylesheet" href="pages/shell.css">
+<script>
+  // screens.html?app=styles&screen=a-sound&theme=dark[&w=800][&shot=1]
+  const APP = new URLSearchParams(location.search).get("app") || "styles";
+  const APPS = {};
+  const REG = (id, def) => { APPS[id] = def; };
+  document.write(`<link rel="stylesheet" href="pages/${APP}.css">`);
+</script>
+<script src="../revamp/mock.js"></script>
+</head>
+<body>
+<script src="../revamp/kit.js"></script>
+<script src="../revamp/common.js"></script>
+<script src="pages/shell.js"></script>
+<script src="umbra-glyphs.js"></script>
+<script>document.write(`<script src="pages/${APP}.js"><\/script>`);</script>
+<script>
+  const DEF = APPS[APP];
+  Object.assign(KI, SHELL_ICONS, DEF.icons || {});
+  // &look=tile|tinted|frame|line draws the icon tiles as that Umbra look, with Umbra's glyphs;
+  // &sw= &sl= &rd= &cb= &dd= &sg= &fd= &bt=NAME draw every switch, slider, radio button,
+  // checkbox, dropdown, segmented control, text field or button as that design (shell.css).
+  const LOOK = Q.get("look");
+  if (LOOK) { ROOT.classList.add(`look-${LOOK}`); Object.assign(KI, UMBRA_GLYPHS); }
+  for (const k of ["sw", "sl", "rd", "cb", "dd", "sg", "fd", "bt"]) if (Q.get(k)) ROOT.classList.add(`${k}-${Q.get(k)}`);
+  ROOT.dataset.screens = Object.keys(DEF.pages).join(",");
+  mount((DEF.pages[SCREEN] || Object.values(DEF.pages)[0])());
+</script>
+</body>
+</html>

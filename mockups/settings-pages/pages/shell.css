@@ -1,0 +1,435 @@
+/* Parts every page here uses, on top of ../revamp (kit, common and its Settings shell). */
+.sh1 .btn.sm { height: 22px; }
+/* The sidebar's first row starts level with the page panel's top edge. */
+.side:has(.navx.first) { padding-top: 0; }
+/* A head with no section and no tabs (Home): the title centred in it, the same space above and below. */
+.shead.bare { padding: 16px 20px; }
+.shead.bare .sh2 { margin: 0; }
+.sh1 > * + * { margin-left: 4px; }
+
+/* Rows: a leading icon on a soft tile, a value and a chevron for rows that open deeper. */
+.lic { width: 30px; height: 30px; border-radius: 8px; flex: none; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--tc) 15%, transparent); color: var(--tc); }
+.lic i { width: 16px; height: 16px; }
+.after .card.icons .opt { --inset: 58px; }
+.opt .rv { color: var(--dim-text); white-space: nowrap; }
+i.cv { width: 14px; height: 14px; color: var(--text-tertiary); flex: none; margin-left: -6px; }
+.opt.onav { gap: 12px; }
+.gtitle .sp { flex: 1; }
+.gtitle.gflex .note { display: inline; margin: 0; }
+.gtitle .btn.sm, .gtitle .seg > * { height: 22px; }
+
+/* Wi-Fi bars */
+.sig4 { display: inline-flex; align-items: flex-end; gap: 2px; height: 15px; flex: none; }
+.sig4 b { width: 3.5px; border-radius: 1px; background: color-mix(in srgb, var(--text) 18%, transparent); }
+.sig4 b.on { background: var(--text); }
+
+/* Keycaps */
+.kc { display: inline-flex; gap: 3px; flex: none; }
+.kc .kbd { min-width: 22px; height: 22px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 5px; font-weight: 500; color: var(--text); background: var(--raised); box-shadow: inset 0 0 0 1px var(--edge), 0 1px 0 color-mix(in srgb, var(--shadow) 50%, transparent); }
+
+/* Level meter */
+.lvl { display: inline-flex; gap: 2px; align-items: center; height: 12px; }
+.lvl b { width: 4px; height: 10px; border-radius: 1px; background: color-mix(in srgb, var(--text) 12%, transparent); }
+.lvl b.on { background: var(--success); }
+.lvl b.on.hi { background: var(--warning); }
+
+/* Equalizer curve */
+svg.eqc { display: block; overflow: visible; }
+svg.eqc line { stroke: var(--hair); stroke-width: 1; }
+svg.eqc line.z { stroke: color-mix(in srgb, var(--text) 18%, transparent); stroke-dasharray: 3 3; }
+svg.eqc .fillp { fill: color-mix(in srgb, var(--sec-hardware) 14%, transparent); }
+svg.eqc .line { fill: none; stroke: var(--sec-hardware); stroke-width: 2.2; }
+svg.eqc circle { fill: #fff; stroke: var(--sec-hardware); stroke-width: 2; }
+
+/* A status pill */
+.pill { height: 22px; padding: 0 9px; border-radius: 11px; display: inline-flex; align-items: center; gap: 5px; font-size: .846em; font-weight: 600; white-space: nowrap; background: color-mix(in srgb, var(--tc, var(--success)) 15%, transparent); color: var(--tc, var(--success)); }
+.pill i { width: 12px; height: 12px; }
+.pill.dot::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* Shared from round 1: radios, picked rows, screens on a desk, and style B (Ken's pick). */
+.dim { color: var(--text-tertiary); }
+.content { padding-top: 18px; }
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; align-items: start; }
+body.narrow .cols2 { grid-template-columns: 1fr; }
+.rad { width: 18px; height: 18px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 1.5px var(--text-tertiary); position: relative; }
+.rad.on { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.rad.on::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--accent); }
+.after .opt.picked { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.after .card > .opt.picked:first-child { border-radius: var(--r-card) var(--r-card) 0 0; }
+i.okc { width: 16px; height: 16px; color: var(--accent); }
+i.inl { width: 18px; height: 18px; color: var(--dim-text); }
+.slw.grow { flex: 1; } .slw.grow .slider { flex: 1; }
+.opt.volrow .opt-text { flex: none; }
+.cbx.sq.done { background: var(--accent); }
+.cbx i { width: 12px; height: 12px; }
+
+/* Screens on a desk */
+.arr2 { position: relative; height: 210px; border-radius: 12px; z-index: 1;
+  background: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--text) 14%, transparent) 1px, transparent 1.5px) 0 0 / 18px 18px, color-mix(in srgb, var(--bg) 55%, var(--card));
+  box-shadow: inset 0 0 0 1px var(--hair); }
+.arr2.big { height: 300px; }
+.scr2 { position: absolute; display: flex; flex-direction: column; gap: 5px; }
+.scr2 .glass { flex: 1; border-radius: 7px; position: relative; overflow: hidden; box-shadow: 0 0 0 3px #0b0c10, 0 0 0 4px var(--edge), 0 8px 20px color-mix(in srgb, var(--shadow) 50%, transparent); }
+.scr2.sel .glass { box-shadow: 0 0 0 3px #0b0c10, 0 0 0 5.5px var(--sec-hardware), 0 8px 24px color-mix(in srgb, var(--sec-hardware) 25%, transparent); }
+.scr2 .mb { position: absolute; left: 0; right: 0; top: 0; height: 7%; min-height: 5px; background: rgba(0,0,0,.45); }
+.scr2 .mw { position: absolute; left: 6%; top: 16%; width: 52%; height: 64%; border-radius: 4px; background: rgba(255,255,255,.14); box-shadow: 0 0 0 1px rgba(255,255,255,.08); }
+.scr2 .mw.b { left: 62%; width: 32%; height: 40%; }
+.scr2 .lbl { display: flex; gap: 8px; align-items: baseline; justify-content: center; font-size: .923em; white-space: nowrap; }
+.scr2 .lbl b { font-weight: 600; } .scr2 .lbl span { color: var(--text-tertiary); font-size: .923em; }
+.scr2 .main { position: absolute; left: 8px; top: 10px; height: 18px; padding: 0 6px; border-radius: 9px; background: rgba(0,0,0,.55); color: #fff; font-size: .77em; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+.scr2 .main i { width: 10px; height: 10px; }
+.atools { position: absolute; right: 10px; top: 10px; }
+.ahint { position: absolute; left: 12px; bottom: 10px; display: flex; gap: 6px; align-items: center; color: var(--text-tertiary); font-size: .846em; }
+.ahint i { width: 13px; height: 13px; }
+
+/* ── B: controls with a preview ────────────────────────────────────── */
+.split2 { flex: 1; min-height: 0; display: flex; }
+.split2 .ctl { width: var(--ctlw, 430px); flex: none; border-right: 1px solid var(--divider-line); overflow: hidden; }
+.split2 .ci { padding: 16px 18px; }
+.split2 .ci > .gtitle:first-child, .split2 .ci > .card:first-child, .split2 .ci > .field:first-child, .split2 .ci > .ubar:first-child { margin-top: 0; }
+.split2 .pv { flex: 1; min-width: 0; padding: 16px 22px; display: flex; flex-direction: column; gap: 14px; overflow: hidden;
+  background: radial-gradient(ellipse at 60% 20%, color-mix(in srgb, var(--tc) 9%, transparent), transparent 65%), color-mix(in srgb, var(--text) 1.5%, transparent); }
+.pvh { display: flex; align-items: center; gap: 10px; }
+.pvh > div:first-child { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pvh b { font-size: 1.231em; font-weight: 600; letter-spacing: -.01em; }
+.pvh > div:first-child > span { color: var(--dim-text); font-size: .923em; }
+.pvh .sp { flex: 1; }
+.pvh .seg > * { height: 24px; padding: 0 9px; white-space: nowrap; }
+.eqbig { display: flex; gap: 10px; padding: 14px 16px 10px; align-items: stretch; }
+.eqy { display: flex; flex-direction: column; justify-content: space-between; padding: 6px 0 22px; color: var(--text-tertiary); font-size: .77em; font-feature-settings: "tnum"; text-align: right; }
+.eqp { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.eqp svg { width: 100%; height: 290px; }
+.eqx { display: flex; justify-content: space-between; padding: 0 6px; color: var(--text-tertiary); font-size: .77em; }
+.pre { width: 56px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 6px; border-left: 1px solid var(--hair); padding-left: 12px; }
+.pre small { color: var(--text-tertiary); font-size: .77em; }
+.pre span { font-size: .846em; font-weight: 600; color: var(--sec-hardware); }
+.vsl { flex: 1; width: 6px; border-radius: 3px; background: var(--track); position: relative; }
+.vsl b { position: absolute; left: 50%; width: 18px; height: 18px; margin: 0 0 -9px -9px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.4); }
+.vsl::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 62%; border-radius: 3px; background: var(--sec-hardware); }
+.pvchips { display: flex; flex-wrap: wrap; gap: 6px; }
+.pvchips .chip2 { height: 28px; padding: 0 12px; border-radius: 14px; font-size: .923em; }
+.pvchips .chip2.on { background: color-mix(in srgb, var(--tc) 22%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tc) 55%, transparent); color: var(--text); }
+.pvfoot { display: flex; align-items: center; gap: 8px; color: var(--dim-text); font-size: .923em; margin-top: auto; }
+.pvfoot > i { width: 15px; height: 15px; color: var(--success); flex: none; }
+.pvfoot .sp { flex: 1; }
+.lvls { font-size: .77em; color: var(--text-tertiary); line-height: 1.5; text-align: right; }
+.lvls .lvl b { width: 3px; height: 6px; }
+.dpick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
+.dp { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r-card); background: var(--card); box-shadow: inset 0 0 0 1px var(--hair); }
+.dp > i { width: 22px; height: 22px; color: var(--dim-text); }
+.dp div { display: flex; flex-direction: column; } .dp b { font-weight: 600; } .dp span { color: var(--text-tertiary); font-size: .846em; }
+.dp.on { background: color-mix(in srgb, var(--sec-hardware) 12%, var(--card)); box-shadow: inset 0 0 0 1.5px var(--sec-hardware); }
+.dp.on > i { color: var(--sec-hardware); }
+.split2 .arr2.big { flex: 1; min-height: 220px; height: auto; }
+.scalepv { display: flex; gap: 18px; padding: 14px; align-items: center; }
+.sp1 { display: flex; flex-direction: column; gap: 6px; }
+.sp1 small { color: var(--text-tertiary); font-size: .846em; }
+.sampw { width: 250px; border-radius: 9px; overflow: hidden; background: var(--bg); box-shadow: 0 0 0 1px var(--edge); font-size: 1.1em; }
+.samph { display: flex; align-items: center; gap: 5px; height: 30px; padding: 0 10px; border-bottom: 1px solid var(--hair); }
+.samph i { width: 8px; height: 8px; border-radius: 50%; background: var(--track); } .samph b { margin-left: 6px; font-weight: 600; }
+.sampb { display: flex; align-items: center; gap: 10px; padding: 8px 10px; }
+.sampb .sbx { width: 28px; height: 28px; border-radius: 7px; background: var(--sw-blue); flex: none; } .sampb .sbx.v { background: var(--sw-violet); }
+.sampb div { display: flex; flex-direction: column; } .sampb b { font-weight: 600; } .sampb span { color: var(--text-tertiary); font-size: .8em; }
+.sp2 { flex: 1; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.sp2 b { font-weight: 600; } .sp2 span { color: var(--dim-text); font-size: .923em; line-height: 1.4; }
+body.narrow .split2 { flex-direction: column; }
+body.narrow .split2 .pv { order: -1; flex: none; height: 330px; border-bottom: 1px solid var(--divider-line); padding: 12px 16px; gap: 10px; }
+body.narrow .split2 .pv .pvh > div:first-child > span { display: none; }
+body.narrow .split2 .pv .scalepv { display: none; }
+body.narrow .split2 .ctl { width: auto; flex: 1; border-right: 0; }
+body.narrow .split2 .ci { padding: 12px 16px; }
+body.narrow .dpick { display: none; }
+.netcard { display: flex; gap: 22px; padding: 16px; align-items: center; }
+.nsig { display: flex; align-items: center; gap: 14px; flex: none; }
+.nsig > div { display: flex; flex-direction: column; gap: 2px; } .nsig b { font-weight: 600; font-size: 1.077em; } .nsig span { color: var(--dim-text); font-size: .923em; }
+.nsig .ring b { font-size: 1.077em; }
+.nspark { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.nspark .r1 { display: flex; justify-content: space-between; align-items: center; } .nspark .r1 b { font-weight: 600; }
+.nspark svg { width: 100%; height: 64px; }
+.nfacts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 16px; padding: 14px 16px; }
+.nfacts div { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.nfacts small { color: var(--text-tertiary); font-size: .846em; } .nfacts span { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nrowx { display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; }
+.nshare { display: flex; align-items: center; gap: 12px; padding: 12px; }
+.nshare > div { display: flex; flex-direction: column; } .nshare b { font-weight: 600; } .nshare span { color: var(--dim-text); font-size: .846em; }
+.qr { width: 66px; height: 66px; display: grid; grid-template-columns: repeat(11, 1fr); gap: 0; padding: 4px; background: #fff; border-radius: 6px; flex: none; }
+.qr b { background: transparent; } .qr b.on { background: #111; }
+.kcats { display: flex; flex-wrap: wrap; gap: 5px; margin: 12px 0 4px; }
+.kcat { height: 26px; padding: 0 9px; border-radius: 13px; display: inline-flex; align-items: center; gap: 6px; background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); font-size: .923em; color: var(--dim-text); white-space: nowrap; }
+.kcat i { width: 8px; height: 8px; border-radius: 50%; background: var(--kc); }
+.kcat small { color: var(--text-tertiary); font-size: .9em; }
+.kcat.on { background: color-mix(in srgb, var(--kc) 18%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kc) 55%, transparent); color: var(--text); }
+.kbwrap { position: relative; padding: 14px; }
+.kbmap { display: flex; flex-direction: column; gap: 5px; }
+.kr { display: flex; gap: 5px; }
+.ky { flex: 1; height: 36px; min-width: 0; border-radius: 6px; display: flex; align-items: flex-end; padding: 0 0 4px 6px; font-size: .77em; font-weight: 500; color: var(--text-tertiary); background: color-mix(in srgb, var(--text) 4%, var(--bg)); box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--shadow) 40%, transparent), inset 0 0 0 1px var(--hair); white-space: nowrap; overflow: hidden; }
+.kr:first-child .ky { height: 26px; }
+.ky.has { background: color-mix(in srgb, var(--kc) 24%, var(--bg)); color: var(--text); box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--kc) 50%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--kc) 45%, transparent); }
+.ky.mod { background: var(--text); color: var(--bg); font-weight: 600; }
+.ky.sel { background: var(--sw-violet); color: #fff; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--sw-violet); font-weight: 600; }
+.kpop { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 10px 4px 0; border-top: 1px solid var(--hair); }
+.kpop .kf { width: 30px; height: 30px; border-radius: 8px; flex: none; display: flex; align-items: center; justify-content: center; background: var(--sw-violet); color: #fff; font-weight: 600; }
+.kpop > div:nth-child(2) { flex: 1; display: flex; flex-direction: column; } .kpop b { font-weight: 600; } .kpop span { color: var(--dim-text); font-size: .923em; }
+.kpop .bts { display: flex; gap: 6px; }
+.klegend { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--dim-text); font-size: .923em; }
+.klegend span { display: inline-flex; align-items: center; gap: 6px; }
+.klegend i { width: 10px; height: 10px; border-radius: 3px; }
+.klegend i.free { box-shadow: inset 0 0 0 1px var(--text-tertiary); }
+.ubar { display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 14px; }
+.ubar b { font-weight: 600; }
+.opt .d em { font-style: normal; color: var(--warning); }
+.notes { padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+.notes .nh { font-size: .846em; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--text-tertiary); }
+.notes .nh + ul { margin-bottom: 8px; }
+.notes ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; line-height: 1.4; }
+.notes li::marker { color: var(--sec-system); }
+.ntags { display: flex; gap: 6px; }
+
+
+/* ── Umbra icon looks (?look=…): the section tiles drawn as Umbra draws its icons ─────────
+ * Tile: a satin tile from the background, a glow of the icon's colour at the top left, a
+ * hairline rim of it and the glyph in it (umbra/looks.py _tile). Tinted washes the satin in
+ * the colour; Frame is an outline over a faint wash; Line is the glyph alone. */
+html.look-tile, html.look-tinted { --ut-top: color-mix(in srgb, var(--text) 13%, var(--bg)); --ut-bot: color-mix(in srgb, var(--text) 4%, var(--bg)); --ut-glow: 20%; }
+html.look-tile[data-theme="light"], html.look-tinted[data-theme="light"] { --ut-top: color-mix(in srgb, #fff 85%, var(--bg)); --ut-bot: color-mix(in srgb, var(--text) 8%, var(--bg)); --ut-glow: 14%; }
+html[class*="look-"] i.ctile, html[class*="look-"] .side .navx > i.ctile, html[class*="look-"] .side .navx.active > i.ctile,
+html[class*="look-"] .lic, html[class*="look-"] .hic, html[class*="look-"] .bigic, html[class*="look-"] .stile .ic, html[class*="look-"] .qt .qi {
+  color: var(--tc); box-shadow: none; }
+html.look-tile i.ctile, html.look-tile .lic, html.look-tile .hic, html.look-tile .bigic, html.look-tile .stile .ic {
+  background: radial-gradient(circle at 18% 10%, color-mix(in srgb, var(--tc) var(--ut-glow), transparent), transparent 75%), linear-gradient(180deg, var(--ut-top), var(--ut-bot));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tc) 30%, transparent); }
+html.look-tinted i.ctile, html.look-tinted .lic, html.look-tinted .hic, html.look-tinted .bigic, html.look-tinted .stile .ic {
+  background: radial-gradient(circle at 18% 10%, color-mix(in srgb, var(--tc) var(--ut-glow), transparent), transparent 75%), linear-gradient(180deg, color-mix(in srgb, var(--tc) 20%, var(--ut-top)), color-mix(in srgb, var(--tc) 10%, var(--ut-bot)));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tc) 42%, transparent); }
+html.look-tinted[data-theme="light"] i.ctile, html.look-tinted[data-theme="light"] .lic {
+  background: radial-gradient(circle at 18% 10%, color-mix(in srgb, var(--tc) 14%, transparent), transparent 75%), linear-gradient(180deg, color-mix(in srgb, var(--tc) 10%, var(--ut-top)), color-mix(in srgb, var(--tc) 16%, var(--ut-bot))); }
+html.look-frame i.ctile, html.look-frame .lic, html.look-frame .hic, html.look-frame .bigic, html.look-frame .stile .ic {
+  background: color-mix(in srgb, var(--tc) 7%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--tc) 60%, transparent); }
+html.look-line i.ctile, html.look-line .lic, html.look-line .hic, html.look-line .bigic, html.look-line .stile .ic { background: none; }
+html[class*="look-"] i.ctile { padding: 5px; border-radius: 7px; }
+html[class*="look-"] .side .navx.cat > i.ctile { padding: 6px; border-radius: 8px; }
+html.look-line .side .navx.cat > i.ctile, html.look-line i.ctile { padding: 3px; }
+html[class*="look-"] .hic i { width: 26px; height: 26px; }
+
+/* ── Switch designs (?sw=…), all on the 36 × 20 (or near) Design 2.0 footprint ────────────
+ * Markup: <span class="switch [on] [dis] [focus]"> with its knob as ::after. */
+html[class*="sw-"] body.after .switch { transition: none; }
+html[class*="sw-"] body.after .switch.dis { opacity: .45; }
+html[class*="sw-"] body.after .switch.focus { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
+
+/* Segment: drawn like the segmented control: a field track with a hairline, radius_small,
+ * and a raised knob; on, the knob is the accent and the track takes a tint of it. */
+html.sw-segment body.after .switch { width: 38px; height: 22px; border-radius: 7px; background: var(--track); box-shadow: inset 0 0 0 1px var(--hair); }
+html.sw-segment body.after .switch::after { top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 5px; background: color-mix(in srgb, var(--text) 26%, var(--bg)); box-shadow: 0 0 0 1px var(--edge), 0 1px 2px color-mix(in srgb, var(--shadow) 45%, transparent); }
+html.sw-segment body.after .switch.on { background: color-mix(in srgb, var(--accent) 22%, var(--track)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent); }
+html.sw-segment[data-theme="light"] body.after .switch::after { background: #fff; }
+html.sw-segment body.after .switch.on::after { left: 19px; background: var(--accent); box-shadow: 0 1px 3px color-mix(in srgb, var(--accent) 45%, transparent); }
+
+/* Tinted: a pill like today's, but on is a soft tint of the accent with an accent knob,
+ * the way selection is drawn (nav_active); off is the field with a dim knob. */
+html.sw-tinted body.after .switch { width: 36px; height: 20px; border-radius: 10px; background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); }
+html.sw-tinted body.after .switch::after { top: 3px; left: 3px; width: 14px; height: 14px; background: var(--text-tertiary); box-shadow: none; }
+html.sw-tinted body.after .switch.on { background: color-mix(in srgb, var(--accent) 24%, var(--field)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 50%, transparent); }
+html.sw-tinted body.after .switch.on::after { left: 19px; background: var(--accent); }
+
+/* Satin: the Umbra tile in a pill: a satin track with a hairline rim; on, the rim and a
+ * glow take the accent and the knob is the accent, softly lit. */
+html.sw-satin body.after .switch { width: 38px; height: 22px; border-radius: 11px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--text) 4%, var(--bg)), color-mix(in srgb, var(--text) 12%, var(--bg)));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 12%, transparent), inset 0 1px 2px color-mix(in srgb, var(--shadow) 50%, transparent); }
+html.sw-satin[data-theme="light"] body.after .switch { background: linear-gradient(180deg, color-mix(in srgb, var(--text) 10%, var(--bg)), color-mix(in srgb, #fff 70%, var(--bg))); }
+html.sw-satin body.after .switch::after { top: 3px; left: 3px; width: 16px; height: 16px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--text) 30%, var(--bg)), color-mix(in srgb, var(--text) 18%, var(--bg)));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 14%, transparent), 0 1px 2px color-mix(in srgb, var(--shadow) 50%, transparent); }
+html.sw-satin[data-theme="light"] body.after .switch::after { background: linear-gradient(180deg, #fff, color-mix(in srgb, var(--text) 6%, #fff)); }
+html.sw-satin body.after .switch.on { background: radial-gradient(circle at 75% 50%, color-mix(in srgb, var(--accent) 34%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, var(--text) 4%, var(--bg)), color-mix(in srgb, var(--text) 12%, var(--bg)));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 50%, transparent), inset 0 1px 2px color-mix(in srgb, var(--shadow) 40%, transparent); }
+html.sw-satin body.after .switch.on::after { left: 19px; background: linear-gradient(180deg, color-mix(in srgb, #fff 22%, var(--accent)), var(--accent)); box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 55%, transparent), 0 1px 2px color-mix(in srgb, var(--shadow) 40%, transparent); }
+
+/* Marked: today's shape, quieter: off is the field with a raised knob, on is the accent
+ * darkened into the background with a check in the knob, so on doesn't rely on colour. */
+html.sw-marked body.after .switch { width: 40px; height: 22px; border-radius: 11px; background: var(--track); box-shadow: inset 0 0 0 1px var(--hair); }
+html.sw-marked body.after .switch::after { top: 3px; left: 3px; width: 16px; height: 16px; background: color-mix(in srgb, var(--text) 30%, var(--bg)); box-shadow: 0 0 0 1px var(--edge), 0 1px 2px color-mix(in srgb, var(--shadow) 40%, transparent); }
+html.sw-marked body.after .switch.on { background: color-mix(in srgb, var(--accent) 70%, var(--bg)); box-shadow: none; }
+html.sw-marked body.after .switch.on::after { left: 21px; background: var(--on-accent); box-shadow: 0 1px 2px color-mix(in srgb, var(--shadow) 40%, transparent); }
+html.sw-marked body.after .switch.on::before { content: ""; position: absolute; z-index: 1; left: 26.5px; top: 8px; width: 5px; height: 3px; border-left: 1.6px solid var(--accent); border-bottom: 1.6px solid var(--accent); transform: rotate(-45deg); }
+html.sw-marked[data-theme="light"] body.after .switch.on::after { background: #fff; }
+
+/* Rail: a slim rail and a bigger raised knob that sits over it; on, the rail tints and the
+ * knob is the accent. Light, and the knob is the thing you see. */
+html.sw-rail body.after .switch { width: 34px; height: 20px; background: none; border-radius: 0; }
+html.sw-rail body.after .switch::before { content: ""; position: absolute; left: 3px; right: 3px; top: 6px; height: 8px; border-radius: 4px; background: var(--track); box-shadow: inset 0 0 0 1px var(--hair); }
+html.sw-rail body.after .switch::after { top: 1px; left: 0; width: 18px; height: 18px; background: color-mix(in srgb, var(--text) 34%, var(--bg)); box-shadow: 0 0 0 1px var(--edge), 0 1px 3px color-mix(in srgb, var(--shadow) 50%, transparent); }
+html.sw-rail body.after .switch.on { background: none; }
+html.sw-rail body.after .switch.on::before { background: color-mix(in srgb, var(--accent) 45%, var(--track)); box-shadow: none; }
+html.sw-rail body.after .switch.on::after { left: 16px; background: var(--accent); box-shadow: 0 1px 3px color-mix(in srgb, var(--accent) 40%, transparent); }
+html.sw-marked[data-theme="light"] body.after .switch:not(.on)::after, html.sw-rail[data-theme="light"] body.after .switch:not(.on)::after { background: #fff; }
+
+/* ── Round 3: a control up close (ctlSpec) ── */
+.spk2 { padding: 26px 18px 18px; }
+.spr { display: grid; grid-template-columns: repeat(var(--n, 5), 1fr); gap: 8px; }
+.spc { display: flex; flex-direction: column; align-items: center; gap: 18px; min-width: 0; }
+.spc .big { height: 60px; display: flex; align-items: center; justify-content: center; }
+.spc .big > * { transform: scale(var(--zoom, 2.4)); }
+.spc small { color: var(--dim-text); font-size: .846em; text-align: center; }
+.spk3 { padding: 4px 16px; }
+.sl1 { display: flex; align-items: center; gap: 12px; min-height: 46px; }
+.sl1 + .sl1 { border-top: 1px solid var(--hair); }
+.sl1 b { flex: 1; font-weight: 500; }
+.sl1.was b { color: var(--dim-text); font-weight: 400; }
+.sl1 > span { display: flex; align-items: center; gap: 14px; }
+.spidea { color: var(--dim-text); line-height: 1.5; margin: 0 2px; max-width: 540px; }
+body.narrow .spr { grid-template-columns: repeat(3, 1fr); row-gap: 18px; }
+body.narrow .spidea { display: none; }
+/* Today's controls, drawn as they are, for comparison beside a design. */
+.was-sl { position: relative; width: 140px; height: 20px; display: inline-flex; align-items: center; }
+.was-sl::before { content: ""; width: 100%; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--accent) 60%, var(--track) 60%); }
+.was-sl::after { content: ""; position: absolute; left: calc(60% - 9px); top: 1px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 .5px rgba(0,0,0,.12), 0 1px 3px rgba(0,0,0,.35); }
+.was-rd { width: 18px; height: 18px; border-radius: 50%; display: inline-block; position: relative; box-shadow: inset 0 0 0 1.5px var(--text-tertiary); }
+.was-rd.on { box-shadow: inset 0 0 0 1.5px var(--accent); } .was-rd.on::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--accent); }
+.was-cb { width: 18px; height: 18px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1.5px var(--text-tertiary); }
+.was-cb.on { background: var(--accent); box-shadow: none; color: var(--on-accent); } .was-cb i { width: 12px; height: 12px; }
+
+/* ── Slider designs (?sl=…). Markup: .slider > .tr > .fill, and .kn at the value ── */
+html[class*="sl-"] body.after .slider.dis { opacity: .45; }
+html[class*="sl-"] body.after .slider.focus .kn { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
+/* Bar: a filled bar like the segmented control's track, a tint of the accent up to a slim handle. */
+html.sl-bar body.after .slider { height: 22px; }
+html.sl-bar body.after .slider .tr { height: 22px; border-radius: 7px; background: var(--track); box-shadow: inset 0 0 0 1px var(--hair); }
+html.sl-bar body.after .slider .fill { background: color-mix(in srgb, var(--accent) 34%, var(--track)); box-shadow: inset -1px 0 0 color-mix(in srgb, var(--accent) 60%, transparent); }
+html.sl-bar body.after .slider .kn { display: none; }
+html.sl-bar body.after .slider .fill { position: relative; min-width: 14px; }
+html.sl-bar body.after .slider .fill::after { content: ""; position: absolute; right: 5px; top: 5px; width: 4px; height: 12px; border-radius: 2px; background: var(--text); }
+html.sl-bar body.after .slider.focus .fill::after { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
+/* Tinted: a soft track, the accent fill, and an accent knob ringed by the surface it sits on. */
+html.sl-tinted body.after .slider .tr { height: 6px; border-radius: 3px; background: var(--track); }
+html.sl-tinted body.after .slider .fill { background: color-mix(in srgb, var(--accent) 75%, var(--track)); }
+html.sl-tinted body.after .slider .kn { top: 3px; width: 14px; height: 14px; margin-left: -7px; background: var(--accent); box-shadow: 0 0 0 3px var(--card), 0 0 0 4px color-mix(in srgb, var(--accent) 35%, transparent); }
+/* Satin: an Umbra satin groove, a lit accent fill, a satin knob. */
+html.sl-satin body.after .slider .tr { height: 8px; border-radius: 4px; background: linear-gradient(180deg, color-mix(in srgb, var(--text) 4%, var(--bg)), color-mix(in srgb, var(--text) 12%, var(--bg))); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 10%, transparent); }
+html.sl-satin body.after .slider .fill { background: linear-gradient(180deg, color-mix(in srgb, #fff 18%, var(--accent)), var(--accent)); box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 50%, transparent); }
+html.sl-satin body.after .slider .kn { top: 1px; background: linear-gradient(180deg, color-mix(in srgb, var(--text) 34%, var(--bg)), color-mix(in srgb, var(--text) 20%, var(--bg))); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 16%, transparent), 0 1px 3px color-mix(in srgb, var(--shadow) 60%, transparent); }
+html.sl-satin[data-theme="light"] body.after .slider .kn { background: linear-gradient(180deg, #fff, color-mix(in srgb, var(--text) 6%, #fff)); }
+/* Split: a thick track cut by a tall handle, the accent before it and a tint after. */
+html.sl-split body.after .slider { height: 26px; }
+html.sl-split body.after .slider .tr { height: 14px; border-radius: 7px; background: color-mix(in srgb, var(--accent) 16%, var(--track)); }
+html.sl-split body.after .slider .fill { background: var(--accent); }
+html.sl-split body.after .slider .kn { top: 0; width: 4px; height: 26px; margin-left: -2px; border-radius: 2px; background: var(--accent); box-shadow: 0 0 0 4px var(--card); }
+/* Ticks: today's line with a dot at each step and a raised knob. */
+html.sl-ticks body.after .slider .tr { height: 4px; background: var(--track); overflow: visible; }
+html.sl-ticks body.after .slider .tr::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 4px; margin-top: -2px; background: radial-gradient(circle, color-mix(in srgb, var(--text) 45%, transparent) 1.3px, transparent 1.8px) 0 50% / 10% 100% repeat-x; }
+html.sl-ticks body.after .slider .fill { border-radius: 2px; }
+html.sl-ticks body.after .slider .kn { background: color-mix(in srgb, var(--text) 30%, var(--bg)); box-shadow: inset 0 0 0 1.5px var(--accent), 0 1px 3px color-mix(in srgb, var(--shadow) 50%, transparent); }
+html.sl-ticks[data-theme="light"] body.after .slider .kn { background: #fff; }
+
+/* ── Radio button designs (?rd=…). Markup: .rad, .rad.on ── */
+html[class*="rd-"] .rad.dis { opacity: .45; }
+html[class*="rd-"] .rad.focus { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
+/* Filled: off is the field with a hairline; on fills with the accent around a dot. */
+html.rd-filled .rad { background: var(--track); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 16%, transparent); }
+html.rd-filled .rad.on { background: var(--accent); box-shadow: none; }
+html.rd-filled .rad.on::after { inset: 6px; background: var(--on-accent); }
+html.rd-filled[data-theme="light"] .rad.on::after { background: #fff; }
+/* Tinted: on is a tint of the accent with an accent ring and dot, like a selected row. */
+html.rd-tinted .rad { background: var(--field); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--text) 22%, transparent); }
+html.rd-tinted .rad.on { background: color-mix(in srgb, var(--accent) 22%, var(--field)); box-shadow: inset 0 0 0 1.5px var(--accent); }
+html.rd-tinted .rad.on::after { inset: 5px; }
+/* Satin: an Umbra satin bead; on, an accent glow and a lit dot. */
+html.rd-satin .rad { background: linear-gradient(180deg, color-mix(in srgb, var(--text) 4%, var(--bg)), color-mix(in srgb, var(--text) 13%, var(--bg))); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 14%, transparent); }
+html.rd-satin[data-theme="light"] .rad { background: linear-gradient(180deg, color-mix(in srgb, var(--text) 8%, var(--bg)), #fff); }
+html.rd-satin .rad.on { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, transparent), 0 0 8px color-mix(in srgb, var(--accent) 35%, transparent); }
+html.rd-satin .rad.on::after { inset: 5px; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, #fff 40%, var(--accent)), var(--accent)); }
+/* Check: on is an accent disc with a check, matching the checked item in a dropdown. */
+html.rd-check .rad { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--text) 26%, transparent); }
+html.rd-check .rad.on { background: var(--accent); box-shadow: none; }
+html.rd-check .rad.on::after { inset: auto; left: 6px; top: 4.5px; width: 4px; height: 7px; border-radius: 0; background: none; border-right: 1.8px solid var(--on-accent); border-bottom: 1.8px solid var(--on-accent); transform: rotate(45deg); }
+html.rd-check[data-theme="light"] .rad.on::after { border-color: #fff; }
+/* Cards: the choice is the row: no circles, the chosen row is tinted and outlined with a check. */
+html.rd-cards .rad:not(.on) { width: 0; margin-right: -14px; box-shadow: none; }
+html.rd-cards .rad.on { width: 16px; background: none; box-shadow: none; order: 99; margin-left: auto; }
+html.rd-cards .rad.on::after { inset: auto; left: 5px; top: 1px; width: 5px; height: 10px; border-radius: 0; background: none; border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg); }
+html.rd-cards body.after .opt:has(> .rad.on) { background: color-mix(in srgb, var(--accent) 10%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 55%, transparent); border-radius: var(--r-small); }
+html.rd-cards body.after .opt:has(> .rad.on)::before, html.rd-cards body.after .opt:has(> .rad.on) + .opt::before { display: none; }
+
+/* ── Checkbox designs (?cb=…). Markup: .cbx.sq, .cbx.sq.done with a check icon ── */
+html[class*="cb-"] .cbx.dis { opacity: .45; }
+html[class*="cb-"] .cbx.focus { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
+html.cb-field .cbx.sq { background: var(--track); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 16%, transparent); }
+html.cb-field .cbx.sq.done { background: var(--accent); box-shadow: none; color: var(--on-accent); }
+html.cb-field[data-theme="light"] .cbx.sq.done { color: #fff; }
+html.cb-tinted .cbx.sq { background: var(--field); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--text) 22%, transparent); }
+html.cb-tinted .cbx.sq.done { background: color-mix(in srgb, var(--accent) 22%, var(--field)); box-shadow: inset 0 0 0 1.5px var(--accent); color: var(--accent); }
+html.cb-satin .cbx.sq { background: linear-gradient(180deg, color-mix(in srgb, var(--text) 4%, var(--bg)), color-mix(in srgb, var(--text) 13%, var(--bg))); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 14%, transparent); }
+html.cb-satin[data-theme="light"] .cbx.sq { background: linear-gradient(180deg, color-mix(in srgb, var(--text) 8%, var(--bg)), #fff); }
+html.cb-satin .cbx.sq.done { background: linear-gradient(180deg, color-mix(in srgb, #fff 18%, var(--accent)), var(--accent)); box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 40%, transparent); color: var(--on-accent); }
+html.cb-satin[data-theme="light"] .cbx.sq.done { color: #fff; }
+html.cb-round .cbx.sq { border-radius: 50%; background: none; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--text) 30%, transparent); }
+html.cb-round .cbx.sq.done { background: var(--accent); box-shadow: none; color: var(--on-accent); }
+html.cb-round[data-theme="light"] .cbx.sq.done { color: #fff; }
+
+/* ── Dropdown designs (?dd=…). Markup: .dd (label, then a chevron icon) ── */
+html[class*="dd-"] body.after .dd.dis { opacity: .45; }
+html[class*="dd-"] body.after .dd.focus { box-shadow: var(--ring); }
+/* Raised: drawn like a button, raised off the card, the chevron behind a hairline. */
+html.dd-raised body.after .dd { background: var(--raised); box-shadow: 0 0 0 1px var(--edge), 0 1px 2px color-mix(in srgb, var(--shadow) 35%, transparent); padding-right: 6px; }
+html.dd-raised body.after .dd i { margin-left: 2px; padding-left: 7px; width: 20px; box-sizing: content-box; border-left: 1px solid var(--hair); }
+html.dd-raised[data-theme="light"] body.after .dd { background: #fff; }
+/* Quiet: no box until you point at it; the value and an up-and-down chevron. */
+html.dd-quiet body.after .dd { background: none; box-shadow: none; padding: 0 6px 0 8px; font-weight: 500; }
+html.dd-quiet body.after .dd.hover, html.dd-quiet body.after .dd.focus { background: var(--field); }
+html.dd-quiet body.after .dd i { color: var(--accent); }
+/* Underline: the value over a hairline, which turns the accent when it's open. */
+html.dd-underline body.after .dd { background: none; box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--text) 24%, transparent); border-radius: 0; padding: 0 2px; min-width: 120px; justify-content: space-between; }
+html.dd-underline body.after .dd.focus { box-shadow: inset 0 -2px 0 var(--accent); }
+/* Tinted: the field with the value in the accent, saying it's a choice you can change. */
+html.dd-tinted body.after .dd { background: color-mix(in srgb, var(--accent) 10%, var(--field)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 28%, transparent); color: var(--text); }
+html.dd-tinted body.after .dd i { color: var(--accent); }
+
+/* ── Segmented control designs (?sg=…). Markup: .seg > button, .on for the chosen one ── */
+html.sg-tinted body.after .seg > .on { background: color-mix(in srgb, var(--accent) 22%, var(--field)); color: var(--text); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent); }
+html.sg-solid body.after .seg { border-radius: 999px; padding: 3px; }
+html.sg-solid body.after .seg > * { border-radius: 999px; }
+html.sg-solid body.after .seg > .on { background: var(--accent); color: var(--on-accent); box-shadow: none; font-weight: 600; }
+html.sg-solid[data-theme="light"] body.after .seg > .on { color: #fff; }
+html.sg-outline body.after .seg { background: none; padding: 0; gap: 0; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 16%, transparent); }
+html.sg-outline body.after .seg > * { height: 28px; border-radius: 0; }
+html.sg-outline body.after .seg > * + * { box-shadow: -1px 0 0 color-mix(in srgb, var(--text) 16%, transparent); }
+html.sg-outline body.after .seg > :first-child { border-radius: 7px 0 0 7px; } html.sg-outline body.after .seg > :last-child { border-radius: 0 7px 7px 0; }
+html.sg-outline body.after .seg > .on { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
+html.sg-underline body.after .seg { background: none; box-shadow: none; padding: 0; gap: 14px; }
+html.sg-underline body.after .seg > * { height: 28px; padding: 0 2px; border-radius: 0; }
+html.sg-underline body.after .seg > .on { background: none; box-shadow: inset 0 -2px 0 var(--accent); color: var(--text); font-weight: 600; }
+
+/* ── Text field designs (?fd=…). Markup: .field (icon, .ph or text), .search in the header ── */
+html[class*="fd-"] .field.err { box-shadow: inset 0 0 0 1.5px var(--danger); }
+html[class*="fd-"] .field.dis { opacity: .45; }
+html.fd-sunken .field, html.fd-sunken body.after .search { background: color-mix(in srgb, var(--shadow) 30%, var(--bg)); box-shadow: inset 0 1px 2px color-mix(in srgb, var(--shadow) 60%, transparent), inset 0 0 0 1px var(--hair); }
+html.fd-sunken[data-theme="light"] .field, html.fd-sunken[data-theme="light"] body.after .search { background: color-mix(in srgb, var(--text) 5%, var(--bg)); box-shadow: inset 0 1px 2px color-mix(in srgb, var(--shadow) 25%, transparent), inset 0 0 0 1px var(--hair); }
+html.fd-sunken .field.focus { box-shadow: inset 0 0 0 1.5px var(--accent), var(--ring); }
+html.fd-outline .field, html.fd-outline body.after .search { background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 18%, transparent); }
+html.fd-outline .field.focus { box-shadow: inset 0 0 0 1.5px var(--accent); }
+html.fd-underline .field { background: none; border-radius: 0; padding: 0 2px; box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--text) 24%, transparent); }
+html.fd-underline .field.focus { box-shadow: inset 0 -2px 0 var(--accent); }
+html.fd-underline .field.err { box-shadow: inset 0 -2px 0 var(--danger); }
+html.fd-pill .field, html.fd-pill body.after .search { border-radius: 999px; padding: 0 14px; }
+html.fd-pill .field.focus { box-shadow: inset 0 0 0 1.5px var(--accent); }
+
+/* ── Button designs (?bt=…). Markup: .btn, .btn.primary, .btn.ghost, .btn.danger, .ib ── */
+/* Bright: the primary with white text (today's is dark text on the accent). */
+html.bt-bright body.after .btn.primary { color: #fff; }
+html.bt-bright body.after .btn { background: color-mix(in srgb, var(--text) 9%, var(--card)); }
+/* Tinted: every button is a tint; the primary a strong tint of the accent with accent text. */
+html.bt-tinted body.after .btn.primary { background: color-mix(in srgb, var(--accent) 24%, var(--card)); color: color-mix(in srgb, var(--accent) 70%, var(--text)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent); }
+html.bt-tinted body.after .btn.danger { background: color-mix(in srgb, var(--danger) 18%, var(--card)); color: var(--danger); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 40%, transparent); }
+/* Satin: Umbra's satin on the plain buttons; the primary a lit accent. */
+html.bt-satin body.after .btn { background: linear-gradient(180deg, color-mix(in srgb, var(--text) 14%, var(--bg)), color-mix(in srgb, var(--text) 7%, var(--bg))); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 12%, transparent), 0 1px 2px color-mix(in srgb, var(--shadow) 40%, transparent); }
+html.bt-satin[data-theme="light"] body.after .btn { background: linear-gradient(180deg, #fff, color-mix(in srgb, var(--text) 5%, #fff)); }
+html.bt-satin body.after .btn.primary { background: linear-gradient(180deg, color-mix(in srgb, #fff 16%, var(--accent)), var(--accent)); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 3px color-mix(in srgb, var(--accent) 40%, transparent); }
+html.bt-satin body.after .btn.ghost { background: none; box-shadow: none; }
+/* Outline: plain buttons are an outline; the primary stays solid. */
+html.bt-outline body.after .btn { background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 20%, transparent); }
+html.bt-outline body.after .btn.primary { background: var(--accent); color: #fff; box-shadow: none; }
+html.bt-outline body.after .btn.ghost { box-shadow: none; }
+html.bt-outline body.after .btn.danger { background: none; color: var(--danger); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 60%, transparent); }
+html[class*="bt-"] body.after .btn.dis { opacity: .45; }
+html[class*="bt-"] body.after .btn.focus { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }

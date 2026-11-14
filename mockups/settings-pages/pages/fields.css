@@ -1,0 +1,10 @@
+.frow { display: grid; grid-template-columns: 130px 1fr; align-items: center; column-gap: 12px; row-gap: 4px; padding: 10px 14px; }
+.frow + .frow { border-top: 1px solid var(--hair); }
+.frow label { color: var(--dim-text); font-weight: 500; }
+.frow small { grid-column: 2; color: var(--text-tertiary); font-size: .846em; }
+.frow small.er { color: var(--danger); }
+.field .caret { width: 1.5px; height: 16px; background: var(--accent); margin-left: -6px; }
+.field.dis { opacity: .5; }
+.field.err { box-shadow: inset 0 0 0 1.5px var(--danger); }
+.was-fd { height: 32px; width: 200px; padding: 0 10px; border-radius: 7px; display: inline-flex; align-items: center; background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); font-weight: 400; }
+body.narrow .frow { grid-template-columns: 110px 1fr; }

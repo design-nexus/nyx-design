@@ -1,0 +1,9 @@
+.was-dd { height: 28px; padding: 0 10px; border-radius: 7px; display: inline-flex; align-items: center; background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); color: var(--text); font-weight: 400; }
+.ddopen { position: relative; padding: 12px 16px 12px; }
+.ddrow { display: flex; align-items: center; justify-content: space-between; }
+.ddrow > span:first-child { font-weight: 500; }
+.ddopen .menu.ddm { position: relative !important; left: auto !important; top: auto !important; margin: 6px 0 0 auto; }
+.ddm .mi.check i { color: var(--accent); }
+.ddm .mi .k { color: var(--accent); }
+body.after .dd.hover { background: color-mix(in srgb, var(--text) 8%, var(--field)); }
+body.narrow .ddopen { display: none; }

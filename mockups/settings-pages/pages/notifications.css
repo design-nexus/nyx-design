@@ -1,0 +1,141 @@
+/* Desktop › Notifications: pop-ups on a corner of the desktop, quiet hours as a day, apps one by one. */
+
+/* The mini desktop */
+.dsk { position: relative; width: 100%; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; flex: none;
+  box-shadow: 0 0 0 1px var(--edge), 0 12px 30px color-mix(in srgb, var(--shadow) 45%, transparent); }
+.dsk .dbar { position: absolute; left: 0; right: 0; top: 0; height: 18px; display: flex; align-items: center; gap: 6px; padding: 0 9px; background: color-mix(in srgb, var(--bg) 84%, transparent); font-size: 9px; font-weight: 600; color: var(--text); z-index: 2; }
+.dsk .ws { display: flex; gap: 3px; }
+.dsk .ws b { width: 6px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--text) 30%, transparent); }
+.dsk .ws b.on { width: 14px; background: var(--accent); }
+.dsk .clk { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.dsk .tray { margin-left: auto; display: flex; gap: 6px; }
+.dsk .tray i { width: 10px; height: 10px; }
+.dsk .dw { position: absolute; border-radius: 6px; background: var(--card); overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 10%, transparent), 0 6px 16px rgba(0,0,0,.3); }
+.dsk .dw.f { box-shadow: 0 0 0 1.5px var(--accent), 0 6px 16px rgba(0,0,0,.3); }
+.dsk .dw.ghost { opacity: .9; }
+.dsk .dwh { height: 15px; flex: none; display: flex; align-items: center; gap: 3px; padding: 0 6px; border-bottom: 1px solid var(--hair); }
+.dsk .dwh i { width: 5px; height: 5px; border-radius: 50%; background: color-mix(in srgb, var(--text) 22%, transparent); }
+.dsk .dwh b { margin-left: 5px; height: 4px; width: 26%; border-radius: 2px; background: color-mix(in srgb, var(--text) 32%, transparent); }
+.dsk .dwb { flex: 1; min-height: 0; display: flex; }
+.dsk .dsd { width: 26%; padding: 7px 6px; display: flex; flex-direction: column; gap: 5px; background: color-mix(in srgb, var(--text) 3.5%, transparent); }
+.dsk .dsd b { height: 5px; border-radius: 2px; background: color-mix(in srgb, var(--text) 16%, transparent); }
+.dsk .dsd b.on { background: var(--accent); }
+.dsk .dmn { flex: 1; min-width: 0; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.dsk .l { height: 5px; border-radius: 2px; background: color-mix(in srgb, var(--text) 60%, transparent); }
+.dsk .l.dim { background: color-mix(in srgb, var(--text) 18%, transparent); }
+.dsk .rw { height: 13px; border-radius: 3px; background: color-mix(in srgb, var(--text) 6%, transparent); }
+.dsk .rw.on { background: color-mix(in srgb, var(--accent) 28%, transparent); }
+.dsk .tm { flex: 1; padding: 7px 8px; display: flex; flex-direction: column; gap: 6px; background: color-mix(in srgb, var(--bg) 55%, var(--card)); }
+.dsk .tm span { display: flex; gap: 4px; } .dsk .tm b { height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--text) 50%, transparent); }
+.dsk .tm .c1 { background: var(--sw-green); } .dsk .tm .c2 { background: var(--sw-violet); } .dsk .tm .c3 { background: var(--sw-amber); }
+.dsk .pic { height: 38%; border-radius: 4px; }
+.w20 { width: 20%; } .w30 { width: 30%; } .w40 { width: 40%; } .w50 { width: 50%; } .w60 { width: 60%; } .w70 { width: 70%; } .w80 { width: 80%; } .w90 { width: 90%; }
+
+/* App icons and the dock */
+.ai { --is: 22px; width: var(--is); height: var(--is); border-radius: 26%; flex: none; position: relative; display: flex; align-items: center; justify-content: center; color: #fff;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--a) 82%, #fff), color-mix(in srgb, var(--a) 78%, #000));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 1px 2px rgba(0,0,0,.35); }
+.ai > i { width: 54%; height: 54%; }
+.ai .run { position: absolute; left: 50%; bottom: calc(var(--is) * -.2); width: calc(var(--is) * .1 + 1px); height: calc(var(--is) * .1 + 1px); margin-left: calc(var(--is) * -.05 - .5px); border-radius: 50%; background: color-mix(in srgb, var(--text) 75%, transparent); }
+.ai .run.two { box-shadow: calc(var(--is) * -.16) 0 0 color-mix(in srgb, var(--text) 75%, transparent); margin-left: calc(var(--is) * .02); }
+.ai .bdg { position: absolute; right: -18%; top: -18%; min-width: calc(var(--is) * .42); height: calc(var(--is) * .42); padding: 0 3px; border-radius: 99px; background: var(--danger); color: #fff; font-size: calc(var(--is) * .26); font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 1.5px var(--bg); }
+.ai.tr { background: linear-gradient(160deg, color-mix(in srgb, var(--text) 30%, var(--bg)), color-mix(in srgb, var(--text) 14%, var(--bg))); color: var(--text); }
+.ai.fold { background: linear-gradient(160deg, color-mix(in srgb, var(--sw-blue) 55%, var(--bg)), color-mix(in srgb, var(--sw-blue) 35%, var(--bg))); }
+.ddk { --is: 22px; position: absolute; z-index: 3; display: flex; align-items: center; gap: calc(var(--is) * .24); padding: calc(var(--is) * .24); border-radius: calc(var(--is) * .4);
+  background: color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter: blur(8px);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 12%, transparent), 0 8px 20px rgba(0,0,0,.35); }
+.ddk .ai { --is: inherit; }
+.ddk.bottom { left: 50%; bottom: 3%; transform: translateX(-50%); }
+.ddk.left { left: 1.6%; top: 52%; transform: translateY(-50%); flex-direction: column; }
+.ddk .sep { width: 1px; align-self: stretch; margin: calc(var(--is) * .15) 0; background: color-mix(in srgb, var(--text) 16%, transparent); }
+.ddk.left .sep { width: auto; height: 1px; margin: 0 calc(var(--is) * .15); }
+.ddk.hot { box-shadow: 0 0 0 2px var(--sec-desktop), 0 0 0 7px color-mix(in srgb, var(--sec-desktop) 22%, transparent), 0 8px 20px rgba(0,0,0,.35); }
+.meas { position: absolute; top: 0; bottom: 0; right: -46px; width: 10px; border: 1.5px solid #fff; border-left: 0; border-radius: 0 3px 3px 0; opacity: .9; }
+.meas span { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); padding: 1px 6px; border-radius: 6px; background: var(--sec-desktop); color: #fff; font-size: 9.5px; font-weight: 700; white-space: nowrap; }
+.dsk .tag { position: absolute; z-index: 4; display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 11px; background: color-mix(in srgb, var(--bg) 88%, transparent); color: var(--text); font-size: 10.5px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,.3); white-space: nowrap; }
+.dsk .tag i { width: 12px; height: 12px; color: var(--sec-desktop); }
+
+
+/* Pop-ups */
+.np { width: 272px; padding: 10px 12px 11px; border-radius: 14px; display: flex; flex-direction: column; gap: 4px; position: relative;
+  background: color-mix(in srgb, var(--popover) 95%, transparent); backdrop-filter: blur(10px); box-shadow: 0 0 0 1px var(--hair), 0 10px 26px rgba(0,0,0,.35); }
+.np .nh { display: flex; align-items: center; gap: 7px; font-size: .846em; color: var(--dim-text); }
+.np .nh .ai { --is: 18px; } .np .nh b { font-weight: 600; color: var(--text); } .np .nh .sp { flex: 1; }
+.np .nt { font-weight: 600; margin-top: 2px; }
+.np .nb { color: var(--dim-text); font-size: .923em; line-height: 1.35; }
+.np .na { display: flex; gap: 6px; margin-top: 5px; } .np .na .btn { flex: 1; justify-content: center; height: 26px; }
+.np .avt { position: absolute; right: 12px; top: 30px; }
+.np.short .nb, .np.short .na { display: none; }
+.np.back { transform: scale(.94); opacity: .7; margin-top: -58px; z-index: -1; }
+
+/* A: a corner of the desktop */
+.corner { position: relative; flex: none; height: 300px; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--edge), 0 12px 30px color-mix(in srgb, var(--shadow) 40%, transparent); }
+.corner .cbar { position: absolute; left: 0; right: 0; top: 0; height: 30px; display: flex; align-items: center; gap: 12px; padding: 0 14px; background: color-mix(in srgb, var(--bg) 86%, transparent); font-size: .923em; font-weight: 600; z-index: 2; }
+.corner .cbar .sp { flex: 1; }
+.corner .cbar > i { width: 14px; height: 14px; color: var(--dim-text); }
+.corner .bell { position: relative; width: 24px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 1.5px var(--sec-desktop); background: color-mix(in srgb, var(--sec-desktop) 12%, transparent); }
+.corner .bell i { width: 13px; height: 13px; }
+.corner .bell b { position: absolute; right: -5px; top: -5px; min-width: 14px; height: 14px; padding: 0 3px; border-radius: 7px; background: var(--danger); color: #fff; font-size: 8.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.corner .cwin { position: absolute; left: 4%; top: 46px; width: 60%; bottom: -20px; border-radius: 10px; background: var(--card); box-shadow: 0 0 0 1px var(--hair), 0 10px 24px rgba(0,0,0,.3); padding: 14px; display: flex; flex-direction: column; gap: 9px; }
+.corner .cwin .l { height: 7px; border-radius: 3px; background: color-mix(in srgb, var(--text) 55%, transparent); }
+.corner .cwin .l.dim { background: color-mix(in srgb, var(--text) 16%, transparent); }
+.corner .stack { position: absolute; right: 14px; top: 42px; display: flex; flex-direction: column; gap: 8px; z-index: 3; }
+.corner .stack .more { align-self: flex-end; height: 22px; padding: 0 9px; border-radius: 11px; background: color-mix(in srgb, var(--popover) 90%, transparent); font-size: .77em; color: var(--dim-text); display: flex; align-items: center; box-shadow: 0 0 0 1px var(--hair); }
+
+/* Quiet hours across a day */
+.d24 { padding: 12px 16px 12px; display: flex; flex-direction: column; gap: 9px; }
+.d24 .dh { display: flex; align-items: center; gap: 10px; } .d24 .dh b { font-weight: 600; } .d24 .dh span { color: var(--dim-text); font-size: .923em; } .d24 .dh .sp { flex: 1; }
+.d24 .trk { position: relative; height: 30px; border-radius: 8px; background: color-mix(in srgb, var(--text) 6%, transparent); overflow: visible; }
+.d24 .q { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--sw-violet) 30%, transparent); display: flex; align-items: center; justify-content: center; gap: 5px; color: var(--text); font-size: .846em; font-weight: 600; white-space: nowrap; }
+.d24 .q i { width: 13px; height: 13px; color: var(--sw-violet); }
+.d24 .q.a { left: 0; width: 29.17%; border-radius: 8px 0 0 8px; } .d24 .q.b { left: 91.67%; right: 0; border-radius: 0 8px 8px 0; }
+.d24 .hd { position: absolute; top: -4px; bottom: -4px; width: 4px; margin-left: -2px; border-radius: 2px; background: var(--sw-violet); }
+.d24 .now { position: absolute; top: -6px; bottom: -6px; width: 2px; margin-left: -1px; background: var(--text); }
+.d24 .now span { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: .77em; font-weight: 700; white-space: nowrap; }
+.d24 .tk { display: flex; justify-content: space-between; color: var(--text-tertiary); font-size: .77em; font-feature-settings: "tnum"; }
+.d24 .keep { display: flex; gap: 7px; align-items: flex-start; line-height: 1.4; color: var(--dim-text); font-size: .846em; }
+.tfield { display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 7px; background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); font-feature-settings: "tnum"; font-weight: 600; }
+.tpair { display: inline-flex; align-items: center; gap: 8px; color: var(--dim-text); font-size: .923em; }
+
+/* B: apps list and detail */
+.alist .opt .ai { --is: 28px; }
+.alist .opt .st2 { display: flex; gap: 6px; }
+.alist .opt .st2 i { width: 14px; height: 14px; color: var(--text-tertiary); }
+.alist .opt .st2 i.off { color: var(--danger); opacity: .8; }
+.alist .opt.picked { background: color-mix(in srgb, var(--sec-desktop) 10%, transparent); }
+.alist .opt.picked::after { content: ""; position: absolute; left: 0; top: 9px; bottom: 9px; width: 3px; border-radius: 2px; background: var(--sec-desktop); }
+.apph { display: flex; align-items: center; gap: 12px; }
+.apph .ai { --is: 44px; }
+.apph > div { display: flex; flex-direction: column; gap: 2px; flex: 1; } .apph b { font-size: 1.231em; font-weight: 600; } .apph span { color: var(--dim-text); font-size: .923em; }
+.tcards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tcd { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: var(--r-card); background: var(--card); box-shadow: inset 0 0 0 1px var(--hair); }
+.tcd .r { display: flex; align-items: center; gap: 8px; } .tcd .r i { width: 16px; height: 16px; color: var(--sec-desktop); } .tcd .r b { font-weight: 600; flex: 1; }
+.tcd span { color: var(--dim-text); font-size: .846em; line-height: 1.35; }
+.recent .opt .tm2 { color: var(--text-tertiary); font-size: .846em; white-space: nowrap; }
+.recent .opt i.pin { width: 14px; height: 14px; color: var(--sec-desktop); }
+
+/* C: the quiet hours on a dial */
+.dialrow { display: flex; gap: 16px; align-items: stretch; }
+.dialc { flex: none; width: 260px; display: flex; align-items: center; justify-content: center; padding: 14px; }
+svg.dial { overflow: visible; }
+svg.dial .rg { fill: none; stroke: color-mix(in srgb, var(--text) 8%, transparent); stroke-width: 22; }
+svg.dial .qa { fill: none; stroke: color-mix(in srgb, var(--sw-violet) 70%, transparent); stroke-width: 22; stroke-linecap: round; }
+svg.dial .hn { fill: #fff; stroke: var(--sw-violet); stroke-width: 3; }
+svg.dial .tk { stroke: color-mix(in srgb, var(--text) 30%, transparent); stroke-width: 1.5; }
+svg.dial text { fill: var(--text-tertiary); font-size: 10px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; font-family: inherit; }
+svg.dial .nowh { stroke: var(--text); stroke-width: 2; stroke-linecap: round; }
+svg.dial .nowd { fill: var(--text); }
+svg.dial .c1 { fill: var(--text); font-size: 20px; font-weight: 700; }
+svg.dial .c2 { fill: var(--dim-text); font-size: 10.5px; font-weight: 500; }
+.through { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.through .card { padding: 4px 0; }
+.through .tth { font-weight: 600; margin: 2px 2px 0; }
+
+/* 800 px */
+body.narrow .split2 .pv { height: 340px; }
+body.narrow .corner { flex: 1; height: auto; min-height: 0; }
+.d24 .keep i { width: 14px; height: 14px; flex: none; margin-top: 1px; color: var(--success); }
+svg.dial .nowr { fill: var(--text); stroke: var(--card); stroke-width: 2.5; }
+svg.dial .nowt { fill: var(--text); font-size: 9.5px; font-weight: 700; }
+.pvh .btn span { color: inherit; font-size: inherit; }

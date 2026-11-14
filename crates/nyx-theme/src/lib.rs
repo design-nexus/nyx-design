@@ -146,7 +146,8 @@ fn defines2(look: &Look, light: bool) -> String {
          @define-color lift_active mix(@theme_card, @theme_accent, 0.1);\n\
          @define-color veil alpha(mix(@theme_bg, @theme_shadow, 0.45), 0.82);\n\
          @define-color field alpha(@theme_text, 0.035);\n\
-         @define-color track alpha(@theme_text, 0.1);\n",
+         @define-color track alpha(@theme_text, 0.1);\n\
+         @define-color switch_knob {knob};\n",
         // The page's sheet keeps its line when blended: it is the one line between areas.
         sheet = if light { "0.11" } else { "0.09" },
         sel = look.selection,
@@ -154,6 +155,8 @@ fn defines2(look: &Look, light: bool) -> String {
         // Blended: the lines an app's own sheet still draws between areas and rows vanish.
         hairline = if look.material.blended { "alpha(@theme_bg, 0)" } else { "mix(@theme_bg, @theme_border, 0.82)" },
         divider = if look.material.blended { "alpha(@theme_bg, 0)" } else { "@theme_divider" },
+        // A raised knob: white on light themes, a step up from the track on dark ones.
+        knob = if light { "#ffffff" } else { "mix(@theme_bg, @theme_text, 0.26)" },
     )
 }
 
@@ -1068,7 +1071,7 @@ mod tests {
         assert!(!base.contains("@define-color"));
         let look = bundled().into_iter().find(|t| t.id == "nyx-dark").unwrap().look;
         let defines = defines2(&look, false);
-        for name in ["sheet_line", "hairline", "divider", "nav_active", "row_hover", "lift", "lift_active", "veil", "field", "track"] {
+        for name in ["sheet_line", "hairline", "divider", "nav_active", "row_hover", "lift", "lift_active", "veil", "field", "track", "switch_knob"] {
             assert!(defines.contains(&format!("@define-color {name} ")), "{name}");
         }
         let used = ["@field", "@track", "@theme_panel", "@theme_card", "@theme_raised", "@theme_popover", "@theme_text_tertiary"];

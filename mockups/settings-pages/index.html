@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Settings pages mockups</title>
+<link rel="stylesheet" href="../revamp/tokens.css">
+<link rel="stylesheet" href="../revamp/gallery.css">
+<link rel="stylesheet" href="gallery.css">
+<script>
+  // Every tab, by section, in order: [section, [[id, name], …]]. A tab without a pages/ID.js
+  // is listed dimmed ("not drawn yet").
+  const SECTIONS = [
+    ["Round 1", [["styles", "Page styles"]]],
+    ["Round 3", [["icons", "Umbra icons"], ["switches", "Switches"], ["sliders", "Sliders"], ["radios", "Radio buttons"], ["checkboxes", "Checkboxes"], ["dropdowns", "Dropdowns"], ["segmented", "Segmented controls"], ["fields", "Text fields"], ["buttons", "Buttons"]]],
+    ["Home", [["home", "Home"]]],
+    ["Connections", [["wifi", "Wi-Fi"], ["bluetooth", "Bluetooth"], ["devices", "Connected Devices"], ["network", "Network"], ["mounts", "Mounts"], ["sharing", "Sharing"]]],
+    ["Hardware", [["displays", "Displays"], ["audio", "Sound"], ["power", "Power & Battery"], ["idle", "Lock Screen"], ["printers", "Printers"], ["disks", "Disks"]]],
+    ["Personalization", [["theme", "Appearance"], ["look", "Window Style"], ["bar", "Bar & Notifications"], ["nyx-bar", "Bar"], ["plugins", "Bar Plugins"], ["nightlight", "Night Light"]]],
+    ["Desktop", [["dock", "Dock"], ["switcher", "Switcher"], ["control-center", "Control Center"], ["notifications", "Notifications"], ["workspaces", "Tiling & Workspaces"], ["workspace-profiles", "Workspace Profiles"], ["keybindings", "Keyboard Shortcuts"], ["rules", "Startup & Rules"], ["capture", "Capture & Tools"]]],
+    ["Input", [["keyboard", "Keyboard"], ["mouse", "Mouse"], ["trackpad", "Trackpad"]]],
+    ["Accounts", [["accounts", "Users"], ["sign-in", "Sign-in & Security"], ["online-accounts", "Online Accounts"], ["oa-settings", "Online Accounts: connection settings"]]],
+    ["Assistant & AI", [["assistant", "Assistant"], ["assistant-appearance", "Aura"], ["assistant-voice", "Voice"], ["assistant-permissions", "Permissions"], ["assistant-activity", "Activity"], ["assistant-performance", "Performance"], ["assistant-models", "Language Model"], ["local-ai", "Local AI"], ["local-ai-models", "Models"]]],
+    ["System", [["region", "Time & Language"], ["boot", "Boot & Login"], ["apps", "Default Apps"], ["software", "Software"], ["services", "Services"], ["extensions", "Extensions"], ["nyx", "Nyx apps"], ["about", "About"]]],
+    ["Extensions", [["ext-styles", "Extension pages: style"], ["ext-pages", "Extension pages: every page"], ["ext-devices", "Galleon's Stream Deck and the A50 X"]]],
+    ["NyxOS", [["nyxos-frame", "Sidebar & Home"], ["nyxos-apply", "Applying changes"], ["nyxos-accounts", "Accounts"], ["nyxos-users", "Users"], ["nyxos-region", "Time & Language"], ["nyxos-services", "Services"], ["nyxos-software", "Software"], ["nyxos-updates", "Updates"], ["nyxos-boot", "Boot & Sign-in"], ["nyxos-lock", "Lock Screen"]]],
+  ];
+  const ORDER = SECTIONS.flatMap(([sec, tabs]) => tabs.map(([id, name]) => [id, name, sec]));
+  const APPS = {};
+  const REG = (id, def) => { APPS[id] = def; };
+  const PICKS = {};
+  for (const [id] of ORDER) document.write(`<script src="pages/${id}.js" onerror="void 0"><\/script>`);
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="title"><h1>Nyx Settings: the pages</h1><span class="lede">Mockups only, inside the two-level Settings you picked (sections in the sidebar, each section's pages as tabs). Round 1 was three page styles on five pages, and you picked B, controls beside a live preview. Round 2 draws every page in it with two or three layouts each, and NyxOS's sidebar, its own pages and how its system changes are applied. Say the tab and the option to build ("Sound B", "Displays A"). Click a shot for the full size: ← and → go through every shot, D and L switch dark and light, Esc closes.</span></div>
+  <div class="theme" id="theme"></div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main id="out"></main>
+<script>
+  // Ken's picks (picks.json), kept inline so the page works from file://.
+  Object.assign(PICKS, {"styles":"b","icons":"a","switches":"a","sliders":"a","radios":"b","checkboxes":"b","rules":"b","home":"a","wifi":"a","bluetooth":"a","devices":"a","network":"a","mounts":"a","sharing":"a","displays":"a","audio":"a","power":"a","idle":"a","printers":"a","disks":"a","theme":"a","look":"a","bar":"a","nyx-bar":"a","plugins":"a","nightlight":"a","dock":"a","switcher":"a","control-center":"a","notifications":"a","workspaces":"a","workspace-profiles":"a","keybindings":"a","capture":"a","keyboard":"a","mouse":"a","trackpad":"a","accounts":"a","sign-in":"a","online-accounts":"a","assistant":"a","assistant-appearance":"a","assistant-voice":"a","assistant-permissions":"a","assistant-activity":"a","assistant-performance":"a","assistant-models":"a","local-ai":"a","local-ai-models":"a","region":"a","boot":"a","apps":"a","software":"a","services":"a","extensions":"a","nyx":"a","about":"a","nyxos-frame":"a","nyxos-apply":"a","nyxos-accounts":"a","nyxos-users":"a","nyxos-region":"a","nyxos-services":"a","nyxos-software":"a","nyxos-updates":"a","nyxos-boot":"a","nyxos-lock":"a","ext-styles":"a","oa-settings":"c","ext-pages":"a","ext-devices":"a"});
+</script>
+<script src="gallery.js"></script>
+</body>
+</html>

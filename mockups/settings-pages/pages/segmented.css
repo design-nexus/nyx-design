@@ -1,0 +1,5 @@
+.was-sg { display: inline-flex; gap: 2px; padding: 2px; border-radius: 7px; background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); }
+.was-sg b { height: 24px; padding: 0 11px; border-radius: 5px; display: inline-flex; align-items: center; color: var(--dim-text); font-weight: 500; }
+.was-sg b.on { background: var(--raised); color: var(--text); box-shadow: 0 0 0 1px var(--edge), 0 1px 2px color-mix(in srgb, var(--shadow) 30%, transparent); }
+body.after .seg.dis { opacity: .45; }
+body.after .seg.focus { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }

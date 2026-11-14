@@ -1,0 +1,94 @@
+/* NyxOS › Accounts */
+.ac .card.icons .opt { --inset: 58px; }
+.ac-logo { width: var(--s); height: var(--s); border-radius: calc(var(--s) * .27); flex: none; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: calc(var(--s) * .5); letter-spacing: -.02em; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+.ac-logo.ms { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: calc(var(--s) * .06); padding: calc(var(--s) * .2); background: #fff; }
+.ac-logo.ms b { display: block; width: 100%; height: 100%; border-radius: 1px; }
+.ac-you { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; }
+.ac-you .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ac-you .tx b { font-weight: 600; font-size: 1.077em; } .ac-you .tx span { color: var(--dim-text); font-size: .923em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-you .btn.sm { height: 28px; font-size: 1em; }
+.ac-list .opt { --inset: 58px; min-height: 54px; }
+.ac-list .opt .dim { color: var(--text-tertiary); }
+.ac-list .opt.picked { box-shadow: inset 3px 0 0 var(--sec-accounts); }
+.ac-list .opt .d { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac .pill { flex: none; }
+
+/* A: the account */
+.ac-head { display: flex; align-items: center; gap: 14px; }
+.ac-head .tx { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ac-head .tx b { font-size: 1.385em; font-weight: 600; letter-spacing: -.015em; } .ac-head .tx span { color: var(--dim-text); }
+.ac-head .sp { flex: 1; }
+.ac-lab { margin: 4px 2px -4px; font-size: .846em; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--text-tertiary); }
+.ac-svc { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.ac-svc .sv { padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ac-svc .sv .r1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.ac-svc .sv .si { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: var(--field); color: var(--text-tertiary); }
+.ac-svc .sv .si i { width: 17px; height: 17px; }
+.ac-svc .sv.on .si { background: color-mix(in srgb, var(--tc) 18%, transparent); color: var(--tc); }
+.ac-svc .sv b { font-weight: 600; }
+.ac-svc .sv span { color: var(--dim-text); font-size: .923em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-svc .sv:not(.on) b { color: var(--dim-text); }
+.ac .pv .card.icons .opt .btn.sm { height: 26px; }
+
+/* B: the grid */
+.ac-prov { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ac-prov .pv1 { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 12px 6px 10px; }
+.ac-prov .pv1 b { font-weight: 500; font-size: .923em; white-space: nowrap; }
+.ac-grid { padding: 4px 0 0; overflow: hidden; }
+.ac-grid .gh, .ac-grid .gr, .ac-grid .gf { display: grid; grid-template-columns: 2.3fr repeat(5, 1fr); align-items: center; gap: 4px; padding: 0 14px; }
+.ac-grid .gh { height: 40px; color: var(--dim-text); font-size: .923em; font-weight: 500; border-bottom: 1px solid var(--hair); }
+.ac-grid .gh span { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: .923em; }
+.ac-grid .gh i { width: 15px; height: 15px; color: var(--tc); }
+.ac-grid .gh { height: 50px; }
+.ac-grid .gr { min-height: 64px; border-bottom: 1px solid var(--hair); }
+.ac-grid .gr .who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ac-grid .gr .who div { display: flex; flex-direction: column; min-width: 0; }
+.ac-grid .gr .who b { font-weight: 600; } .ac-grid .gr .who span { color: var(--dim-text); font-size: .846em; white-space: nowrap; }
+.ac-grid .gr .who em { font-style: normal; color: var(--warning); font-weight: 600; }
+.ac-grid .gr.warn { background: color-mix(in srgb, var(--warning) 6%, transparent); }
+.ac-grid .gr .c { display: flex; justify-content: center; }
+.ac-grid .gr .na { font-style: normal; color: var(--text-tertiary); }
+.ac-grid .gf { height: 42px; color: var(--text-tertiary); font-size: .846em; background: color-mix(in srgb, var(--text) 2.5%, transparent); }
+.ac-grid .gf span { text-align: center; } .ac-grid .gf span:first-child { text-align: left; font-weight: 600; }
+.ac-grid .gf b { color: var(--text); font-weight: 600; }
+.ac-warn { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; background: color-mix(in srgb, var(--warning) 9%, var(--card)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--warning) 28%, transparent) !important; }
+.ac-warn .tx { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ac-warn .tx b { font-weight: 600; } .ac-warn .tx span { color: var(--dim-text); font-size: .923em; line-height: 1.35; }
+.ac-warn .btn.sm { height: 28px; font-size: 1em; }
+
+/* C: the sheet */
+.ac-add { width: 760px; padding: 0; overflow: hidden; }
+.ac-add .ah { padding: 18px 22px 14px; border-bottom: 1px solid var(--hair); }
+.ac-add .ab { display: flex; height: 400px; }
+.ac-add .pl { width: 290px; flex: none; padding: 8px; border-right: 1px solid var(--hair); display: flex; flex-direction: column; gap: 2px; background: color-mix(in srgb, var(--text) 2%, transparent); }
+.ac-add .pi { display: flex; align-items: center; gap: 11px; padding: 8px 10px; border-radius: var(--r-small); }
+.ac-add .pi div { display: flex; flex-direction: column; min-width: 0; } .ac-add .pi b { font-weight: 500; } .ac-add .pi span { color: var(--text-tertiary); font-size: .846em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-add .pi.on { background: var(--nav-active); } .ac-add .pi.on b { font-weight: 600; }
+.ac-add .pf { flex: 1; min-width: 0; padding: 18px 22px; display: flex; flex-direction: column; gap: 12px; }
+.ac-add .ph { display: flex; align-items: center; gap: 12px; margin-bottom: 2px; }
+.ac-add .ph div { display: flex; flex-direction: column; gap: 1px; } .ac-add .ph b { font-weight: 600; font-size: 1.077em; } .ac-add .ph span { color: var(--dim-text); font-size: .923em; }
+.ac-add .fl { display: flex; flex-direction: column; gap: 5px; }
+.ac-add .fl small { color: var(--dim-text); font-size: .846em; font-weight: 500; }
+.ac-add .fl.two { display: grid; grid-template-columns: 1fr 1.3fr; gap: 10px; }
+.ac-add .fl.two > div { display: flex; flex-direction: column; gap: 5px; }
+.ac-add .field .sp { flex: 1; }
+.ac-add .lnk { margin-top: -4px; }
+.ac-add .sv3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 4px; }
+.ac-add .s1 { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: var(--r-card); background: var(--card); box-shadow: inset 0 0 0 1px var(--hair); }
+.ac-add .s1 i { width: 15px; height: 15px; color: var(--dim-text); } .ac-add .s1 span { flex: 1; font-weight: 500; }
+.ac-add .fold2 { display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--hair); }
+.ac-add .fold2 i { width: 13px; height: 13px; color: var(--text-tertiary); } .ac-add .fold2 span { font-weight: 500; } .ac-add .fold2 small { color: var(--text-tertiary); margin-left: auto; font-size: .846em; }
+.ac-add .bt { margin: 0; padding: 12px 16px 12px 22px; border-top: 1px solid var(--hair); align-items: center; }
+.ac-add .bt .sp { flex: 1; }
+.ac-add .bt .note { display: inline-flex; align-items: center; gap: 6px; color: var(--text-tertiary); font-size: .846em; }
+.ac-add .bt .note i { width: 12px; height: 12px; }
+.ac-add .bt .btn { height: 32px; padding: 0 14px; }
+
+/* 800 px */
+body.narrow .split2.ac .pv { height: 326px; }
+body.narrow .ac .pv .card.icons, body.narrow .ac .pv .pvfoot { display: none; }
+body.narrow .ac-svc .sv { padding: 10px 12px; }
+.shead .stabs:empty { display: none; }
+.ac-svc .sv.sync { background: color-mix(in srgb, var(--text) 2.5%, transparent); box-shadow: inset 0 0 0 1px var(--hair); }
+.ac-svc .sv.sync .btn.sm { height: 24px; }
+.ac-svc .sv.sync .si { background: color-mix(in srgb, var(--success) 16%, transparent); color: var(--success); }

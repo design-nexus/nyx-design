@@ -288,7 +288,19 @@ split by spacing when blended, by a `@theme_divider` line otherwise.
 selected segment is `@theme_raised` with a soft shadow. Prefer it to a dropdown when the
 options fit.
 
-**Switch:** 36 × 20 pill; off `track`, on the accent with an `on_accent` knob.
+**Switch:** 38 × 22, `radius 7` like the segmented control: a `track` with a hairline
+and a raised 16 px knob (radius 5, `switch_knob`: white on light themes). On, the track is
+a tint of the accent with an accent hairline and the knob is the accent.
+
+**Slider:** a 22 px bar, `radius 7`, `track` with a hairline; the value is a tint of the
+accent up to a 4 × 12 handle in `text`. Vertical sliders are the same bar standing up.
+
+**Radio button and checkbox:** 16 px, a `field` fill with a 1.5 px ring (round for radio,
+radius 5 for check). Chosen, a tint of the accent with an accent ring and an accent dot or
+check, the way a selected row is drawn. Checkboxes only pick several things from a list; a
+setting that turns on or off is a switch.
+
+Disabled controls are drawn at 45%; keyboard focus is a 2 px accent outline.
 
 **Search field:** `field` fill, `radius_small`, a search icon and the key hint (`Ctrl F`)
 at the right; focus shows an accent outline.

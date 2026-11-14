@@ -442,38 +442,150 @@ window.@APP@ .segmented button.segment:checked {
   box-shadow: 0 1px 2px alpha(@theme_shadow, 0.35);
 }
 
+/* Switch: drawn like the segmented control, a track with a hairline and the
+ * small radius, and a raised knob; on, the knob is the accent and the track a
+ * tint of it. */
 window.@APP@ switch {
-  min-width: 36px;
-  min-height: 20px;
+  min-width: 38px;
+  min-height: 22px;
+  border-radius: 7px;
   background: @track;
   border: none;
+  box-shadow: inset 0 0 0 1px alpha(@theme_text, 0.06);
 }
 
 window.@APP@ switch:checked {
-  background: @theme_accent;
+  background: mix(@theme_bg, @theme_accent, 0.22);
+  box-shadow: inset 0 0 0 1px alpha(@theme_accent, 0.45);
 }
 
 window.@APP@ switch > slider {
-  min-width: 14px;
-  min-height: 14px;
+  min-width: 16px;
+  min-height: 16px;
   margin: 3px;
-  background: @theme_dim_text;
+  border-radius: 5px;
+  background: @switch_knob;
+  box-shadow: 0 1px 2px alpha(@theme_shadow, 0.45);
 }
 
 window.@APP@ switch:checked > slider {
-  background: @theme_on_accent;
+  background: @theme_accent;
+  box-shadow: 0 1px 3px alpha(@theme_accent, 0.45);
+}
+
+window.@APP@ switch:disabled {
+  opacity: 0.45;
+}
+
+window.@APP@ switch:focus-visible {
+  outline: 2px solid alpha(@theme_accent, 0.6);
+  outline-offset: 2px;
+}
+
+/* Slider: a filled bar the height of a button, a tint of the accent up to a
+ * slim handle. */
+window.@APP@ scale {
+  padding: 6px 2px;
 }
 
 window.@APP@ scale > trough {
+  border-radius: 7px;
   background: @track;
+  border: none;
+  box-shadow: inset 0 0 0 1px alpha(@theme_text, 0.06);
+}
+
+window.@APP@ scale.horizontal > trough {
+  min-height: 22px;
+}
+
+window.@APP@ scale.vertical > trough {
+  min-width: 22px;
+}
+
+window.@APP@ scale > trough > highlight {
+  border-radius: 7px;
+  background: mix(@theme_bg, @theme_accent, 0.34);
+}
+
+window.@APP@ scale.horizontal > trough > highlight {
+  box-shadow: inset -1px 0 0 alpha(@theme_accent, 0.6);
+}
+
+window.@APP@ scale.vertical > trough > highlight {
+  box-shadow: inset 0 1px 0 alpha(@theme_accent, 0.6);
 }
 
 window.@APP@ scale > trough > slider,
 window.@APP@ scale.marks-before > trough > slider,
 window.@APP@ scale.marks-after > trough > slider {
-  background: @theme_text;
+  -gtk-icon-source: none;
+  background-image: none;
+  margin: 0;
   border: none;
-  box-shadow: 0 1px 3px alpha(@theme_shadow, 0.45);
+  border-radius: 2px;
+  background: @theme_text;
+  box-shadow: none;
+}
+
+window.@APP@ scale.horizontal > trough > slider {
+  min-width: 4px;
+  min-height: 12px;
+  margin: 0;
+}
+
+window.@APP@ scale.vertical > trough > slider {
+  min-width: 12px;
+  min-height: 4px;
+  margin: 0;
+}
+
+window.@APP@ scale:disabled {
+  opacity: 0.45;
+}
+
+window.@APP@ scale:focus-visible > trough {
+  outline: 2px solid alpha(@theme_accent, 0.6);
+  outline-offset: 2px;
+}
+
+/* Radio buttons and checkboxes: a field with a ring; chosen, a tint of the
+ * accent with an accent ring and mark, like a selected row. */
+window.@APP@ checkbutton > check,
+window.@APP@ checkbutton > radio {
+  min-width: 16px;
+  min-height: 16px;
+  background: @field;
+  border: 1.5px solid alpha(@theme_text, 0.22);
+  box-shadow: none;
+  color: transparent;
+}
+
+window.@APP@ checkbutton > check {
+  border-radius: 5px;
+}
+
+window.@APP@ checkbutton > radio {
+  border-radius: 999px;
+}
+
+window.@APP@ checkbutton > check:checked,
+window.@APP@ checkbutton > check:indeterminate,
+window.@APP@ checkbutton > radio:checked {
+  background: mix(@theme_bg, @theme_accent, 0.22);
+  border-color: @theme_accent;
+  color: @theme_accent;
+}
+
+window.@APP@ checkbutton:disabled > check,
+window.@APP@ checkbutton:disabled > radio {
+  opacity: 0.45;
+}
+
+window.@APP@ checkbutton:focus-visible > check,
+window.@APP@ checkbutton:focus-visible > radio {
+  outline: 2px solid alpha(@theme_accent, 0.6);
+  outline-offset: 2px;
 }
 
 window.@APP@ progressbar > trough,
