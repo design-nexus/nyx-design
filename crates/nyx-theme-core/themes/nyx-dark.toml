@@ -41,6 +41,7 @@ calendar = "red"
 music = "pink"
 lyra = "violet"
 home = "green"
+messages = "teal"
 
 # Accent choices offered in each app's settings (same names in every theme)
 [swatches]

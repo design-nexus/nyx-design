@@ -82,6 +82,7 @@ const ACCENT_MAP: &[(&str, &str)] = &[
     ("home", "green"),
     ("weather", "cyan"),
     ("chat", "cyan"),
+    ("messages", "cyan"),
     ("tasks", "green"),
 ];
 
