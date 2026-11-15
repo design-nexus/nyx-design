@@ -198,8 +198,26 @@ fn app_info(id: &str) -> Option<gio::AppInfo> {
     gio::AppInfo::all().into_iter().find(|a| a.id().is_some_and(|i| i == id))
 }
 
+// gio 0.22.10 returns PathBuf; 0.22.11 returns Option<PathBuf>. Accept either.
+trait ExePath {
+    fn into_exe_path(self) -> Option<std::path::PathBuf>;
+}
+impl ExePath for std::path::PathBuf {
+    fn into_exe_path(self) -> Option<std::path::PathBuf> {
+        Some(self)
+    }
+}
+impl ExePath for Option<std::path::PathBuf> {
+    fn into_exe_path(self) -> Option<std::path::PathBuf> {
+        self
+    }
+}
+
 fn executable(id: &str) -> String {
-    app_info(id).and_then(|a| a.executable().file_name().map(|e| e.to_string_lossy().to_string())).unwrap_or_default()
+    app_info(id)
+        .and_then(|a| a.executable().into_exe_path())
+        .and_then(|p| p.file_name().map(|e| e.to_string_lossy().into_owned()))
+        .unwrap_or_default()
 }
 
 fn desktop_categories(id: &str) -> Vec<String> {
