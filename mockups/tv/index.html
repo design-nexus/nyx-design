@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx TV mockups</title>
+<link rel="stylesheet" href="../polish/tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 400 13px/1.45 "Inter", sans-serif; padding: 32px 40px 60px; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -.015em; }
+  h2 { font-size: 17px; font-weight: 600; margin: 40px 0 4px; }
+  h3 { font-size: 14px; font-weight: 600; margin: 26px 0 0; }
+  h3 span { color: var(--dim-text); font-weight: 400; margin-left: 8px; }
+  p { color: var(--dim-text); max-width: 980px; margin-top: 6px; }
+  .dirs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 14px; }
+  .dirs > div { padding: 12px 14px; border-radius: 10px; background: color-mix(in srgb, var(--text) 3.5%, transparent); }
+  .dirs b { display: block; margin-bottom: 4px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 10px; }
+  .grid.two { grid-template-columns: repeat(2, 1fr); max-width: 1300px; }
+  figure { margin: 0; }
+  figure a { display: block; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px var(--border); }
+  figure img { display: block; width: 100%; }
+  figcaption { margin-top: 8px; display: flex; gap: 10px; align-items: baseline; }
+  figcaption b { font-weight: 600; }
+  figcaption span { color: var(--dim-text); font-size: 12px; }
+  figcaption a { margin-left: auto; color: var(--accent); font-size: 12px; text-decoration: none; }
+  .theme { display: flex; gap: 6px; margin-top: 14px; }
+  .theme a { padding: 5px 12px; border-radius: 7px; color: var(--dim-text); text-decoration: none; background: color-mix(in srgb, var(--text) 3.5%, transparent); }
+  .theme a.on { background: var(--accent); color: var(--on-accent); }
+  /* The viewer: one shot at a time, full window; arrows step through every shot. */
+  .viewer { position: fixed; inset: 0; z-index: 10; display: none; flex-direction: column; background: color-mix(in srgb, #000 88%, transparent); color: #eee; }
+  .viewer.on { display: flex; }
+  .viewer .stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 16px 64px 0; }
+  .viewer img { max-width: 100%; max-height: 100%; border-radius: 8px; box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 20px 60px rgba(0,0,0,.6); }
+  .viewer .bar { height: 56px; flex: none; display: flex; align-items: center; gap: 14px; padding: 0 24px; font-size: 13px; }
+  .viewer .bar b { font-weight: 600; }
+  .viewer .bar .sub { color: #aaa; }
+  .viewer .bar .keys { margin-left: auto; color: #888; font-size: 12px; }
+  .viewer .bar .n { color: #888; font-feature-settings: "tnum"; }
+  .viewer .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 64px; border: 0; border-radius: 10px; background: rgba(255,255,255,.08); color: #fff; font-size: 26px; cursor: pointer; }
+  .viewer .nav:hover { background: rgba(255,255,255,.16); }
+  .viewer .prev { left: 12px; } .viewer .next { right: 12px; }
+  .viewer .close { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border: 0; border-radius: 8px; background: rgba(255,255,255,.08); color: #fff; font-size: 18px; cursor: pointer; }
+</style>
+</head>
+<body>
+<h1>Nyx TV</h1>
+<p>A Plex-first launcher for Android TV and Google TV, and the desktop Manager that installs it. Three
+directions for the launcher, each drawn on every screen at 1920 × 1080 (the TV's UI size), and two for the
+Manager. Rows show one screen in every direction, so the viewer steps A, B, C, then on to the next
+screen. Dark is Catppuccin Mocha, light is Catppuccin Latte. The media is your own Plex library from
+Theater's cache; servers, profiles, TVs, firmware, package names and measurements are samples.</p>
+<div class="dirs">
+  <div><b>A · Cinema</b>The focused title's backdrop fills the screen, rows sit on its lower gradient, text tabs at top left. Closest to Infuse and Plex HTPC.</div>
+  <div><b>B · Shelf</b>A hero with the favorite apps directly under it, then media rows; a centred pill for navigation. Closest to Apple TV.</div>
+  <div><b>C · Gallery</b>A calm solid base with an inset hero card, denser poster rows; backdrops only on details. The lightest to draw on TV hardware.</div>
+</div>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const t = new URLSearchParams(location.search).get("theme") || "dark";
+  document.documentElement.dataset.theme = t;
+  document.getElementById("theme").innerHTML = ["dark", "light"]
+    .map((v) => `<a class="${v === t ? "on" : ""}" href="?theme=${v}">${v[0].toUpperCase() + v.slice(1)}</a>`).join("");
+
+  const TV = [
+    ["Home", [
+      ["home", "Home", "Featured hero, Continue Watching, favorite apps"],
+      ["home-nohero", "Home without the hero", "Hero turned off in Settings; the first row has focus"],
+      ["offline", "Server offline", "Cached library shown at once; a quiet banner and retry"],
+      ["card-menu", "Card menu", "Long-press OK on a card"],
+    ]],
+    ["Browse", [
+      ["movies", "Movies", "Genres, sort, the poster grid"],
+      ["shows", "TV Shows", "Unwatched episode counts"],
+      ["collections", "Collections", "Plex collections"],
+      ["movie", "Movie details", "Ratings, cast, related; no Plex launch to browse"],
+      ["show", "Show details", "Seasons, episodes, the episode in progress"],
+    ]],
+    ["Apps and search", [
+      ["apps", "Apps", "Favorites, a folder, the app menu (move, hide, info, uninstall)"],
+      ["search", "Search", "Plex and installed apps together; voice through the remote"],
+    ]],
+    ["Plex account", [
+      ["signin", "Sign in to Plex", "PIN at plex.tv/link or a QR code"],
+      ["servers", "Choose a server", "Local preferred, remote fallback, an offline server"],
+      ["profiles", "Who's watching", "Plex Home profiles (a later phase)"],
+    ]],
+    ["Settings", [
+      ["settings", "Settings: Home screen", "Hero, apps row position, clock"],
+      ["rows", "Content rows", "Reorder, hide, card style, item count"],
+      ["themes", "Appearance", "Themes and accent"],
+    ]],
+    ["TV", [
+      ["quick", "Quick settings", "Network, Bluetooth, input, picture, sound, sleep"],
+      ["inputs", "Inputs", "HDMI inputs with CEC names"],
+      ["ambient", "Ambient", "Artwork from the library and a clock"],
+      ["oled", "Ambient: black", "A dim clock on black for OLED"],
+    ]],
+  ];
+  const PLEX_PLAYER = [
+    ["idle", "Idle", "Picture only; chrome hidden"],
+    ["controls", "Controls", "Title + Ends at · scrubber · Subs/Settings · Skip Intro · remote legend"],
+    ["scrubber", "Scrubber", "Seekbar focused — L/R seek (~30s); no −10/Play/+10 row"],
+    ["audio", "Settings", "Plex settings panel + Nyx Audio sync (Plex dropped offset)"],
+    ["remote", "Remote map", "Traced from Bedroom TV Plex player"],
+  ];
+  const PLAYER = [
+    ["controls", "Controls", "Skip Intro above scrubber; transport and menus"],
+    ["credits", "Credits / next", "Skip Credits, next episode or up-next card"],
+    ["audio", "Audio & sync", "Track list and −500 ms offset"],
+    ["idle", "Idle", "Picture only; chrome hidden"],
+  ];
+  const PLAYER_DIRS = [
+    ["a", "Gradient", "Theater ship: icon menus, seek with times"],
+    ["b", "Lean back", "Labeled chips; up-next card"],
+    ["c", "Status chips", "Chips show current audio / subs / speed"],
+    ["d", "Center", "Large centered transport; gear opens rail"],
+  ];
+  const MGR = [
+    ["add", "Add a TV", "Discovery, wireless pairing code, an address"],
+    ["overview", "Overview", "Model, firmware, connection, launcher state", true],
+    ["install", "Install and update", "Signed releases; rolls back if the update won't start"],
+    ["replace", "Set as the home app", "Every change listed; a snapshot first", true],
+    ["verify", "Verify", "Home button, stock launcher, apps, restart"],
+    ["restore", "Restore", "Snapshots only for the same TV and firmware"],
+    ["repair", "Repair after an update", "What a firmware update changed"],
+    ["backups", "Backups", "Layout, snapshots, copy to another TV; no Plex sign-in"],
+    ["diagnostics", "Diagnostics", "Memory, CPU, start time, redacted log"],
+    ["debloat", "Debloat", "Verified optional only; the rest is never offered", true],
+    ["debloat-confirm", "Debloat: confirm and compare", "Before and after, measured the same way"],
+  ];
+  const fig = (shot, name, sub, live) => `<figure><a href="shots/${shot}-${t}.jpg" data-shot="${shot}" data-name="${name}" data-sub="${sub}"><img src="shots/${shot}-${t}.jpg" loading="lazy" alt="${name}"></a><figcaption><b>${name}</b><span>${sub}</span><a href="${live}&theme=${t}">live</a></figcaption></figure>`;
+  let html = "<h2>Nyx TV, the launcher</h2>";
+  for (const [title, screens] of TV) {
+    html += `<h3>${title}</h3>`;
+    for (const [s, name, sub] of screens) {
+      html += `<div class="grid">${["a", "b", "c"].map((d) => fig(`tv-${d}-${s}`, `${d.toUpperCase()} · ${name}`, sub, `screens.html?direction=${d}&screen=${s}`)).join("")}</div>`;
+    }
+  }
+  html += `<h2>Player · Plex copy</h2><p>Rebuild contract traced from Plex on the Bedroom TV: top title + clock/Ends at,
+    thin scrubber with times, Subtitles + Settings top-right of the control zone, View More → Chapters.
+    No −10 / Play disc / +10 row. Settings is a right panel; <b>Audio sync</b> is Nyx-only (Plex removed it).
+    Approve these before any Kotlin rewrite.</p>`;
+  html += `<div class="grid" style="grid-template-columns:repeat(3,1fr)">${PLEX_PLAYER.map(([s, name, sub]) =>
+    fig(`tv-player-plex-${s}`, name, sub, `screens.html?direction=plex&screen=player-${s}`)).join("")}</div>`;
+  html += `<h2>Player · earlier options (archive)</h2><p>Four Theater-inspired chrome options kept for reference.</p>
+    <div class="dirs" style="grid-template-columns:repeat(4,1fr)">${PLAYER_DIRS.map(([d, n, idea]) =>
+      `<div><b>${d.toUpperCase()} · ${n}</b>${idea}</div>`).join("")}</div>`;
+  for (const [s, name, sub] of PLAYER) {
+    html += `<h3>${name}<span>${sub}</span></h3>`;
+    html += `<div class="grid" style="grid-template-columns:repeat(4,1fr)">${PLAYER_DIRS.map(([d]) =>
+      fig(`tv-player-${d}-${s}`, `${d.toUpperCase()} · ${name}`, sub, `screens.html?direction=${d}&screen=player-${s}`)).join("")}</div>`;
+  }
+  html += `<h2>Nyx TV Manager</h2><p><b>A</b> keeps every TV in the sidebar with a page per section, like other Nyx apps.
+    <b>B</b> shows one TV at a time on a dashboard, and every change is a guided flow with steps. Both at 1280 × 800, with three screens at 800 px tiled.</p>`;
+  for (const [s, name, sub, narrow] of MGR) {
+    html += `<div class="grid two">${["a", "b"].map((d) => fig(`manager-${d}-${s}`, `${d.toUpperCase()} · ${name}`, sub, `manager.html?direction=${d}&screen=${s}`)).join("")}</div>`;
+    if (narrow) html += `<div class="grid two" style="grid-template-columns:repeat(4,1fr)">${["a", "b"].map((d) => fig(`manager-${d}-${s}-800`, `${d.toUpperCase()} · ${name} at 800 px`, "Tiled", `manager.html?direction=${d}&screen=${s}&w=800`)).join("")}</div>`;
+  }
+  document.getElementById("out").innerHTML = html;
+
+  // Viewer: click a shot, then ← → through every shot, D / L for dark or light, Esc to close.
+  const shots = [...document.querySelectorAll("a[data-shot]")];
+  let at = -1, theme = t;
+  const v = document.createElement("div");
+  v.className = "viewer";
+  v.innerHTML = `<div class="stage"><img alt=""></div><button class="nav prev" title="Previous (←)">‹</button><button class="nav next" title="Next (→)">›</button><button class="close" title="Close (Esc)">×</button>
+    <div class="bar"><span class="n"></span><b></b><span class="sub"></span><span class="keys">← → next and previous · D dark · L light · Esc close</span></div>`;
+  document.body.append(v);
+  const show = (i) => {
+    at = (i + shots.length) % shots.length;
+    const a = shots[at];
+    const tv = a.dataset.shot.startsWith("tv-");
+    v.querySelector("img").src = `shots/${a.dataset.shot}-${theme}.jpg`;
+    v.querySelector(".n").textContent = `${at + 1} / ${shots.length}`;
+    v.querySelector("b").textContent = a.dataset.name;
+    v.querySelector(".sub").textContent = `${a.dataset.sub} · ${tv ? (theme === "dark" ? "Catppuccin Mocha" : "Catppuccin Latte") : theme === "dark" ? "Nyx Dark" : "Nyx Light"}`;
+    v.classList.add("on");
+  };
+  const close = () => { v.classList.remove("on"); at = -1; };
+  shots.forEach((a, i) => a.addEventListener("click", (e) => { e.preventDefault(); show(i); }));
+  v.querySelector(".prev").onclick = () => show(at - 1);
+  v.querySelector(".next").onclick = () => show(at + 1);
+  v.querySelector(".close").onclick = close;
+  v.querySelector(".stage").onclick = (e) => { if (e.target === e.currentTarget) close(); };
+  document.addEventListener("keydown", (e) => {
+    if (at < 0) return;
+    if (e.key === "ArrowRight" || e.key === " ") show(at + 1);
+    else if (e.key === "ArrowLeft") show(at - 1);
+    else if (e.key === "Escape") close();
+    else if (e.key === "d" || e.key === "l") { theme = e.key === "d" ? "dark" : "light"; show(at); }
+    else return;
+    e.preventDefault();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TV Manager pages mockups</title>
+<link rel="stylesheet" href="../revamp/tokens.css">
+<link rel="stylesheet" href="../revamp/gallery.css">
+<link rel="stylesheet" href="gallery.css">
+<script>
+  // Tabs match Manager's sidebar and launcher subflows. Shell stays Manager A (TVs in the
+  // sidebar); each tab redesigns the page inside it.
+  const SECTIONS = [
+    ["Get started", [["add", "Add a TV"]]],
+    ["This TV", [["overview", "Overview"], ["install", "Install and update"], ["launcher", "Launcher"], ["backups", "Backups"], ["diagnostics", "Diagnostics"], ["debloat", "Debloat"]]],
+    ["Launcher flows", [["replace", "Set as home"], ["verify", "Verify"], ["restore", "Restore"], ["repair", "Repair"]]],
+    ["App", [["settings", "Settings"]]],
+  ];
+  const ORDER = SECTIONS.flatMap(([sec, tabs]) => tabs.map(([id, name]) => [id, name, sec]));
+  const APPS = {};
+  const REG = (id, def) => { APPS[id] = def; };
+  const PICKS = {};
+  for (const [id] of ORDER) document.write(`<script src="pages/${id}.js" onerror="void 0"><\/script>`);
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="title"><h1>TV Manager: the pages</h1><span class="lede">Complete UI overhaul inside Manager A (TVs in the sidebar). Today is a real screenshot of the app. Each option is a different interaction model — not a card reshuffle. Say the tab and letter ("Overview A", "Debloat B"). Click a shot: ← →, D/L, Esc.</span></div>
+  <div class="theme" id="theme"></div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main id="out"></main>
+<script>
+  Object.assign(PICKS, { add: "a", overview: "a", install: "a", launcher: "a", replace: "a", verify: "a", restore: "a", repair: "a", backups: "a", diagnostics: "a", debloat: "a", settings: "a" });
+</script>
+<script src="gallery.js"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Appearance mockup</title>
+<link rel="stylesheet" href="appearance.css">
+</head>
+<body>
+<div class="stage" id="root"></div>
+<script>
+const Q = new URLSearchParams(location.search);
+const DIR = Q.get("dir") || "a";
+const THEME = Q.get("theme") || "dark";
+document.documentElement.dataset.theme = THEME;
+document.body.className = `dir-${DIR}`;
+
+const THEMES = [
+  ["Catppuccin Mocha", "#1e1e2e", "#181825", "#cba6f7", "#f9e2af", "#a6e3a1"],
+  ["Catppuccin Macchiato", "#24273a", "#1e2030", "#c6a0f6", "#eed49f", "#a6da95"],
+  ["Catppuccin Frappé", "#303446", "#292c3c", "#ca9ee6", "#e5c890", "#a6d189"],
+  ["Catppuccin Latte", "#eff1f5", "#e6e9ef", "#8839ef", "#df8e1d", "#40a02b"],
+  ["OLED Black", "#000000", "#0b0b0f", "#cba6f7", "#f9e2af", "#a6e3a1"],
+  ["Nyx Dark", "#0d0e12", "#121318", "#3d8ae8", "#eeb43f", "#59d45b"],
+  ["Tokyo Night", "#1a1b26", "#16161e", "#7aa2f7", "#e0af68", "#9ece6a"],
+  ["Dracula", "#282a36", "#21222c", "#bd93f9", "#f1fa8c", "#50fa7b"],
+  ["Marquee", "#141C2E", "#0E1524", "#E6B35A", "#E6B35A", "#6BCB8B"],
+];
+const ACC = [["#cba6f7",1],["#89b4fa",0],["#b4befe",0],["#f5c2e7",0],["#fab387",0],["#f9e2af",0],["#a6e3a1",0],["#94e2d5",0],["#f38ba8",0]];
+const FOCUS = 6; // Tokyo Night
+const INUSE = 0; // Mocha
+
+const card = (t, i, { focus = false, previewing = false, inuse = false } = {}) => {
+  const [n, base, mantle, a, y, g] = t;
+  const cls = ["card", focus && "focus", previewing && "previewing", inuse && "inuse"].filter(Boolean).join(" ");
+  const st = previewing ? "Previewing" : inuse ? "In use" : "&nbsp;";
+  return `<div class="${cls}"><div class="sw" style="background:${base}"><div class="strip" style="background:${mantle}"></div>
+    <div class="dots"><i style="background:${a}"></i><i style="background:${y}"></i><i style="background:${g}"></i></div></div>
+    <div class="name">${n}</div><div class="st">${st}</div></div>`;
+};
+
+const accents = (focusIdx = -1) => `<div class="accents">${ACC.map(([c, on], i) =>
+  `<div class="acc${on ? " on" : ""}${i === focusIdx ? " focus" : ""}" style="background:${c}"></div>`).join("")}</div>`;
+
+const footer = (focus = "") => `<div class="footer">
+  <div class="btn${focus === "cancel" ? " focus" : ""}">Cancel</div>
+  <div class="btn primary${focus === "apply" ? " focus" : ""}">Apply</div>
+</div>`;
+
+const shell = (body, keys) => {
+  const side = ["Home screen","Content rows","Appearance","Apps","Plex","Playback","Ambient mode","TV and inputs","About"]
+    .map((t) => `<div class="srow${t === "Appearance" ? " on" : ""}">${t}</div>`).join("");
+  return `<div class="bd"></div>
+    <div class="nav"><div class="brand"><i></i>Nyx <small>TV</small></div>
+      <div class="tab on">Home</div><div class="tab">Movies</div><div class="tab">TV Shows</div><div class="tab">Apps</div>
+      <div class="end"><div class="gear"></div><div>K</div><div>7:28</div></div></div>
+    <div class="side"><h1>Settings</h1>${side}</div>
+    ${body}
+    <div class="keys">${keys.map(([k, v]) => `<span><b>${k}</b> ${v}</span>`).join("")}</div>`;
+};
+
+const previewStrip = (t) => {
+  const [, base, , a] = t;
+  return `<div class="preview-strip" style="background:${base}">
+    <div class="hero" style="background:${colorMix(base, a, .2)}"><span style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,${a});opacity:.35;border-radius:10px"></span></div>
+    ${[0,1,2,3].map((i) => `<div class="p" style="background:${i === 0 ? a : colorMix(base, "#fff", .08)};opacity:${i === 0 ? .55 : .35}"></div>`).join("")}
+  </div>`;
+};
+
+function colorMix(a, b, t) { return a; } // solid swatches enough for mock
+
+const grid = () => THEMES.map((t, i) => card(t, i, {
+  focus: i === FOCUS, previewing: i === FOCUS, inuse: i === INUSE,
+})).join("");
+
+const A = () => shell(`<div class="panel">
+  <h2>Appearance</h2>
+  <div class="sub">Preview stays up here while you move. Nothing changes until Apply.</div>
+  ${previewStrip(THEMES[FOCUS])}
+  <div class="lab">THEME</div>
+  <div class="grid">${grid()}</div>
+  <div class="lab">ACCENT</div>
+  ${accents()}
+  ${footer()}
+</div>`, [
+  ["←", "sidebar only from left column"],
+  ["↑↓→", "stay in the theme grid"],
+  ["↓ past themes", "accents, then Cancel / Apply"],
+  ["Back", "sidebar"],
+]);
+
+const B = () => {
+  const t = THEMES[FOCUS];
+  const home = `<div class="home-peek" style="color:${t[3]}">
+    <div class="ht" style="color:${t[1] === "#eff1f5" ? "#2e3148" : "#e8eef8"}">Continue Watching</div>
+    <div class="row">${[0,1,2,3].map((i) => `<div class="p" style="background:${i === 0 ? t[3] : t[2]};opacity:${.4 + i * .05}"></div>`).join("")}</div>
+  </div>`;
+  return shell(`${home}<div class="panel">
+  <h2>Appearance</h2>
+  <div class="sub">The home behind this panel restyles as you move. Apply to keep it.</div>
+  <div class="lab">THEME</div>
+  <div class="grid">${grid()}</div>
+  <div class="lab">ACCENT</div>
+  ${accents()}
+  ${footer()}
+</div>`, [
+  ["←", "sidebar only from left column"],
+  ["↑↓→", "theme grid only"],
+  ["Preview", "whole home behind the panel"],
+  ["Apply", "commits; Cancel reverts"],
+]);
+};
+
+const C = () => {
+  const t = THEMES[FOCUS];
+  return shell(`<div class="panel">
+  <h2>Appearance</h2>
+  <div class="sub">One theme at a time. Left and Right never leave this page.</div>
+  <div class="carousel">
+    <div class="big" style="background:${t[1]}"><div class="strip" style="background:${t[2]}"></div>
+      <div class="mini"><b style="background:${t[3]};opacity:.5"></b><b style="background:${t[2]}"></b><b style="background:${t[4]};opacity:.4"></b></div>
+    </div>
+    <div class="cname">${t[0]}</div>
+    <div class="cmeta">Previewing · In use is Catppuccin Mocha</div>
+    <div class="arrows"><em>←</em> previous theme &nbsp;·&nbsp; next theme <em>→</em></div>
+  </div>
+  <div class="lab">ACCENT</div>
+  ${accents()}
+  ${footer()}
+</div>`, [
+  ["← →", "previous / next theme (stay on page)"],
+  ["↓", "accents, then Cancel / Apply"],
+  ["Back", "sidebar — only way Left leaves"],
+  ["OK on Apply", "commits"],
+]);
+};
+
+const D = () => {
+  const t = THEMES[FOCUS];
+  const list = THEMES.map((th, i) => {
+    const focus = i === FOCUS, inuse = i === INUSE;
+    return `<div class="li${focus ? " focus" : ""}${inuse && !focus ? " inuse" : ""}">
+      <div class="dot" style="background:${th[1]};box-shadow:inset 8px 0 0 ${th[2]}"></div>
+      <span>${th[0]}</span>
+      <span style="margin-left:auto;font-size:18px;opacity:.85">${focus ? "Previewing" : inuse ? "In use" : ""}</span>
+    </div>`;
+  }).join("");
+  return shell(`<div class="panel">
+  <h2>Appearance</h2>
+  <div class="sub">Up and Down only in the list. Preview on the right never moves.</div>
+  <div class="split">
+    <div class="list">${list}</div>
+    <div class="sidepv">
+      <div class="label">Previewing ${t[0]}</div>
+      <div class="stage" style="background:${t[1]}">
+        <div class="bar" style="background:${t[2]}"><i style="width:40px"></i><i style="width:56px"></i><i style="width:48px"></i></div>
+        <div class="hero" style="background:${t[2]}"><div style="position:absolute;right:0;top:0;bottom:0;width:35%;background:${t[3]};opacity:.4;border-radius:0 12px 12px 0"></div></div>
+        <div class="cards">${[0,1,2,3].map((i) => `<b style="background:${i === 0 ? t[3] : t[2]};opacity:${i === 0 ? .55 : .7}"></b>`).join("")}</div>
+      </div>
+      <div class="lab">ACCENT</div>
+      ${accents()}
+      ${footer()}
+    </div>
+  </div>
+</div>`, [
+  ["↑ ↓", "themes list only"],
+  ["→", "accents / Cancel / Apply"],
+  ["←", "sidebar (from the list)"],
+  ["Preview", "always visible on the right"],
+]);
+};
+
+const render = { a: A, b: B, c: C, d: D }[DIR] || A;
+document.getElementById("root").innerHTML = render();
+</script>
+</body>
+</html>
