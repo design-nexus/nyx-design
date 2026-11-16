@@ -1,0 +1,17 @@
+/* On top of the revamp galleries: the Kept table and the By option / By state switch. */
+table.kept { border-collapse: collapse; margin-top: 12px; width: 100%; max-width: 1280px; font-size: 12.5px; }
+table.kept th, table.kept td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.kept th { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--text-tertiary); }
+table.kept td:first-child { color: var(--text); font-weight: 500; width: 34%; }
+table.kept td { color: var(--dim-text); }
+table.kept td em { font-style: normal; color: var(--success); font-weight: 500; }
+details.keptw { margin-top: 18px; }
+details.keptw summary { cursor: pointer; font-size: 15px; font-weight: 600; }
+details.keptw summary span { font-weight: 400; color: var(--dim-text); font-size: 13px; margin-left: 8px; }
+.mode { display: inline-flex; gap: 4px; margin-top: 22px; padding: 3px; border-radius: 9px; background: color-mix(in srgb, var(--text) 5%, transparent); }
+.mode a { padding: 5px 12px; border-radius: 7px; color: var(--dim-text); text-decoration: none; cursor: pointer; }
+.mode a.on { background: var(--accent); color: var(--on-accent); }
+.grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 10px; }
+.opts > div b { font-weight: 600; display: block; }
+.opts > div span { color: var(--dim-text); font-size: 12.5px; }

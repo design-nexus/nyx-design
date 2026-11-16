@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Messages mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+<h1>Nyx Messages</h1>
+<p>SMS and RCS on the desktop, paired with Google Messages on your phone. Four layout ideas for
+the main window — pick a direction before we draw pairing, share and notifications. Every shot
+comes in Nyx Dark and Nyx Light. Click a shot for the full size, or “live” to open the page.</p>
+<div class="theme" id="theme"></div>
+<div id="out"></div>
+<script>
+  const GALLERY = [
+    ["A · Split inbox", [
+      ["a-chat", "List and conversation", "Two panes. Filters on the list (All / Unread / Starred). No places sidebar — phone status lives in the header."],
+      ["a-chat-800", "At 800 px", "List narrows; the chat keeps its room."],
+    ]],
+    ["B · People first", [
+      ["b-home", "Favorites and recent", "Home is people, not an inbox of snippets. Favorites as a strip; large recent rows."],
+      ["b-chat", "In a conversation", "Avatar rail on the left; the thread fills the rest. Switch people without going “back to inbox”."],
+    ]],
+    ["C · Focus", [
+      ["c-chat", "Conversation owns the window", "One thread, centred. Switch chats from the header control — for living in a few conversations."],
+      ["c-picker", "Jump to a chat", "The header opens a floating list; “See all” only when you need the full inbox."],
+    ]],
+    ["D · Stack", [
+      ["d-list", "Chats as a page", "One column: the list is the whole window. Built for a tiled half-screen."],
+      ["d-chat", "Open a chat", "The list is replaced; Back returns. No columns fighting for width."],
+    ]],
+  ];
+</script>
+<script src="gallery.js"></script>
+</body>
+</html>

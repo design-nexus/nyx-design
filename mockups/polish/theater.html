@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" data-accent="coral" data-screens="library,detail">
+<head>
+<meta charset="utf-8">
+<title>Theater — Nyx polish mockup</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="nyx-before.css">
+<link rel="stylesheet" href="nyx-after.css">
+<script src="mock.js"></script>
+<style>
+  .pgrid { display: grid; }
+  .pst .poster { aspect-ratio: 2 / 3; width: 100%; }
+  .pst .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pst .poster .prog { position: absolute; left: 8px; right: 8px; bottom: 8px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.3); z-index: 2; overflow: hidden; }
+  .pst .poster .prog div { height: 100%; background: var(--accent); }
+  .pst .poster .seen { position: absolute; right: 8px; top: 8px; z-index: 2; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: inline-flex; align-items: center; justify-content: center; }
+  .pst .poster .seen i { width: 13px; height: 13px; }
+  .cast { display: flex; gap: 18px; }
+  .person { width: 88px; text-align: center; }
+  .face { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; font-size: 18px; }
+  .person .rl { margin-top: 2px; }
+  .hero { position: relative; overflow: hidden; }
+  .hero .bd { position: absolute; inset: 0; background: linear-gradient(180deg, #2a1608 0%, #8a4a1c 38%, #d98a3d 58%, #f2c27a 72%, #3a2414 100%); }
+  .hero .bd::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 22% at 72% 60%, rgba(255,225,170,.55), transparent 70%), linear-gradient(170deg, transparent 55%, rgba(30,15,6,.85) 56%, rgba(20,10,4,.9)); }
+  .meta-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .acts { display: flex; align-items: center; gap: 8px; }
+  .more-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+
+  /* Before */
+  .before .lib { flex: 1; overflow: auto; padding: 0 18px 36px 8px; }
+  .before .ltool { height: 46px; display: flex; align-items: center; gap: 8px; padding: 0 0 0 12px; }
+  .before .ltool .ttl { font-size: 1.35em; font-weight: 700; margin-right: 8px; }
+  .before .ltool .chip { height: 26px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--border); display: inline-flex; align-items: center; color: var(--dim-text); font-weight: 600; }
+  .before .ltool .chip.on { background: var(--nav-active); color: var(--text); }
+  .before .pgrid { grid-template-columns: repeat(auto-fill, 170px); padding-left: 2px; }
+  .before .pst { padding: 10px; }
+  .before .pst .poster { border-radius: 6px; box-shadow: 0 6px 16px color-mix(in srgb, var(--shadow) 60%, transparent); }
+  .before .pst.hov .poster { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--accent), 0 0 14px var(--accent), 0 12px 24px color-mix(in srgb, var(--shadow) 60%, transparent); }
+  .before .pst .nm { margin-top: 8px; font-weight: 700; }
+  .before .pst .yr { color: var(--dim-text); font-size: 0.9em; }
+  .before .side-foot { color: var(--dim-text); }
+  .before .det { flex: 1; overflow: auto; padding: 0 18px 36px 8px; }
+  .before .hero { height: 340px; border-radius: 14px; margin: 12px 0 0 12px; }
+  .before .hero .txt { position: absolute; left: 28px; bottom: 26px; right: 28px; color: #fff; }
+  .before .eyebrow { font-size: 0.8em; letter-spacing: 1px; text-transform: uppercase; opacity: .8; font-weight: 600; }
+  .before .hero h1 { font-size: 2.1em; font-weight: 700; margin: 4px 0 6px; }
+  .before .hero .meta-line { opacity: .85; font-size: 0.92em; }
+  .before .acts { margin-top: 14px; }
+  .before .acts .hb { height: 34px; padding: 0 14px; border-radius: 8px; background: rgba(255,255,255,.16); color: #fff; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+  .before .acts .hb.pri { background: var(--accent); color: var(--on-accent); }
+  .before .body { padding: 18px 0 0 12px; }
+  .before .ov { line-height: 1.4; }
+  .before .gtitle2 { margin: 22px 0 10px; font-size: 1.35em; font-weight: 700; }
+  .before .face { background: var(--card); color: var(--dim-text); }
+  .before .person .nm2 { font-weight: 600; font-size: 0.92em; }
+  .before .person .rl { color: var(--dim-text); font-size: 0.85em; }
+  .before .more-row { gap: 20px; }
+  .before .more-row .poster { border-radius: 6px; }
+
+  /* After */
+  .after .lib { flex: 1; overflow: auto; padding: 4px 24px 32px; }
+  .after .ltool { height: 44px; display: flex; align-items: center; gap: 6px; padding: 0 24px; flex: none; }
+  .after .pgrid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); column-gap: 20px; row-gap: 24px; }
+  .after .pst .poster { border-radius: var(--r-small); box-shadow: var(--art-shadow); }
+  .after .pst .nm { margin-top: 8px; font-weight: 500; }
+  .after .pst .yr { margin-top: 2px; }
+  .after .det { flex: 1; overflow: auto; position: relative; }
+  .after .hero { height: 420px; margin-bottom: -150px; }
+  .after .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, color-mix(in srgb, var(--bg) 70%, transparent) 70%, var(--bg) 100%); }
+  .after .hero .bd { border-radius: 0; }
+  .after .dbody { position: relative; z-index: 1; padding: 0 32px 40px; max-width: 980px; }
+  .after .dtitle { color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,.35); }
+  [data-theme="light"] .after .dtitle { color: var(--text); text-shadow: none; }
+  .after .meta-line { margin-top: 8px; color: var(--dim-text); }
+  .after .meta-line .sep { color: var(--text-tertiary); }
+  .after .acts { margin-top: 18px; }
+  .after .acts .btn.primary { height: 32px; padding: 0 16px 0 13px; }
+  .after .acts .btn.primary i { width: 13px; height: 13px; }
+  .after .acts .ib { width: 32px; height: 32px; background: var(--field); box-shadow: inset 0 0 0 1px var(--hair); }
+  .after .ov { margin-top: 18px; max-width: 620px; line-height: 1.55; }
+  .after .facts { margin-top: 14px; display: grid; grid-template-columns: 110px 1fr; row-gap: 4px; max-width: 620px; }
+  .after .facts .k { color: var(--text-tertiary); }
+  .after .gtitle2 { margin: 30px 0 12px; font-weight: 600; font-size: 1.154em; letter-spacing: -0.01em; }
+  .after .face { box-shadow: var(--art-shadow); }
+  .after .person .nm2 { font-weight: 500; font-size: 0.923em; }
+  .after .person .rl { color: var(--dim-text); font-size: 0.846em; }
+  .after .more-row { gap: 20px; }
+  .after .more-row .poster { border-radius: var(--r-small); box-shadow: var(--art-shadow); }
+  .after .side-foot { display: flex; align-items: center; gap: 8px; }
+  .after .side-foot .on { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+  @media (max-width: 900px) {
+    body.after { --side-w: 56px; }
+    .after .nav span, .after .grp, .after .nav .cnt, .after .side .app-name { display: none; }
+    body.after .side .side-foot.only-after.flex, body.after .side .grp.only-after { display: none !important; }
+    .after .nav { justify-content: center; padding: 0; }
+    body.v-tinted .side-id { justify-content: center; padding: 0; }
+    body.v-tinted .side-id > :not(.app-ic) { display: none; }
+    .after .pgrid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); column-gap: 16px; }
+    .after .lib, .after .ltool { padding-left: 16px; padding-right: 16px; }
+    .after .ltool .wide { display: none; }
+    .after .dbody { padding: 0 20px 32px; }
+    .after .more-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .after .more-row > :nth-child(n+5) { display: none; }
+    .after .search { width: 150px; }
+  }
+</style>
+</head>
+<body>
+<div class="win">
+  <header class="hdr">
+    <div class="hdr-id"><i data-i="film" class="app-ic"></i><span class="app-name">Theater</span>
+      <span class="app-sub" data-scr="library"><span class="sep">/</span>Movies</span>
+      <span class="app-sub" data-scr="detail"><span class="sep">/</span><span class="not-before">Movies<span class="sep">/</span></span>Dune</span></div>
+    <div class="hdr-start">
+      <button class="ib only-after" data-scr="detail"><i data-i="chev-l"></i></button>
+      <span class="app-sub only-tinted" data-scr="library">Movies <span class="dim">· 1,204</span></span>
+      <span class="app-sub only-tinted" data-scr="detail">Dune</span>
+    </div>
+    <div class="hdr-center"></div>
+    <div class="hdr-end">
+      <div class="search" style="margin-right:4px"><i data-i="search"></i><span>Search</span><span class="key">Ctrl F</span></div>
+      <button class="ib"><i data-i="refresh"></i></button>
+      <button class="ib"><i data-i="sliders"></i></button>
+    </div>
+  </header>
+
+  <aside class="side">
+    <div class="side-id"><i data-i="film" class="app-ic"></i><span class="app-name grow">Theater</span><button class="ib"><i data-i="sidebar"></i></button></div>
+    <div class="side-scroll">
+      <div class="grp first only-after">Watch</div>
+      <a class="nav"><i data-i="home"></i><span>Home</span></a>
+      <a class="nav"><i data-i="compass"></i><span>Discover</span></a>
+      <a class="nav active"><i data-i="film"></i><span>Movies</span><em class="cnt">1,204</em></a>
+      <a class="nav"><i data-i="tv"></i><span>TV shows</span><em class="cnt">86</em></a>
+      <a class="nav"><i data-i="layers"></i><span>Collections</span></a>
+      <a class="nav"><i data-i="list"></i><span>Playlists</span></a>
+      <div class="grp">Servers</div>
+      <a class="nav"><i data-i="server"></i><span>Jellyfin</span></a>
+      <a class="nav"><i data-i="server"></i><span>Plex</span></a>
+    </div>
+    <div class="side-foot only-before">Synced 1,204 items · Marked watched</div>
+    <div class="side-foot only-after flex"><span class="on"></span><span class="t-cap" style="font-weight:400">Jellyfin · up to date</span></div>
+  </aside>
+
+  <main class="page">
+    <!-- Library -->
+    <div class="ltool" data-scr="library">
+      <span class="ttl only-before">Movies</span>
+      <span class="chip on">All</span><span class="chip">Unwatched</span><span class="chip">4K</span><span class="chip wide">Recently added</span>
+      <span class="grow"></span>
+      <span class="dd only-after flex wide">Recently added<i data-i="chev-d"></i></span>
+      <div class="seg icons only-after flex"><button class="on"><i data-i="grid"></i></button><button><i data-i="list"></i></button></div>
+      <button class="ib only-before"><i data-i="refresh"></i></button>
+    </div>
+    <div class="lib" data-scr="library">
+      <div class="pgrid">
+        <div class="pst"><div class="poster art g13"><span class="art-t" style="bottom:22px">Dune</span><span class="prog"><div style="width:62%"></div></span></div><div class="nm">Dune</div><div class="yr t-sec">2021 · 2 h 35 min</div></div>
+        <div class="pst"><div class="poster art g15"><span class="art-t">Arrival</span></div><div class="nm">Arrival</div><div class="yr t-sec">2016 · 1 h 56 min</div></div>
+        <div class="pst hov"><div class="poster art g11"><span class="art-t">Blade Runner 2049</span></div><div class="nm">Blade Runner 2049</div><div class="yr t-sec">2017 · 2 h 44 min</div></div>
+        <div class="pst"><div class="poster art g10"><span class="art-t">Interstellar</span><span class="seen"><i data-i="check"></i></span></div><div class="nm">Interstellar</div><div class="yr t-sec">2014 · 2 h 49 min</div></div>
+        <div class="pst"><div class="poster art g7"><span class="art-t">Everything Everywhere All at Once</span></div><div class="nm">Everything Everywhere All at Once</div><div class="yr t-sec">2022 · 2 h 19 min</div></div>
+        <div class="pst"><div class="poster art g6"><span class="art-t">Past Lives</span></div><div class="nm">Past Lives</div><div class="yr t-sec">2023 · 1 h 45 min</div></div>
+        <div class="pst"><div class="poster art g12"><span class="art-t">Oppenheimer</span></div><div class="nm">Oppenheimer</div><div class="yr t-sec">2023 · 3 h 0 min</div></div>
+        <div class="pst"><div class="poster art g3"><span class="art-t">The Grand Budapest Hotel</span><span class="seen"><i data-i="check"></i></span></div><div class="nm">The Grand Budapest Hotel</div><div class="yr t-sec">2014 · 1 h 39 min</div></div>
+        <div class="pst"><div class="poster art g5"><span class="art-t">Spirited Away</span></div><div class="nm">Spirited Away</div><div class="yr t-sec">2001 · 2 h 5 min</div></div>
+        <div class="pst"><div class="poster art g9"><span class="art-t">Parasite</span></div><div class="nm">Parasite</div><div class="yr t-sec">2019 · 2 h 12 min</div></div>
+        <div class="pst"><div class="poster art g14"><span class="art-t">Drive</span></div><div class="nm">Drive</div><div class="yr t-sec">2011 · 1 h 40 min</div></div>
+        <div class="pst"><div class="poster art g16"><span class="art-t">Moonlight</span></div><div class="nm">Moonlight</div><div class="yr t-sec">2016 · 1 h 51 min</div></div>
+        <div class="pst"><div class="poster art g1"><span class="art-t">Her</span></div><div class="nm">Her</div><div class="yr t-sec">2013 · 2 h 6 min</div></div>
+        <div class="pst"><div class="poster art g2"><span class="art-t">Sicario</span></div><div class="nm">Sicario</div><div class="yr t-sec">2015 · 2 h 1 min</div></div>
+      </div>
+    </div>
+    <div class="toast only-after flex" data-scr="library"><i data-i="check-c"></i><span>Marked “Interstellar” as watched</span><button class="btn">Undo</button></div>
+
+    <!-- Detail -->
+    <div class="det" data-scr="detail">
+      <div class="hero">
+        <div class="bd"></div>
+        <div class="txt only-before">
+          <div class="eyebrow">Movie · 2021</div>
+          <h1>Dune</h1>
+          <div class="meta-line">2 h 35 min · PG-13 · Science fiction, Adventure · ★ 8.0</div>
+          <div class="acts"><span class="hb pri"><i data-i="play"></i>Resume</span><span class="hb">Watched</span><span class="hb">Watchlist</span><span class="hb">More</span></div>
+        </div>
+      </div>
+      <div class="body only-before">
+        <div class="ov">Paul Atreides, the gifted heir of a noble house, is sent to the most dangerous planet in the universe to secure his family's future, as rival powers fight over the most precious resource in existence.</div>
+        <div class="gtitle2">Cast</div>
+        <div class="cast">
+          <div class="person"><div class="face">TC</div><div class="nm2">Timothée Chalamet</div><div class="rl">Paul Atreides</div></div>
+          <div class="person"><div class="face">RF</div><div class="nm2">Rebecca Ferguson</div><div class="rl">Lady Jessica</div></div>
+          <div class="person"><div class="face">OI</div><div class="nm2">Oscar Isaac</div><div class="rl">Duke Leto</div></div>
+          <div class="person"><div class="face">Z</div><div class="nm2">Zendaya</div><div class="rl">Chani</div></div>
+          <div class="person"><div class="face">JM</div><div class="nm2">Jason Momoa</div><div class="rl">Duncan Idaho</div></div>
+        </div>
+      </div>
+      <div class="dbody only-after">
+        <div class="dtitle t-doc" style="font-size:2.6em">Dune</div>
+        <div class="meta-line t-sec"><span>2021</span><span class="sep">·</span><span>2 h 35 min</span><span class="sep">·</span><span>Science fiction, Adventure</span><span class="tag">PG-13</span><span class="tag">4K</span><span class="tag">HDR</span></div>
+        <div class="acts">
+          <button class="btn primary"><i data-i="play"></i>Resume · 58 min left</button>
+          <button class="ib"><i data-i="bookmark"></i></button>
+          <button class="ib"><i data-i="check"></i></button>
+          <button class="ib"><i data-i="more"></i></button>
+        </div>
+        <div class="ov">Paul Atreides, the gifted heir of a noble house, is sent to the most dangerous planet in the universe to secure his family's future, as rival powers fight over the most precious resource in existence.</div>
+        <div class="facts t-sec"><span class="k">Directed by</span><span>Denis Villeneuve</span><span class="k">Audio</span><span>English · Dolby Atmos</span><span class="k">Rating</span><span>8.0 IMDb · 83% Rotten Tomatoes</span></div>
+        <div class="gtitle2">Cast</div>
+        <div class="cast">
+          <div class="person"><div class="face art g13">TC</div><div class="nm2">Timothée Chalamet</div><div class="rl">Paul Atreides</div></div>
+          <div class="person"><div class="face art g14">RF</div><div class="nm2">Rebecca Ferguson</div><div class="rl">Lady Jessica</div></div>
+          <div class="person"><div class="face art g2">OI</div><div class="nm2">Oscar Isaac</div><div class="rl">Duke Leto</div></div>
+          <div class="person"><div class="face art g15">Z</div><div class="nm2">Zendaya</div><div class="rl">Chani</div></div>
+          <div class="person"><div class="face art g9">JM</div><div class="nm2">Jason Momoa</div><div class="rl">Duncan Idaho</div></div>
+          <div class="person"><div class="face art g4">JB</div><div class="nm2">Josh Brolin</div><div class="rl">Gurney Halleck</div></div>
+        </div>
+        <div class="gtitle2">More like this</div>
+        <div class="more-row">
+          <div class="poster art g15" style="aspect-ratio:2/3"><span class="art-t">Arrival</span></div>
+          <div class="poster art g11" style="aspect-ratio:2/3"><span class="art-t">Blade Runner 2049</span></div>
+          <div class="poster art g10" style="aspect-ratio:2/3"><span class="art-t">Interstellar</span></div>
+          <div class="poster art g12" style="aspect-ratio:2/3"><span class="art-t">Oppenheimer</span></div>
+          <div class="poster art g16" style="aspect-ratio:2/3"><span class="art-t">Moonlight</span></div>
+          <div class="poster art g2" style="aspect-ratio:2/3"><span class="art-t">Sicario</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

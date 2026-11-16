@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en" data-accent="blue" data-screens="list,columns">
+<head>
+<meta charset="utf-8">
+<title>Files — Nyx polish mockup</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="nyx-before.css">
+<link rel="stylesheet" href="nyx-after.css">
+<script src="mock.js"></script>
+<style>
+  /* Shared structure */
+  .tabs { display: flex; align-items: center; gap: 4px; flex: none; }
+  .tab { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .tab i { width: 14px; height: 14px; }
+  .cols, .frow { display: grid; grid-template-columns: minmax(0, 1fr) 90px 150px 130px; align-items: center; }
+  .cols > :nth-child(2), .frow > :nth-child(2) { text-align: right; padding-right: 20px; }
+  .rows { flex: 1; overflow: auto; }
+  .frow .nm { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .frow .nm span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .crumbs { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .crumbs i { width: 12px; height: 12px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+
+  /* Before: Files' v1 Strata leftovers under the 2.0 overlay */
+  .before .pillgrp { display: flex; gap: 2px; padding: 0 2px; border-radius: 8px; background: color-mix(in srgb, var(--text) 4.5%, transparent); }
+  .before .crumbs { color: var(--dim-text); margin-left: 12px; }
+  .before .crumbs .last { color: var(--accent); font-weight: 700; }
+  .before .hdr-center { justify-content: flex-start; }
+  .before .side { --side-w: 201px; }
+  body.before { --side-w: 201px; }
+  .before .tabs { height: 34px; padding: 0 12px; }
+  .before .tab { height: 26px; padding: 0 10px; border-radius: 5px; color: var(--dim-text); }
+  .before .tab.on { background: var(--row-hover); color: var(--text); }
+  .before .cols {
+    height: 34px; padding: 0 16px; border-top: 3px solid transparent; border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    font-weight: 700; font-size: 0.92em; color: color-mix(in srgb, var(--accent) 58%, var(--dim-text));
+  }
+  .before .rows { padding: 4px 8px; }
+  .before .frow { height: 36px; padding: 0 8px; border-radius: var(--r-small); }
+  .before .frow > :not(.nm) { color: var(--dim-text); font-size: 0.92em; }
+  .before .frow.sel { background: var(--nav-active); }
+  .before .frow .fi { color: #0090ff; width: 18px; height: 18px; }
+  .before .frow .fd { color: var(--dim-text); width: 18px; height: 18px; }
+  .before .status { height: 28px; gap: 14px; }
+  .before .status .k {
+    font-weight: bold; letter-spacing: 0.5px; padding: 1px 7px; border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); font-size: 0.86em;
+  }
+  .before .status .r { margin-left: auto; }
+
+  /* After */
+  .after .crumbs { color: var(--dim-text); margin-left: 6px; }
+  .after .crumbs i { color: var(--text-tertiary); }
+  .after .crumbs .last { color: var(--text); font-weight: 500; }
+  .after .hdr-center { justify-content: flex-start; }
+  .after .tabs { height: 36px; padding: 0 12px 0 14px; }
+  .after .tab { height: 28px; padding: 0 8px 0 10px; border-radius: var(--r-small); color: var(--dim-text); }
+  .after .tab.on { background: var(--card); color: var(--text); font-weight: 500; box-shadow: 0 0 0 1px var(--hair); }
+  .after .tab .x { color: var(--text-tertiary); width: 12px; height: 12px; }
+  .after .tab.add { padding: 0 8px; }
+  .after .cols { height: 30px; padding: 0 22px 0 24px; }
+  .after .cols > * { font-size: 0.846em; font-weight: 500; color: var(--text-tertiary); }
+  .after .cols .sorted { color: var(--dim-text); display: inline-flex; align-items: center; gap: 4px; }
+  .after .cols .sorted i { width: 12px; height: 12px; color: var(--accent); }
+  .after .rows { padding: 0 12px 0 14px; }
+  .after .frow { height: 32px; padding: 0 10px; border-radius: var(--r-small); }
+  .after .frow > :not(.nm) { color: var(--dim-text); font-size: 0.923em; font-feature-settings: "tnum"; }
+  .after .frow.sel { background: var(--nav-active); }
+  .after .frow .fi { color: color-mix(in srgb, var(--accent) 85%, var(--text)); width: 18px; height: 18px; }
+  .after .frow .fd { color: var(--text-tertiary); width: 18px; height: 18px; }
+  .after .frow .fd.md { color: var(--sw-graphite); }
+  .after .frow .fd.toml { color: var(--sw-amber); }
+  .after .frow .fd.sh { color: var(--sw-green); }
+  .after .frow .fd.json { color: var(--sw-teal); }
+  .after .foot-line { text-align: center; padding: 14px 0 18px; }
+  .after .meter { margin-top: 6px; height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
+  .after .meter div { width: 79%; height: 100%; background: var(--accent); border-radius: 2px; }
+  .after .side-foot .row-flex { gap: 8px; color: var(--text); }
+  .after .side-foot i { width: 16px; height: 16px; color: var(--dim-text); }
+  /* Columns view: one column per folder, then a preview of the selected file. */
+  .mcols { flex: 1; min-height: 0; display: flex; }
+  .mcol { width: 236px; flex: none; padding: 4px 8px; overflow: hidden; }
+  .mrow { height: 30px; display: flex; align-items: center; gap: 10px; padding: 0 8px 0 10px; border-radius: var(--r-small); white-space: nowrap; }
+  .mrow span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .mrow em { font-style: normal; font-size: 0.846em; color: var(--text-tertiary); }
+  .mrow > i:last-child { width: 12px; height: 12px; color: var(--text-tertiary); }
+  .mrow.sel { background: var(--nav-active); }
+  .mrow.path { background: var(--row-hover); }
+  .mrow .fi { color: color-mix(in srgb, var(--accent) 85%, var(--text)); width: 18px; height: 18px; }
+  .mrow .fd { color: var(--sw-graphite); width: 18px; height: 18px; }
+  .mprev { flex: 1; min-width: 0; padding: 22px 24px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .mprev .big { width: 72px; height: 88px; border-radius: 8px; background: var(--card); display: flex; align-items: center; justify-content: center; color: var(--sw-graphite); box-shadow: 0 0 0 1px var(--hair); margin-bottom: 10px; }
+  .mprev .big i { width: 36px; height: 36px; }
+  .mprev .nm { font-weight: 600; font-size: 1.077em; }
+  .mprev .kv { align-self: stretch; display: flex; justify-content: space-between; padding: 5px 2px; color: var(--dim-text); }
+  .mprev .kv b { font-weight: 400; color: var(--text); }
+  .mprev .ex { align-self: stretch; margin-top: 12px; padding: 10px 12px; border-radius: var(--r-card); background: var(--card); color: var(--dim-text); line-height: 1.5; font-size: 0.923em; }
+  @media (max-width: 900px) {
+    body.after { --side-w: 56px; }
+    .after .nav span, .after .grp, .after .nav .cnt, .after .side .app-name, .after .nav.tagrow { display: none; }
+    body.after .side-foot.only-after { display: none !important; }
+    .after .nav { justify-content: center; padding: 0; }
+    body.v-tinted .side-id { justify-content: center; padding: 0; }
+    body.v-tinted .side-id > :not(.app-ic) { display: none; }
+    .after .cols, .after .frow { grid-template-columns: minmax(0, 1fr) 80px 120px; }
+    .after .cols > :nth-child(4), .after .frow > :nth-child(4) { display: none; }
+    .after .search { width: 160px; }
+    .after .crumbs .mid { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="win">
+  <header class="hdr">
+    <div class="hdr-id"><i data-i="folder" class="app-ic"></i><span class="app-name">Files</span></div>
+    <div class="hdr-start">
+      <div class="pillgrp only-before flex">
+        <button class="ib"><i data-i="sidebar"></i></button>
+        <button class="ib"><i data-i="chev-l"></i></button>
+        <button class="ib"><i data-i="chev-r"></i></button>
+      </div>
+      <span class="not-before row-flex" style="gap:2px">
+        <button class="ib not-tinted"><i data-i="sidebar"></i></button>
+        <button class="ib"><i data-i="chev-l"></i></button>
+        <button class="ib"><i data-i="chev-r"></i></button>
+      </span>
+    </div>
+    <div class="hdr-center">
+      <div class="crumbs not-tinted">
+        <span class="mid">ken</span><i data-i="chev-r" class="mid"></i><span>Projects</span><i data-i="chev-r"></i><span class="last">nyx-design</span>
+      </div>
+      <span class="app-sub only-tinted" style="margin-left:4px">nyx-design <span class="dim">· 16 items</span></span>
+    </div>
+    <div class="hdr-end">
+      <div class="pillgrp only-before flex">
+        <button class="ib on"><i data-i="list"></i></button>
+        <button class="ib"><i data-i="grid"></i></button>
+        <button class="ib"><i data-i="folder-plus"></i></button>
+      </div>
+      <div class="seg icons only-after flex" data-scr="list">
+        <button class="on"><i data-i="list"></i></button>
+        <button><i data-i="grid"></i></button>
+        <button><i data-i="columns"></i></button>
+      </div>
+      <div class="seg icons only-after flex" data-scr="columns">
+        <button><i data-i="list"></i></button>
+        <button><i data-i="grid"></i></button>
+        <button class="on"><i data-i="columns"></i></button>
+      </div>
+      <span class="gap only-after"></span>
+      <button class="ib only-after"><i data-i="folder-plus"></i></button>
+      <button class="ib only-after"><i data-i="more"></i></button>
+      <span class="gap only-after"></span>
+      <div class="search" style="margin:0 6px"><i data-i="search"></i><span>Search</span><span class="key">Ctrl F</span></div>
+      <button class="ib"><i data-i="sliders"></i></button>
+    </div>
+  </header>
+
+  <aside class="side">
+    <div class="side-id"><i data-i="folder" class="app-ic"></i><span class="app-name grow">Files</span><button class="ib"><i data-i="sidebar"></i></button></div>
+    <div class="side-scroll">
+      <div class="grp first">Favorites</div>
+      <a class="nav"><i data-i="clock"></i><span>Recent</span></a>
+      <a class="nav"><i data-i="star"></i><span>Starred</span></a>
+      <a class="nav"><i data-i="home"></i><span>Home</span></a>
+      <a class="nav"><i data-i="monitor"></i><span>Desktop</span></a>
+      <a class="nav"><i data-i="file-text"></i><span>Documents</span></a>
+      <a class="nav"><i data-i="download"></i><span>Downloads</span></a>
+      <a class="nav active"><i data-i="code"></i><span>Projects</span></a>
+      <a class="nav"><i data-i="image"></i><span>Pictures</span></a>
+      <a class="nav"><i data-i="music"></i><span>Music</span></a>
+      <div class="grp">Devices</div>
+      <a class="nav"><i data-i="drive"></i><span>Samsung T7</span><em class="cnt">1 TB</em></a>
+      <a class="nav"><i data-i="network"></i><span>Network</span></a>
+      <div class="grp">Tags</div>
+      <a class="nav tagrow"><span class="dot" style="background:var(--sw-red);flex:none;margin:0 3px"></span><span>Urgent</span></a>
+      <a class="nav tagrow"><span class="dot" style="background:var(--sw-amber);flex:none;margin:0 3px"></span><span>Review</span></a>
+      <a class="nav tagrow"><span class="dot" style="background:var(--sw-green);flex:none;margin:0 3px"></span><span>Done</span></a>
+      <a class="nav"><i data-i="trash"></i><span>Trash</span></a>
+    </div>
+    <div class="side-foot only-after">
+      <div class="row-flex"><i data-i="drive"></i><span class="grow">System</span><span class="t-cap">212 GB free</span></div>
+      <div class="meter"><div></div></div>
+    </div>
+  </aside>
+
+  <main class="page">
+    <div class="tabs">
+      <div class="tab on"><i data-i="folder"></i>nyx-design<i data-i="x" class="x only-after"></i></div>
+      <div class="tab"><i data-i="download"></i>Downloads</div>
+      <div class="tab"><i data-i="code"></i>nyx-files</div>
+      <div class="tab add"><i data-i="plus"></i></div>
+    </div>
+    <div class="mcols" data-scr="columns">
+      <div class="mcol">
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>nyx</span><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>nyx-agents</span><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>nyx-core</span><i data-i="chev-r"></i></div>
+        <div class="mrow path"><i data-i="folder-fill" class="fi"></i><span>nyx-design</span><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>nyx-files</span><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>nyx-git</span><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>nyx-lyra</span><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>nyx-mail</span><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>nyx-settings</span><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>nyxos</span><i data-i="chev-r"></i></div>
+      </div>
+      <div class="mcol">
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>assets</span><em>4 items</em><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>bin</span><em>2 items</em><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>crates</span><em>7 items</em><i data-i="chev-r"></i></div>
+        <div class="mrow path"><i data-i="folder-fill" class="fi"></i><span>docs</span><em>3 items</em><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>mockups</span><em>11 items</em><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>tools</span><em>3 items</em><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="file-text" class="fd"></i><span>AGENTS.md</span><em>1.5 KB</em></div>
+        <div class="mrow"><i data-i="file" class="fd"></i><span>Cargo.toml</span><em>1.2 KB</em></div>
+        <div class="mrow"><i data-i="file-text" class="fd"></i><span>README.md</span><em>8.7 KB</em></div>
+        <div class="mrow"><i data-i="file-text" class="fd"></i><span>STYLE.md</span><em>27 KB</em></div>
+      </div>
+      <div class="mcol">
+        <div class="mrow"><i data-i="folder-fill" class="fi"></i><span>theme-engine</span><em>6 items</em><i data-i="chev-r"></i></div>
+        <div class="mrow"><i data-i="file-text" class="fd"></i><span>icons.md</span><em>4.2 KB</em></div>
+        <div class="mrow sel"><i data-i="file-text" class="fd"></i><span>STYLE-v1.md</span><em>31 KB</em></div>
+      </div>
+      <div class="mprev">
+        <div class="big"><i data-i="file-text"></i></div>
+        <div class="nm">STYLE-v1.md</div>
+        <div class="t-cap">Markdown · 31 KB</div>
+        <div style="height:12px"></div>
+        <div class="kv"><span>Modified</span><b>Oct 28 15:47</b></div>
+        <div class="kv"><span>Created</span><b>Oct 13 02:01</b></div>
+        <div class="kv"><span>Where</span><b>nyx-design › docs</b></div>
+        <div class="ex"># Nyx App Style — v1<br>How Nyx apps looked before 2.0. Apps that haven't moved to 2.0 follow it…</div>
+      </div>
+    </div>
+    <div class="cols" data-scr="list">
+      <div><span class="sorted">Name <i data-i="chev-u" class="only-after"></i></span></div><div>Size</div><div>Modified</div><div>Kind</div>
+    </div>
+    <div class="rows" data-scr="list">
+      <div class="frow"><div class="nm"><i data-i="folder-fill" class="fi"></i><span>assets</span></div><div>—</div><div>Today 22:01</div><div>Folder</div></div>
+      <div class="frow"><div class="nm"><i data-i="folder-fill" class="fi"></i><span>bin</span></div><div>—</div><div>Oct 28 08:50</div><div>Folder</div></div>
+      <div class="frow"><div class="nm"><i data-i="folder-fill" class="fi"></i><span>crates</span></div><div>—</div><div>Today 21:59</div><div>Folder</div></div>
+      <div class="frow"><div class="nm"><i data-i="folder-fill" class="fi"></i><span>docs</span></div><div>—</div><div>Oct 27 13:13</div><div>Folder</div></div>
+      <div class="frow"><div class="nm"><i data-i="folder-fill" class="fi"></i><span>mockups</span></div><div>—</div><div>Today 22:40</div><div>Folder</div></div>
+      <div class="frow"><div class="nm"><i data-i="folder-fill" class="fi"></i><span>tests</span></div><div>—</div><div>Today 22:02</div><div>Folder</div></div>
+      <div class="frow"><div class="nm"><i data-i="folder-fill" class="fi"></i><span>tools</span></div><div>—</div><div>Today 22:01</div><div>Folder</div></div>
+      <div class="frow"><div class="nm"><i data-i="file-text" class="fd md"></i><span>AGENTS.md</span></div><div>1.5 KB</div><div>Oct 27 13:13</div><div>Markdown</div></div>
+      <div class="frow"><div class="nm"><i data-i="file" class="fd json"></i><span>build-environment.json</span></div><div>398 B</div><div>Oct 21 09:24</div><div>JSON</div></div>
+      <div class="frow"><div class="nm"><i data-i="file" class="fd toml"></i><span>Cargo.toml</span></div><div>1.2 KB</div><div>Oct 27 09:41</div><div>TOML</div></div>
+      <div class="frow"><div class="nm"><i data-i="file-text" class="fd md"></i><span>CLAUDE.md</span></div><div>1.9 KB</div><div>Oct 27 13:13</div><div>Markdown</div></div>
+      <div class="frow"><div class="nm"><i data-i="code" class="fd sh"></i><span>install.sh</span></div><div>555 B</div><div>Oct 27 13:13</div><div>Shell script</div></div>
+      <div class="frow"><div class="nm"><i data-i="file-text" class="fd"></i><span>LICENSE</span></div><div>1.1 KB</div><div>Oct 13 02:01</div><div>Text</div></div>
+      <div class="frow sel"><div class="nm"><i data-i="file-text" class="fd md"></i><span>README.md</span></div><div>8.7 KB</div><div>Today 22:01</div><div>Markdown</div></div>
+      <div class="frow"><div class="nm"><i data-i="file-text" class="fd md"></i><span>STYLE.md</span></div><div>23 KB</div><div>Oct 28 15:47</div><div>Markdown</div></div>
+      <div class="frow"><div class="nm"><i data-i="file" class="fd toml"></i><span>suite.toml</span></div><div>17 KB</div><div>Oct 28 09:14</div><div>TOML</div></div>
+      <div class="foot-line t-cap only-after">16 items · 1 selected · 8.7 KB</div>
+    </div>
+  </main>
+
+  <footer class="status only-before flex">
+    <span><span class="k">F1</span> Shortcuts</span>
+    <span><span class="k">CTRL L</span> Location</span>
+    <span><span class="k">SPACE</span> Preview</span>
+    <span class="r">16 items · 1 selected</span>
+    <span>212 GB free</span>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nyx Activity pages mockups</title>
+<link rel="stylesheet" href="../revamp/tokens.css">
+<link rel="stylesheet" href="../revamp/gallery.css">
+<link rel="stylesheet" href="gallery.css">
+<script>
+  // Every tab, by Activity's sidebar groups, in order: [group, [[id, name], …]]. The ids are
+  // Activity's own section ids (nyx-activity --section ID). A tab without a pages/ID.js is
+  // listed dimmed ("not drawn yet").
+  const SECTIONS = [
+    ["Activity", [["overview", "Dashboard"], ["processes", "Processes"]]],
+    ["Performance", [["cpu", "CPU"], ["memory", "Memory"], ["storage", "Storage"], ["network", "Network"], ["gpu", "GPU"], ["sensors", "Sensors"]]],
+    ["System", [["startup", "Startup"], ["services", "Services"]]],
+    ["App", [["settings", "Settings"]]],
+  ];
+  const ORDER = SECTIONS.flatMap(([sec, tabs]) => tabs.map(([id, name]) => [id, name, sec]));
+  const APPS = {};
+  const REG = (id, def) => { APPS[id] = def; };
+  const PICKS = {};
+  for (const [id] of ORDER) document.write(`<script src="pages/${id}.js" onerror="void 0"><\/script>`);
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="title"><h1>Nyx Activity: the pages</h1><span class="lede">Mockups only, inside the Activity you picked on the revamp page (dashboard B, Processes E). Every page has a tab: how it looks today, what's wrong with it, and two or three ways to draw it. Say the tab and the option to build ("CPU B", "Services A"). Click a shot for the full size: ← and → go through every shot, D and L switch dark and light, Esc closes.</span></div>
+  <div class="theme" id="theme"></div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main id="out"></main>
+<script>
+  // Ken's picks (picks.json), kept inline so the page works from file://.
+  Object.assign(PICKS, { overview: "a", processes: "a", cpu: "a", memory: "a", storage: "a", network: "b", gpu: "a", sensors: "a", startup: "a", services: "a", settings: "a" });
+</script>
+<script src="gallery.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" data-accent="teal" data-screens="a-chat,b-home,b-chat,c-chat,c-picker,d-list,d-chat" data-narrow="a-chat">
+<head>
+<meta charset="utf-8">
+<title>Screens — Nyx Messages mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="nyx-after.css">
+<link rel="stylesheet" href="kit.css">
+<link rel="stylesheet" href="messages.css">
+<script src="mock.js"></script>
+</head>
+<body>
+<script src="kit.js"></script>
+<script src="messages.js"></script>
+<script>
+  mount((PAGES[SCREEN] || PAGES["a-chat"])());
+</script>
+</body>
+</html>

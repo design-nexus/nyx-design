@@ -1,0 +1,89 @@
+/* The parts every Activity page shares (pages/shell.js), on top of ../revamp's kit and
+   apps/activity.css. A tab's own parts go in pages/ID.css. */
+
+.ap-body { padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
+.ap-body.scroll { overflow: auto; }
+.ap-ph { display: flex; align-items: center; gap: 10px; }
+.ap-ph > div:first-child { display: flex; flex-direction: column; gap: 2px; }
+.ap-ph > div:first-child b { font-size: 15px; font-weight: 600; }
+.ap-ph > div:first-child span { color: var(--dim-text); font-size: 12px; }
+.ap-ph .sp, .ap-ch .sp, .ap-sect .sp { flex: 1; }
+.ap-sect { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-tertiary); margin-top: 4px; }
+
+/* Cards */
+.ap-card { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ap-ch { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.ap-ch .ic { width: 15px; height: 15px; color: var(--dim-text); }
+.ap-ch b { font-weight: 600; }
+.ap-ch .m { color: var(--dim-text); font-size: 12px; }
+.ap-kv { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 12.5px; border-bottom: 1px solid var(--hair); }
+.ap-kv:last-child { border-bottom: 0; }
+.ap-kv .k { color: var(--dim-text); }
+.ap-kv .v { font-feature-settings: "tnum"; text-align: right; }
+.ap-grid { display: grid; gap: 12px; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); }
+
+/* Readings */
+.ap-reads { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 12px; }
+.ap-read { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ap-read .l { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--text-tertiary); }
+.ap-read b { font-size: 19px; font-weight: 600; font-feature-settings: "tnum"; white-space: nowrap; }
+.ap-read b.warn { color: var(--warning); } .ap-read b.bad { color: var(--danger); } .ap-read b.good { color: var(--success); }
+.ap-read .s { font-size: 11.5px; color: var(--dim-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ap-reads.sm .ap-read b { font-size: 15px; }
+
+/* Graphs */
+.ap-graph { display: grid; grid-template-columns: auto 1fr; grid-template-rows: var(--gh) auto; column-gap: 8px; row-gap: 4px; }
+.ap-gy { display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; color: var(--text-tertiary); text-align: right; font-feature-settings: "tnum"; }
+.ap-gp { position: relative; border-radius: 6px; background:
+  linear-gradient(to bottom, transparent calc(50% - .5px), color-mix(in srgb, var(--text) 7%, transparent) 50%, transparent calc(50% + .5px)),
+  color-mix(in srgb, var(--text) 3%, transparent); box-shadow: inset 0 0 0 1px var(--hair); overflow: hidden; }
+.ap-gl { position: absolute; inset: 0; }
+.ap-gl.more path { stroke-dasharray: 4 3; }
+.ap-gx { grid-column: 2; display: flex; justify-content: space-between; font-size: 10px; color: var(--text-tertiary); }
+.ap-gm { position: absolute; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--warning) 70%, transparent); }
+.ap-gm em { position: absolute; top: 4px; left: 4px; font-style: normal; font-size: 10px; white-space: nowrap; color: var(--warning); }
+
+/* Ring */
+.ap-ring { position: relative; flex: none; }
+.ap-ring svg { width: 100%; height: 100%; }
+.ap-ring circle { fill: none; stroke-width: 9; stroke-linecap: round; }
+.ap-ring circle.bg { stroke: color-mix(in srgb, var(--text) 9%, transparent); }
+.ap-ring .in { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ap-ring .in b { font-size: 18px; font-weight: 600; font-feature-settings: "tnum"; }
+.ap-ring .in span { font-size: 10.5px; color: var(--dim-text); }
+
+/* Stacked bars, meter bars, legends */
+.ap-stack { display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 2px; background: color-mix(in srgb, var(--text) 7%, transparent); }
+.ap-stack b { display: block; height: 100%; }
+.ap-stack.tall { height: 22px; border-radius: 7px; }
+.ap-lg { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--dim-text); }
+.ap-lg i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; }
+.ap-lg b { color: var(--text); font-weight: 600; font-feature-settings: "tnum"; }
+.ap-mb { flex: 1; min-width: 40px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--text) 8%, transparent); overflow: hidden; }
+.ap-mb b { display: block; height: 100%; border-radius: 3px; background: var(--accent); }
+.ap-mb.warn b { background: var(--warning); } .ap-mb.bad b { background: var(--danger); }
+
+/* Apps in lists */
+.ap-app { display: flex; align-items: center; gap: 10px; padding: 5px 2px; font-size: 12.5px; }
+.ap-app .n { width: 150px; flex: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ap-app .n em { font-style: normal; color: var(--dim-text); margin-left: 6px; font-size: 11.5px; }
+.ap-app .v { min-width: 72px; flex: none; text-align: right; font-feature-settings: "tnum"; white-space: nowrap; }
+.ap-app.sel { background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 7px; padding: 5px 6px; }
+.ap-app .u-aic { width: 22px; height: 22px; font-size: 11px; border-radius: 6px; }
+
+/* Plain-words notes */
+.ap-note { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--text) 5%, transparent); font-size: 12.5px; }
+.ap-note > i { width: 17px; height: 17px; flex: none; color: var(--dim-text); }
+.ap-note .tx { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ap-note .tx span { color: var(--dim-text); font-size: 12px; }
+.ap-note.warn { background: color-mix(in srgb, var(--warning) 13%, transparent); } .ap-note.warn > i { color: var(--warning); }
+.ap-note.bad { background: color-mix(in srgb, var(--danger) 13%, transparent); } .ap-note.bad > i { color: var(--danger); }
+.ap-note.good > i { color: var(--success); }
+
+/* 800 px */
+.narrow .ap-body { padding: 12px 14px; }
+.narrow .ap-grid { grid-template-columns: minmax(0, 1fr); }
+.narrow .ap-app .n { width: 110px; }
+
+/* A meter on its own line in a card keeps its height. */
+.ap-card > .ap-mb { flex: 0 0 6px; }

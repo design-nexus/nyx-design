@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>Nyx polish — mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font: 400 14px/1.5 "Inter", sans-serif; padding: 40px 48px 80px; }
+  a { color: inherit; }
+  header { max-width: 900px; margin-bottom: 36px; }
+  h1 { font-family: "Inter Display", "Inter", sans-serif; font-size: 30px; font-weight: 600; letter-spacing: -0.022em; }
+  header p { color: var(--dim-text); margin-top: 8px; }
+  header ul { margin: 14px 0 0 18px; color: var(--dim-text); }
+  header ul b { color: var(--text); font-weight: 500; }
+  .bar { position: sticky; top: 0; z-index: 2; background: var(--bg); padding: 10px 0; margin-bottom: 8px; display: flex; gap: 6px; }
+  .bar button { font: inherit; font-size: 13px; color: var(--dim-text); background: var(--field); border: 0; border-radius: 7px; padding: 5px 12px; }
+  .bar button.on { background: var(--text); color: var(--bg); font-weight: 500; }
+  section { margin-top: 36px; }
+  h2 { font-size: 17px; font-weight: 600; letter-spacing: -0.012em; display: flex; align-items: baseline; gap: 12px; }
+  h2 a { font-size: 13px; font-weight: 400; color: var(--theme-accent); text-decoration: none; }
+  section > p { color: var(--dim-text); margin: 4px 0 14px; max-width: 900px; }
+  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .row.narrow { grid-template-columns: repeat(2, minmax(0, 360px)); margin-top: 16px; }
+  figure img { width: 100%; display: block; border-radius: 10px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 9%, transparent), 0 10px 30px rgba(0,0,0,.35); }
+  figcaption { font-size: 12px; color: var(--text-tertiary); margin-top: 8px; font-weight: 500; }
+  body[data-show="dark"] .light, body[data-show="light"] .dark { display: none; }
+</style>
+</head>
+<body data-show="dark">
+<header>
+  <h1>Nyx polish mockups</h1>
+  <p>Proposals for a cleaner, more polished, macOS-like finish that keeps Nyx Design 2.0: one surface, Inter, accent only for state, every colour a token. Findings and the full proposal list are in <a href="AUDIT.md">AUDIT.md</a>. “Before” is rebuilt from today's CSS values; each page is live HTML with its own switcher.</p>
+  <ul>
+    <li><b>Type:</b> seven sizes in em (11 / 12 / 13 / 15 / 17 / 22 / 26), Inter Display from 20 px, weights 400–600, no wide tracking.</li>
+    <li><b>Labels:</b> sentence-case sidebar groups; section colour moves to icon tiles.</li>
+    <li><b>Space:</b> 4 px grid, pages 20 / 24 / 32, a shared 720 px cap for option pages and 680 px for reading.</li>
+    <li><b>Rows:</b> 44 px option rows with inset dividers; 32 px list rows; quiet column headers.</li>
+    <li><b>Chrome:</b> app name in text colour, 28 px icon buttons and fields, no edge bar on the selected item, a focus ring.</li>
+    <li><b>Media:</b> radius-7 art with a soft shadow, no glow; 20 / 24 grid gaps; flat player bar.</li>
+    <li><b>Variant B:</b> an inset, tinted sidebar running the full height with the app's name at its top.</li>
+  </ul>
+</header>
+<div class="bar"><button class="on" data-t="dark">Nyx Dark</button><button data-t="light">Nyx Light</button></div>
+<main id="g"></main>
+<script>
+  const shots = [
+    ["files", "Files", "files.html", "The 2.0 header with crumbs and a view switch replaces Files' v1 chrome; the footer goes (storage moves to the sidebar foot); column headers go quiet; files get kind colours."],
+    ["mail", "Mail", "mail.html", "360 px list with an unread dot, 600 sender and two-line previews split by inset lines; a 680 px reader; HTML bodies follow the theme instead of a white slab."],
+    ["settings-sound", "Settings · Sound", "settings.html?screen=sound", "Section colours move from rainbow headings to icon tiles; a 720 px column; 44 px rows with inset dividers; readouts in Inter with tabular figures."],
+    ["settings-card", "Settings card", "settings.html?screen=card", "The card every app shares: layered shadow over a blurred veil, a tinted group list with tiles, a visible focus ring on search."],
+    ["calendar", "Calendar", "calendar.html", "236 px tree sidebar with a mini month; quick add in the header; 11 px tabular hours; today as an accent circle; events with a 3 px calendar edge."],
+    ["music", "Music", "music.html", "No in-page “Albums” title; filter chips; a fluid grid with 20 / 24 gaps and radius-7 covers; hover shows play, not a glow; a flat player bar."],
+    ["theater-library", "Theater · Library", "theater.html?screen=library", "No page title, quiet chips, posters with progress and watched badges, and a toast instead of status text at the sidebar foot."],
+    ["theater-detail", "Theater · Detail", "theater.html?screen=detail", "A full-bleed backdrop that fades into the page; a 26 px Inter Display title; one primary action plus icon buttons; overview capped at 620 px."],
+  ];
+  const g = document.getElementById("g");
+  for (const [id, title, page, note] of shots) {
+    const fig = (v, t, cap) => `<figure class="${t}"><a href="shots/${id}-${v}-${t}.png"><img loading="lazy" src="shots/${id}-${v}-${t}.png" alt="${title} ${cap}"></a><figcaption>${cap}</figcaption></figure>`;
+    const row = (t) => `<div class="row ${t}">${fig("before", t, "Before")}${fig("blended", t, "After A · blended")}${fig("tinted", t, "After B · tinted sidebar")}</div>`;
+    g.insertAdjacentHTML("beforeend", `<section><h2>${title}<a href="${page}">Open live mockup</a></h2><p>${note}</p>${row("dark")}${row("light")}
+      <div class="row narrow dark">${["blended", "tinted"].map((v) => `<figure><a href="shots/${id}-${v}-dark-800.png"><img loading="lazy" src="shots/${id}-${v}-dark-800.png" alt=""></a><figcaption>${v === "blended" ? "A" : "B"} at 800 px (tiled)</figcaption></figure>`).join("")}</div></section>`);
+  }
+  document.querySelectorAll(".bar button").forEach((b) => b.addEventListener("click", () => {
+    document.body.dataset.show = b.dataset.t;
+    document.documentElement.dataset.theme = b.dataset.t;
+    document.querySelectorAll(".bar button").forEach((x) => x.classList.toggle("on", x === b));
+  }));
+</script>
+</body>
+</html>

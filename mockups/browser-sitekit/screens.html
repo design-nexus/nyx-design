@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Screens — Site styles, scripts, YouTube</title>
+<link rel="stylesheet" href="../browser-revamp/tokens.css">
+<link rel="stylesheet" href="../browser-revamp/kit.css">
+<link rel="stylesheet" href="../browser-revamp/pages.css">
+<link rel="stylesheet" href="../browser-revamp/dirs/b.css">
+<link rel="stylesheet" href="../browser-pages/pages2.css">
+<link rel="stylesheet" href="sitekit.css">
+<script>
+  // screens.html?panel=styles|scripts|install|sitecard|youtube|sss&opt=a|b|c&state=ID&theme=dark|light[&shot=1]
+  // Drawn in Focus (the revamp's layout b); Browser's pages are the same in every layout.
+  const Q = new URLSearchParams(location.search);
+  document.documentElement.dataset.theme = Q.get("theme") || "dark";
+  document.documentElement.classList.add("dir-b");
+  if (Q.get("shot")) document.documentElement.classList.add("shot");
+  const LAYOUT = {};
+</script>
+</head>
+<body>
+<script src="../browser-revamp/icons.js"></script>
+<script src="../browser-revamp/kit.js"></script>
+<script src="../browser-revamp/content.js"></script>
+<script src="../browser-revamp/pages.js"></script>
+<script src="../browser-revamp/dirs/b.js"></script>
+<script src="themes.js"></script>
+<script src="screens.js"></script>
+<script>
+  const draw = DRAW[Q.get("panel") || "styles"];
+  document.body.innerHTML = draw ? draw(Q.get("opt") || "a", Q.get("state") || "") : `<p style="padding:40px">No page "${Q.get("panel")}"</p>`;
+  placePops();
+</script>
+</body>
+</html>

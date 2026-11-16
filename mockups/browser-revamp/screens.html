@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Screens — Nyx Browser redesign mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="kit.css">
+<link rel="stylesheet" href="pages.css">
+<link rel="stylesheet" href="dirs/b.css">
+<script>
+  // screens.html?dir=a|b|c&screen=main&theme=dark|light[&w=800][&shot=1]
+  // Focus (b) is loaded for every layout: its menus, cards and panels are the shared ones.
+  const Q = new URLSearchParams(location.search);
+  const DIR = Q.get("dir") || "b";
+  const SCREEN = Q.get("screen") || "main";
+  document.documentElement.dataset.theme = Q.get("theme") || "dark";
+  document.documentElement.classList.add(`dir-${DIR}`);
+  if (Q.get("shot")) document.documentElement.classList.add("shot");
+  const LAYOUT = {};
+  if (DIR !== "b") document.write(`<link rel="stylesheet" href="dirs/${DIR}.css">`);
+</script>
+</head>
+<body>
+<script src="icons.js"></script>
+<script src="kit.js"></script>
+<script src="content.js"></script>
+<script src="pages.js"></script>
+<script src="dirs/b.js"></script>
+<script>if (DIR !== "b") document.write(`<script src="dirs/${DIR}.js"><\/script>`);</script>
+<script src="screens.js"></script>
+<script>
+  const own = LAYOUT[DIR].screens[SCREEN];
+  const html = own ? own() : SCREEN_DEFS[SCREEN] ? SCREEN_DEFS[SCREEN](LAYOUT.b) : `<p style="padding:40px">No screen "${SCREEN}"</p>`;
+  document.body.innerHTML = html;
+  placePops();
+</script>
+</body>
+</html>

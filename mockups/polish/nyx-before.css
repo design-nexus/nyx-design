@@ -1,0 +1,122 @@
+/* Before: today's Nyx 2.0 (crates/nyx-theme/src/base2.css at Balanced density).
+ * App-specific leftovers live in each mockup page under body.before. */
+
+body.before { --side-w: 212px; --hdr-h: 46px; }
+
+/* Header */
+.before .hdr { padding: 0 8px 0 14px; background: var(--panel); }
+.before .app-ic { width: 20px; height: 20px; color: var(--accent); margin-right: 9px; }
+.before .app-name { color: var(--accent); font-weight: 600; font-size: 1.04em; white-space: nowrap; }
+.before .app-sub { color: var(--dim-text); font-size: 0.96em; margin-left: 9px; white-space: nowrap; }
+.before .app-sub .sep { display: none; }
+.before .hdr-start { margin-left: 10px; gap: 2px; }
+.before .hdr-center { gap: 6px; }
+.before .hdr-end { gap: 2px; }
+.before .ib {
+  width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--r-small); color: var(--dim-text);
+}
+.before .ib i { width: 16px; height: 16px; }
+.before .ib.on { background: var(--nav-active); color: var(--accent); }
+.before .ib.primary { background: var(--accent); color: var(--on-accent); }
+.before .search {
+  display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 10px; width: 260px;
+  background: var(--field); border-radius: 8px; color: var(--text-tertiary);
+}
+.before .search .key { margin-left: auto; font-size: 11px; color: var(--text-tertiary); }
+.before .btn {
+  height: 32px; padding: 0 12px; border-radius: var(--r-small); background: var(--field);
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+}
+.before .btn.primary { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+.before .seg { display: inline-flex; background: var(--field); border-radius: var(--r-small); padding: 2px; }
+.before .seg > * {
+  height: 28px; padding: 0 12px; border-radius: var(--r-small); color: var(--dim-text);
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.before .seg > .on { background: var(--raised); color: var(--text); box-shadow: 0 1px 2px color-mix(in srgb, var(--shadow) 35%, transparent); }
+.before .seg.icons > * { width: 32px; padding: 0; }
+
+/* Sidebar */
+.before .side { background: var(--panel); padding: 8px; }
+.before .grp {
+  margin: 14px 4px 4px; padding: 2px 6px 5px; font-size: 0.846em; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary);
+  border-bottom: 1px solid var(--grp-line, transparent); display: flex; align-items: center;
+}
+.before .grp.first { margin-top: 0; }
+.before .grp i { margin-left: auto; width: 14px; height: 14px; }
+.before .nav {
+  height: 34px; padding: 0 10px; border-radius: var(--r-small); color: var(--dim-text);
+  display: flex; align-items: center; gap: 12px; white-space: nowrap;
+}
+.before .nav i { width: 16px; height: 16px; }
+.before .nav span { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.before .nav.active { background: var(--nav-active); box-shadow: inset 2px 0 0 var(--accent); color: var(--text); }
+.before .nav.active span { font-weight: 500; }
+.before .nav .cnt { font-style: normal; font-size: 0.885em; color: var(--text-tertiary); font-feature-settings: "tnum"; }
+.before .nav .badge {
+  font-style: normal; font-size: 0.846em; font-weight: 600; padding: 1px 6px; border-radius: 5px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent);
+}
+.before .nav .tile { display: contents; }
+.before .side-foot { padding: 8px 6px 2px; color: var(--dim-text); font-size: 0.92em; }
+
+/* Content */
+.before .content { flex: 1; overflow: auto; padding: 16px 20px 28px; }
+.before .clamp { max-width: var(--clamp-before, 920px); margin: 0 auto; }
+.before .gtitle {
+  margin: 20px 2px 8px; font-size: 0.846em; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-tertiary);
+}
+.before .gtitle.first { margin-top: 0; }
+.before .card { background: var(--card); border-radius: var(--r-card); }
+.before .opt { min-height: 52px; padding: 8px 14px; display: flex; align-items: center; gap: 16px; }
+.before .opt .tile { display: none; }
+.before .opt-text { flex: 1; min-width: 0; }
+.before .opt .t { font-weight: 500; }
+.before .opt .d { font-size: 0.92em; color: var(--dim-text); margin-top: 2px; }
+.before .dd {
+  height: 32px; padding: 0 10px 0 12px; border-radius: var(--r-small); background: var(--field);
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+}
+.before .dd i { width: 14px; height: 14px; color: var(--dim-text); }
+.before .switch {
+  width: 36px; height: 20px; border-radius: 10px; background: var(--track); position: relative; flex: none;
+}
+.before .switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--dim-text);
+}
+.before .switch.on { background: var(--accent); }
+.before .switch.on::after { left: 19px; background: var(--on-accent); }
+.before .slider { position: relative; height: 18px; display: flex; align-items: center; flex: none; }
+.before .slider .tr { height: 4px; width: 100%; border-radius: 2px; background: var(--track); overflow: hidden; }
+.before .slider .fill { height: 100%; background: var(--accent); }
+.before .slider .kn {
+  position: absolute; top: 1px; width: 16px; height: 16px; border-radius: 50%; margin-left: -8px;
+  background: var(--text); box-shadow: 0 1px 3px color-mix(in srgb, var(--shadow) 45%, transparent);
+}
+.before .readout { font-family: "JetBrains Mono", monospace; color: var(--dim-text); font-size: 0.92em; }
+.before .banner {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--r-card);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.before .banner i { color: var(--accent); }
+.before .banner .btn { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+.before .tag {
+  font-size: 0.846em; font-weight: 600; padding: 1px 6px; border-radius: 5px; background: var(--field);
+}
+.before .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--dim-text); }
+
+/* Floating surfaces */
+.before .toast {
+  position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%);
+  background: var(--surface); border-radius: var(--r-card); padding: 10px 16px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 7%, transparent), 0 8px 24px color-mix(in srgb, var(--shadow) 50%, transparent);
+  display: flex; align-items: center; gap: 10px;
+}
+.before .status {
+  height: 28px; display: flex; align-items: center; gap: 12px; padding: 0 12px;
+  background: var(--panel); color: var(--dim-text); font-size: 0.885em;
+}

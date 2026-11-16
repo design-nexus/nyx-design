@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" data-accent="pink">
+<head>
+<meta charset="utf-8">
+<title>Music — Nyx polish mockup</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="nyx-before.css">
+<link rel="stylesheet" href="nyx-after.css">
+<script src="mock.js"></script>
+<style>
+  .grid { display: grid; }
+  .alb .cover { aspect-ratio: 1; width: 100%; }
+  .alb .nm, .alb .ar { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .player { display: grid; grid-template-columns: minmax(200px, 1fr) minmax(320px, 1.4fr) minmax(200px, 1fr); align-items: center; flex: none; position: relative; }
+  .np { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .np .meta { min-width: 0; }
+  .np .meta div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .transport { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .tbtns { display: flex; align-items: center; gap: 10px; }
+  .seek { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 460px; }
+  .seek .slider { flex: 1; }
+  .pright { display: flex; align-items: center; justify-content: flex-end; gap: 2px; }
+  .spec { display: flex; align-items: flex-end; gap: 2px; height: 18px; margin-right: 10px; }
+  .spec span { width: 3px; border-radius: 1px; background: var(--accent); opacity: .8; }
+  .play { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+  /* Before */
+  .before .ptool { height: 46px; display: flex; align-items: center; gap: 10px; padding: 0 20px; flex: none; }
+  .before .ptool .title { font-size: 15px; font-weight: 600; flex: 1; }
+  .before .scroll { flex: 1; overflow: auto; padding: 0 8px 20px; }
+  .before .grid { grid-template-columns: repeat(auto-fill, 188px); }
+  .before .alb { padding: 10px; }
+  .before .alb .cover { width: 168px; border-radius: 8px; box-shadow: 0 4px 14px color-mix(in srgb, var(--shadow) 50%, transparent); }
+  .before .alb.focus .cover { box-shadow: 0 0 0 2px var(--accent), 0 0 14px var(--accent); }
+  .before .alb .nm { margin-top: 8px; font-weight: 600; }
+  .before .alb .ar { color: var(--dim-text); font-size: 0.92em; margin-top: 2px; }
+  .before .player { margin: 0 12px 12px; padding: 10px 14px; border-radius: 12px; background: var(--card); }
+  .before .np .cover { width: 48px; height: 48px; border-radius: 6px; }
+  .before .np .t { font-weight: 600; }
+  .before .np .a { color: var(--dim-text); font-size: 0.92em; }
+  .before .play { width: 36px; height: 36px; background: var(--text); color: var(--bg); }
+  .before .seek .tm { font-size: 0.85em; color: var(--dim-text); font-feature-settings: "tnum"; }
+  .before .hover-play { display: none; }
+
+  /* After */
+  .after .ptool { height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 24px; flex: none; }
+  .after .scroll { flex: 1; overflow: auto; padding: 4px 24px 88px; }
+  .after .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); column-gap: 20px; row-gap: 24px; }
+  .after .alb .cover { border-radius: var(--r-small); box-shadow: var(--art-shadow); }
+  .after .alb .nm { margin-top: 8px; font-weight: 500; }
+  .after .alb .ar { color: var(--dim-text); font-size: 0.923em; margin-top: 2px; }
+  .after .alb.hover .cover::before { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.18); z-index: 1; }
+  .after .alb .hover-play { display: none; }
+  .after .alb.hover .hover-play {
+    display: flex; position: absolute; right: 8px; bottom: 8px; z-index: 2; width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,.92); color: #111; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,.35);
+  }
+  .after .alb.hover .hover-play i { width: 14px; height: 14px; margin-left: 2px; }
+  .after .alb.playing .nm { color: var(--accent); }
+  .after .player {
+    height: 72px; padding: 0 16px 0 14px; background: var(--bg);
+    box-shadow: 0 -24px 24px -4px var(--bg);
+  }
+  .after .np .cover { width: 44px; height: 44px; border-radius: 6px; box-shadow: var(--art-shadow); }
+  .after .np .t { font-weight: 500; }
+  .after .np .a { color: var(--dim-text); font-size: 0.923em; margin-top: 1px; }
+  .after .np .ib.on { background: none; color: var(--accent); }
+  .after .tbtns { gap: 6px; }
+  .after .tbtns .ib i { width: 15px; height: 15px; }
+  .after .tbtns .ib.big i { width: 18px; height: 18px; }
+  .after .play { width: 32px; height: 32px; background: var(--text); color: var(--bg); margin: 0 4px; }
+  .after .play i { width: 14px; height: 14px; }
+  .after .seek .tm { font-size: 0.846em; color: var(--text-tertiary); font-feature-settings: "tnum"; width: 34px; }
+  .after .seek .tm:first-child { text-align: right; }
+  .after .seek .slider .kn { display: none; }
+  .after .seek .slider .tr { height: 4px; }
+  @media (max-width: 900px) {
+    body.after { --side-w: 56px; }
+    .after .nav span, .after .grp, .after .nav .cnt, .after .side .app-name { display: none; }
+    .after .nav { justify-content: center; padding: 0; }
+    body.v-tinted .side-id { justify-content: center; padding: 0; }
+    body.v-tinted .side-id > :not(.app-ic) { display: none; }
+    .after .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); column-gap: 16px; }
+    .after .player { grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; }
+    .after .seek, .after .pright .wide, .after .spec { display: none; }
+    .after .scroll, .after .ptool { padding-left: 16px; padding-right: 16px; }
+    .after .search { width: 150px; }
+  }
+</style>
+</head>
+<body>
+<div class="win">
+  <header class="hdr">
+    <div class="hdr-id"><i data-i="music" class="app-ic"></i><span class="app-name">Music</span><span class="app-sub"><span class="sep">/</span>Albums</span></div>
+    <div class="hdr-start"><span class="app-sub only-tinted">Albums <span class="dim">· 386</span></span></div>
+    <div class="hdr-center"></div>
+    <div class="hdr-end">
+      <div class="search" style="margin-right:4px"><i data-i="search"></i><span>Search music</span><span class="key">Ctrl F</span></div>
+      <button class="ib"><i data-i="eq"></i></button>
+      <button class="ib"><i data-i="sliders"></i></button>
+    </div>
+  </header>
+
+  <aside class="side">
+    <div class="side-id"><i data-i="music" class="app-ic"></i><span class="app-name grow">Music</span><button class="ib"><i data-i="sidebar"></i></button></div>
+    <div class="side-scroll">
+      <div class="grp first">Library</div>
+      <a class="nav"><i data-i="note"></i><span>Songs</span><em class="cnt">4,812</em></a>
+      <a class="nav active"><i data-i="disc"></i><span>Albums</span><em class="cnt">386</em></a>
+      <a class="nav"><i data-i="user"></i><span>Artists</span><em class="cnt">241</em></a>
+      <a class="nav"><i data-i="genre"></i><span>Genres</span></a>
+      <a class="nav"><i data-i="folder"></i><span>Folders</span></a>
+      <a class="nav"><i data-i="clock"></i><span>Recently added</span></a>
+      <a class="nav"><i data-i="star"></i><span>Most played</span></a>
+      <div class="grp">Listen</div>
+      <a class="nav"><i data-i="radio"></i><span>Radio</span></a>
+      <a class="nav"><i data-i="podcast"></i><span>Podcasts</span><em class="badge">3</em></a>
+      <div class="grp">Playlists <i data-i="plus"></i></div>
+      <a class="nav"><i data-i="queue"></i><span>Queue</span><em class="cnt">24</em></a>
+      <a class="nav"><i data-i="list"></i><span>Late night coding</span></a>
+      <a class="nav"><i data-i="list"></i><span>Running</span></a>
+      <a class="nav"><i data-i="list"></i><span>Focus</span></a>
+      <a class="nav"><i data-i="list"></i><span>2026 favorites</span></a>
+    </div>
+  </aside>
+
+  <main class="page">
+    <div class="ptool">
+      <span class="title only-before">Albums</span>
+      <span class="chip on only-after flex">All</span><span class="chip only-after flex">Downloaded</span><span class="chip only-after flex">Lossless</span>
+      <span class="grow only-after"></span>
+      <span class="dd">By artist<i data-i="chev-d"></i></span>
+      <div class="seg icons only-after flex"><button class="on"><i data-i="grid"></i></button><button><i data-i="list"></i></button></div>
+    </div>
+    <div class="scroll">
+      <div class="grid">
+        <div class="alb"><div class="cover art g16"></div><div class="nm">Selected Ambient Works 85–92</div><div class="ar">Aphex Twin</div></div>
+        <div class="alb"><div class="cover art g6"></div><div class="nm">Since I Left You</div><div class="ar">The Avalanches</div></div>
+        <div class="alb"><div class="cover art g9"></div><div class="nm">Music Has the Right to Children</div><div class="ar">Boards of Canada</div></div>
+        <div class="alb focus playing"><div class="cover art g12"></div><div class="nm">Random Access Memories</div><div class="ar">Daft Punk</div></div>
+        <div class="alb"><div class="cover art g10"></div><div class="nm">Discovery</div><div class="ar">Daft Punk</div></div>
+        <div class="alb"><div class="cover art g13"></div><div class="nm">Settle</div><div class="ar">Disclosure</div></div>
+        <div class="alb"><div class="cover art g4"></div><div class="nm">Endtroducing.....</div><div class="ar">DJ Shadow</div></div>
+        <div class="alb hover"><div class="cover art g3"><span class="hover-play"><i data-i="play"></i></span></div><div class="nm">Blonde</div><div class="ar">Frank Ocean</div></div>
+        <div class="alb"><div class="cover art g5"></div><div class="nm">Immunity</div><div class="ar">Jon Hopkins</div></div>
+        <div class="alb"><div class="cover art g14"></div><div class="nm">Dummy</div><div class="ar">Portishead</div></div>
+        <div class="alb"><div class="cover art g1"></div><div class="nm">In Rainbows</div><div class="ar">Radiohead</div></div>
+        <div class="alb"><div class="cover art g8"></div><div class="nm">Kid A</div><div class="ar">Radiohead</div></div>
+        <div class="alb"><div class="cover art g2"></div><div class="nm">Ágætis byrjun</div><div class="ar">Sigur Rós</div></div>
+        <div class="alb"><div class="cover art g15"></div><div class="nm">Carrie &amp; Lowell</div><div class="ar">Sufjan Stevens</div></div>
+        <div class="alb"><div class="cover art g7"></div><div class="nm">Currents</div><div class="ar">Tame Impala</div></div>
+        <div class="alb"><div class="cover art g11"></div><div class="nm">Lonerism</div><div class="ar">Tame Impala</div></div>
+        <div class="alb"><div class="cover art g10"></div><div class="nm">Untrue</div><div class="ar">Burial</div></div>
+        <div class="alb"><div class="cover art g9"></div><div class="nm">Geogaddi</div><div class="ar">Boards of Canada</div></div>
+      </div>
+    </div>
+    <div class="player">
+      <div class="np">
+        <div class="cover art g12"></div>
+        <div class="meta"><div class="t">Instant Crush</div><div class="a">Daft Punk · Random Access Memories</div></div>
+        <button class="ib on"><i data-i="heart"></i></button>
+      </div>
+      <div class="transport">
+        <div class="tbtns">
+          <button class="ib wide"><i data-i="shuffle"></i></button>
+          <button class="ib big"><i data-i="prev"></i></button>
+          <button class="play"><i data-i="pause"></i></button>
+          <button class="ib big"><i data-i="next"></i></button>
+          <button class="ib wide"><i data-i="repeat"></i></button>
+        </div>
+        <div class="seek"><span class="tm">2:14</span><div class="slider"><div class="tr"><div class="fill" style="width:40%"></div></div><span class="kn" style="left:40%"></span></div><span class="tm">5:37</span></div>
+      </div>
+      <div class="pright">
+        <span class="spec"><span style="height:40%"></span><span style="height:75%"></span><span style="height:100%"></span><span style="height:60%"></span><span style="height:85%"></span><span style="height:45%"></span><span style="height:70%"></span><span style="height:30%"></span></span>
+        <button class="ib wide"><i data-i="lyrics"></i></button>
+        <button class="ib wide"><i data-i="queue"></i></button>
+        <button class="ib wide"><i data-i="cast"></i></button>
+        <button class="ib"><i data-i="volume"></i></button>
+        <div class="slider wide" style="width:90px"><div class="tr"><div class="fill" style="width:70%"></div></div><span class="kn" style="left:70%"></span></div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

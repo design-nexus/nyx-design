@@ -1,0 +1,30 @@
+.ov-probs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.narrow .ov-probs { grid-template-columns: 1fr; }
+.ov-strip { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 10px; background: color-mix(in srgb, var(--danger) 10%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 25%, transparent); font-size: 12.5px; }
+.ov-strip > i { width: 16px; height: 16px; color: var(--danger); }
+.ov-strip .it { color: var(--dim-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ov-strip .it::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: middle; background: var(--danger); }
+.ov-strip .it.warn::before { background: var(--warning); }
+.ov-strip .sp { flex: 1; }
+.narrow .ov-strip .it { display: none; }
+.ov-c { min-height: 0; }
+.ov-ga .ov-c { min-height: 172px; justify-content: space-between; }
+.ov-go i { width: 14px; height: 14px; color: var(--text-tertiary); }
+.ov-lnk { color: var(--accent); font-size: 12px; }
+.ov-s { font-size: 12px; color: var(--dim-text); display: flex; align-items: center; gap: 4px; }
+.ov-s i { width: 13px; height: 13px; }
+.ov-mnt { display: flex; align-items: center; gap: 10px; font-size: 12.5px; }
+.ov-mnt > span:first-child { width: 52px; }
+.ov-mnt .v { width: 92px; text-align: right; color: var(--dim-text); font-feature-settings: "tnum"; }
+.ov-su { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: var(--dim-text); }
+.ov-su b { color: var(--text); } .ov-su .bad b { color: var(--danger); }
+.ov-rings { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.narrow .ov-rings { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ov-r { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px; }
+.ov-r .n { font-size: 12.5px; font-weight: 600; }
+.ov-r .ap-ring .in b { font-size: 16px; }
+.ov-tabs { display: flex; }
+.ov-c2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 12px; }
+.ov-left, .ov-right { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.ov-left .ap-note { margin: 0; }
+.ov-ga .ov-c.ov-top { justify-content: flex-start; }

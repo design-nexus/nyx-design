@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en" data-accent="red">
+<head>
+<meta charset="utf-8">
+<title>Calendar — Nyx polish mockup</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="nyx-before.css">
+<link rel="stylesheet" href="nyx-after.css">
+<script src="mock.js"></script>
+<style>
+  :root { --hour: 52px; --gut: 56px; }
+  .c-personal { --ec: var(--sw-blue); } .c-work { --ec: var(--sw-violet); } .c-family { --ec: var(--sw-green); }
+  .c-hol { --ec: var(--sw-red); } .c-bday { --ec: var(--sw-amber); } .c-rel { --ec: var(--sw-teal); }
+  .mini { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; row-gap: 2px; }
+  .mini span { height: 26px; display: flex; align-items: center; justify-content: center; font-feature-settings: "tnum"; }
+  .mini .o { opacity: .4; }
+  .mini-head { display: flex; align-items: center; }
+  .cals .nav .chk { width: 14px; height: 14px; border-radius: 4px; background: var(--ec); flex: none; display: inline-flex; align-items: center; justify-content: center; color: #fff; }
+  .cals .nav .chk i { width: 11px; height: 11px; }
+  .cals .nav .chk.off { background: transparent; box-shadow: inset 0 0 0 1.5px var(--ec); }
+  .week { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .days, .allday, .grid { display: grid; grid-template-columns: var(--gut) repeat(7, minmax(0, 1fr)); }
+  .grid { position: relative; flex: 1; overflow: hidden; }
+  .hours { position: relative; }
+  .hours div { position: absolute; right: 8px; transform: translateY(-50%); }
+  .col { position: relative; }
+  .ev { position: absolute; left: 3px; right: 4px; overflow: hidden; }
+  .ev b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ev small { display: block; }
+  .now { position: absolute; left: 0; right: 0; height: 0; z-index: 3; }
+  .bar { position: absolute; height: 22px; display: flex; align-items: center; padding: 0 8px; white-space: nowrap; overflow: hidden; }
+  .qadd { width: 300px !important; }
+
+  /* Before: today's Calendar */
+  .before .side-scroll { padding-top: 2px; }
+  .before .mini { font-size: 0.85em; color: var(--dim-text); }
+  .before .mini .h { font-size: 0.76em; text-transform: uppercase; color: var(--text-tertiary); }
+  .before .mini .today { background: var(--accent); color: var(--on-accent); border-radius: 9px; font-weight: 600; }
+  .before .mini-head { padding: 4px 6px 8px; font-weight: 600; }
+  .before .days { height: 44px; border-bottom: 1px solid transparent; }
+  .before .days .d { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+  .before .days .d .w { font-size: 0.76em; text-transform: uppercase; color: var(--dim-text); }
+  .before .days .d .n { font-weight: 600; padding: 0 6px; }
+  .before .days .d.today .n { background: var(--accent); color: var(--on-accent); border-radius: 9px; }
+  .before .allday { height: 30px; position: relative; }
+  .before .allday .lbl { font-size: 0.72em; color: var(--dim-text); align-self: center; text-align: right; padding-right: 8px; }
+  .before .bar { border-radius: 5px; font-size: 0.85em; background: color-mix(in srgb, var(--ec) 25%, var(--bg)); top: 4px; }
+  .before .hours div { font-size: 0.76em; color: var(--dim-text); }
+  .before .col { border-left: 1px solid color-mix(in srgb, var(--text) 4%, transparent); background: repeating-linear-gradient(180deg, color-mix(in srgb, var(--text) 4%, transparent) 0 1px, transparent 1px var(--hour)); }
+  .before .ev { border-radius: 6px; padding: 3px 6px; font-size: 0.85em; background: color-mix(in srgb, var(--ec) 20%, var(--bg)); box-shadow: inset 2px 0 0 color-mix(in srgb, var(--ec) 28%, var(--bg)); }
+  .before .ev b { font-weight: 600; color: color-mix(in srgb, var(--ec) 45%, var(--text)); }
+  .before .ev small { color: var(--dim-text); font-size: 0.9em; }
+  .before .now { border-top: 2px solid var(--accent); }
+  .before .now::before { content: ""; position: absolute; left: -4px; top: -5px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .before .now-lbl { display: none; }
+
+  /* After */
+  .after .mini { font-size: 0.923em; }
+  .after .mini .h { font-size: 0.846em; font-weight: 500; color: var(--text-tertiary); height: 22px; }
+  .after .mini span { height: 28px; }
+  .after .mini span.d { width: 28px; margin: 0 auto; border-radius: 50%; }
+  .after .mini .wk { background: var(--row-hover); border-radius: 0; }
+  .after .mini .wk.s { border-radius: 14px 0 0 14px; } .after .mini .wk.e { border-radius: 0 14px 14px 0; }
+  .after .mini .wkrow { display: contents; }
+  .after .mini .today b { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
+  .after .mini-head { padding: 6px 4px 8px 10px; gap: 2px; }
+  .after .mini-head .t { font-weight: 600; flex: 1; }
+  .after .mini-wrap { padding: 2px 2px 6px; }
+  .after .cals .nav { gap: 10px; }
+  .after .days { height: 52px; padding-right: 8px; }
+  .after .days .d { display: flex; align-items: baseline; gap: 6px; padding: 0 10px; align-self: center; }
+  .after .days .d .w { color: var(--dim-text); }
+  .after .days .d .n { font-size: 1.154em; font-weight: 600; letter-spacing: -0.01em; font-feature-settings: "tnum"; }
+  .after .days .d.today .n { background: var(--accent); color: var(--on-accent); border-radius: 13px; min-width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; padding: 0 6px; }
+  .after .days .d.today .w { color: var(--accent); font-weight: 600; }
+  .after .days .d.today { align-items: center; }
+  .after .allday { height: 32px; position: relative; padding-right: 8px; }
+  .after .allday .lbl { font-size: 0.846em; color: var(--text-tertiary); align-self: center; text-align: right; padding-right: 8px; font-weight: 500; }
+  .after .bar { border-radius: 6px; font-weight: 500; font-size: 0.923em; background: color-mix(in srgb, var(--ec) 18%, var(--bg)); color: color-mix(in srgb, var(--ec) 55%, var(--text)); top: 5px; }
+  .after .grid { padding-right: 8px; }
+  .after .hours div { font-size: 0.846em; color: var(--text-tertiary); font-feature-settings: "tnum"; font-weight: 500; }
+  .after .col { background: repeating-linear-gradient(180deg, var(--hair) 0 1px, transparent 1px var(--hour)); }
+  .after .col + .col { box-shadow: inset 1px 0 0 color-mix(in srgb, var(--text) 3%, transparent); }
+  .after .col.we { background-color: color-mix(in srgb, var(--text) 1.5%, transparent); }
+  .after .ev {
+    border-radius: var(--r-small); padding: 4px 8px 4px 9px; font-size: 0.923em; line-height: 1.3;
+    background: color-mix(in srgb, var(--ec) 20%, var(--bg)); box-shadow: inset 3px 0 0 var(--ec);
+  }
+  [data-theme="light"] .after .ev { background: color-mix(in srgb, var(--ec) 14%, var(--bg)); }
+  .after .ev b { font-weight: 600; color: color-mix(in srgb, var(--ec) 35%, var(--text)); }
+  .after .ev small { color: color-mix(in srgb, var(--ec) 25%, var(--dim-text)); font-feature-settings: "tnum"; margin-top: 1px; }
+  .after .ev.short { padding-top: 2px; } .after .ev.short small { display: none; }
+  .after .now { border-top: 1.5px solid var(--accent); }
+  .after .now::before { content: ""; position: absolute; left: -5px; top: -5.5px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .after .now-lbl { position: absolute; right: 6px; transform: translateY(-50%); z-index: 4; background: var(--accent); color: var(--on-accent); font-size: 0.846em; font-weight: 600; font-feature-settings: "tnum"; padding: 1px 5px; border-radius: 5px; }
+  .after .cnt-note { padding: 0 10px; }
+  @media (max-width: 900px) {
+    body.after, body.after.tree { --side-w: 0px; }
+    body.v-tinted .win { grid-template-columns: 0 minmax(0, 1fr); }
+    .after .side { display: none; }
+    .after .days, .after .allday, .after .grid { grid-template-columns: var(--gut) repeat(5, minmax(0, 1fr)); }
+    .after .days .we, .after .allday .we, .after .grid .we { display: none; }
+    .after .qadd { width: 200px !important; }
+    .after .seg .wide { display: none; }
+    body.v-tinted .hdr-id { display: none; }
+    body.v-blended .hdr-id .app-sub { display: none; }
+  }
+</style>
+</head>
+<body class="tree">
+<div class="win">
+  <header class="hdr">
+    <div class="hdr-id"><i data-i="calendar" class="app-ic"></i><span class="app-name">Calendar</span><span class="app-sub"><span class="sep">/</span>October 2026</span></div>
+    <div class="hdr-start">
+      <span class="app-sub only-tinted" style="margin-right:10px">October 2026 <span class="dim">· Week 44</span></span>
+      <button class="ib only-after"><i data-i="chev-l"></i></button>
+      <button class="btn only-after flex" style="height:26px;padding:0 10px">Today</button>
+      <button class="ib only-after"><i data-i="chev-r"></i></button>
+    </div>
+    <div class="hdr-center">
+      <div class="seg"><button>Day</button><button class="on">Week</button><button>Month</button><button class="wide">Year</button><button class="only-before flex">Agenda</button></div>
+    </div>
+    <div class="hdr-end">
+      <button class="ib only-before"><i data-i="chev-l"></i></button>
+      <button class="ib only-before"><i data-i="chev-r"></i></button>
+      <button class="ib only-before"><i data-i="plus"></i></button>
+      <div class="search qadd only-after flex" style="margin-right:4px"><i data-i="plus"></i><span class="ellipsis">Add event: “Lunch with Sam tomorrow at 1”</span></div>
+      <button class="ib only-after"><i data-i="search"></i></button>
+      <button class="ib"><i data-i="sliders"></i></button>
+    </div>
+  </header>
+
+  <aside class="side">
+    <div class="side-id"><i data-i="calendar" class="app-ic"></i><span class="app-name grow">Calendar</span><button class="ib"><i data-i="sidebar"></i></button></div>
+    <div class="side-scroll">
+      <div class="mini-wrap">
+        <div class="mini-head"><span class="t">October 2026</span><button class="ib only-after"><i data-i="chev-l"></i></button><button class="ib only-after"><i data-i="chev-r"></i></button></div>
+        <div class="mini">
+          <span class="h">M</span><span class="h">T</span><span class="h">W</span><span class="h">T</span><span class="h">F</span><span class="h">S</span><span class="h">S</span>
+          <span class="o">28</span><span class="o">29</span><span class="o">30</span><span>1</span><span>2</span><span>3</span><span>4</span>
+          <span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span>
+          <span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span>
+          <span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span>
+          <span class="wk s">26</span><span class="wk">27</span><span class="wk">28</span><span class="wk today"><b>29</b></span><span class="wk">30</span><span class="wk">31</span><span class="wk e o">1</span>
+          <span class="o">2</span><span class="o">3</span><span class="o">4</span><span class="o">5</span><span class="o">6</span><span class="o">7</span><span class="o">8</span>
+        </div>
+      </div>
+      <div class="cals">
+        <div class="grp">ken@design-nex.us</div>
+        <a class="nav c-personal"><span class="chk"><i data-i="check"></i></span><span>Personal</span></a>
+        <a class="nav c-work"><span class="chk"><i data-i="check"></i></span><span>Work</span></a>
+        <a class="nav c-family"><span class="chk"><i data-i="check"></i></span><span>Family</span></a>
+        <a class="nav c-rel"><span class="chk"><i data-i="check"></i></span><span>Nyx releases</span></a>
+        <div class="grp">Other</div>
+        <a class="nav c-bday"><span class="chk"><i data-i="check"></i></span><span>Birthdays</span></a>
+        <a class="nav c-hol"><span class="chk off"></span><span>US holidays</span></a>
+      </div>
+    </div>
+    <div class="side-foot t-cap cnt-note">Synced 2 minutes ago</div>
+  </aside>
+
+  <main class="page">
+    <div class="week">
+      <div class="days">
+        <div></div>
+        <div class="d"><span class="w">Mon</span><span class="n">26</span></div>
+        <div class="d"><span class="w">Tue</span><span class="n">27</span></div>
+        <div class="d"><span class="w">Wed</span><span class="n">28</span></div>
+        <div class="d today"><span class="w">Thu</span><span class="n">29</span></div>
+        <div class="d"><span class="w">Fri</span><span class="n">30</span></div>
+        <div class="d we"><span class="w">Sat</span><span class="n">31</span></div>
+        <div class="d we"><span class="w">Sun</span><span class="n">1</span></div>
+      </div>
+      <div class="allday">
+        <div class="lbl">all-day</div>
+        <div style="position:relative;grid-column:2/7"><span class="bar c-work" style="left:3px;right:4px">Nyx 2.1 polish sprint</span></div>
+        <div class="we" style="position:relative"><span class="bar c-bday" style="left:3px;right:4px">Halloween</span></div>
+        <div class="we"></div>
+      </div>
+      <div class="grid">
+        <div class="hours">
+          <div style="top:calc(var(--hour)*1)">09:00</div><div style="top:calc(var(--hour)*2)">10:00</div><div style="top:calc(var(--hour)*3)">11:00</div>
+          <div style="top:calc(var(--hour)*4)">12:00</div><div style="top:calc(var(--hour)*5)">13:00</div><div style="top:calc(var(--hour)*6)">14:00</div>
+          <div style="top:calc(var(--hour)*7)">15:00</div><div style="top:calc(var(--hour)*8)">16:00</div><div style="top:calc(var(--hour)*9)">17:00</div>
+          <div style="top:calc(var(--hour)*10)">18:00</div><div style="top:calc(var(--hour)*11)">19:00</div><div style="top:calc(var(--hour)*12)">20:00</div>
+          <span class="now-lbl" style="top:calc(var(--hour)*6.75)">14:45</span>
+        </div>
+        <div class="col">
+          <div class="ev c-work short" style="top:calc(var(--hour)*1.5);height:calc(var(--hour)*.5 - 2px)"><b>Standup</b><small>09:30</small></div>
+          <div class="ev c-work" style="top:calc(var(--hour)*5);height:calc(var(--hour)*1.5 - 2px)"><b>Design review</b><small>13:00 – 14:30</small></div>
+        </div>
+        <div class="col">
+          <div class="ev c-work short" style="top:calc(var(--hour)*1.5);height:calc(var(--hour)*.5 - 2px)"><b>Standup</b><small>09:30</small></div>
+          <div class="ev c-personal" style="top:calc(var(--hour)*3);height:calc(var(--hour) - 2px)"><b>Dentist</b><small>11:00 – 12:00</small></div>
+        </div>
+        <div class="col">
+          <div class="ev c-work short" style="top:calc(var(--hour)*1.5);height:calc(var(--hour)*.5 - 2px)"><b>Standup</b><small>09:30</small></div>
+          <div class="ev c-work" style="top:calc(var(--hour)*7);height:calc(var(--hour) - 2px)"><b>Calendar sync bug</b><small>15:00 – 16:00</small></div>
+          <div class="ev c-personal" style="top:calc(var(--hour)*10.5);height:calc(var(--hour)*1.5 - 2px)"><b>Climbing</b><small>18:30 – 20:00</small></div>
+        </div>
+        <div class="col today">
+          <div class="ev c-work short" style="top:calc(var(--hour)*1.5);height:calc(var(--hour)*.5 - 2px)"><b>Standup</b><small>09:30</small></div>
+          <div class="ev c-personal" style="top:calc(var(--hour)*4);height:calc(var(--hour) - 2px)"><b>Lunch with Sam</b><small>12:00 – 13:00</small></div>
+          <div class="ev c-work" style="top:calc(var(--hour)*6);height:calc(var(--hour)*1.5 - 2px)"><b>Nyx polish mockups</b><small>14:00 – 15:30</small></div>
+          <div class="ev c-family" style="top:calc(var(--hour)*11);height:calc(var(--hour) - 2px)"><b>Call Mom</b><small>19:00 – 20:00</small></div>
+          <div class="now" style="top:calc(var(--hour)*6.75)"></div>
+        </div>
+        <div class="col">
+          <div class="ev c-work short" style="top:calc(var(--hour)*1.5);height:calc(var(--hour)*.5 - 2px)"><b>Standup</b><small>09:30</small></div>
+          <div class="ev c-work" style="top:calc(var(--hour)*2);height:calc(var(--hour)*2 - 2px)"><b>Pair on shared stylesheet</b><small>10:00 – 12:00</small></div>
+          <div class="ev c-rel" style="top:calc(var(--hour)*8);height:calc(var(--hour) - 2px)"><b>Release nyx-design 0.9.4</b><small>16:00 – 17:00</small></div>
+        </div>
+        <div class="col we">
+          <div class="ev c-family" style="top:calc(var(--hour)*2);height:calc(var(--hour)*1.5 - 2px)"><b>Farmers market</b><small>10:00 – 11:30</small></div>
+          <div class="ev c-personal" style="top:calc(var(--hour)*11);height:calc(var(--hour)*1.5 - 2px)"><b>Dinner with Maya</b><small>19:00 – 20:30</small></div>
+        </div>
+        <div class="col we">
+          <div class="ev c-family" style="top:calc(var(--hour)*3);height:calc(var(--hour) - 2px)"><b>Brunch</b><small>11:00 – 12:00</small></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

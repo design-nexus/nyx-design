@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" data-screens="sound,card">
+<head>
+<meta charset="utf-8">
+<title>Settings — Nyx polish mockup</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="mock.css">
+<link rel="stylesheet" href="nyx-before.css">
+<link rel="stylesheet" href="nyx-after.css">
+<script src="mock.js"></script>
+<style>
+  .sec-home { --sc: var(--sec-home); } .sec-con { --sc: var(--sec-connections); } .sec-hw { --sc: var(--sec-hardware); }
+  .sec-per { --sc: var(--sec-personalization); } .sec-in { --sc: var(--sec-input); } .sec-sys { --sc: var(--sec-system); }
+  .nav .tile { --tc: var(--sc); }
+  .vol { display: flex; align-items: center; gap: 12px; }
+  .eq { display: flex; align-items: stretch; gap: 0; padding: 4px 14px 14px; }
+  .band { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .band .v { font-size: 11px; font-feature-settings: "tnum"; }
+  .band .vt { position: relative; width: 4px; height: 120px; border-radius: 2px; background: var(--track); }
+  .band .vt .f { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 2px; background: var(--accent); }
+  .band .vt .k { position: absolute; left: 50%; width: 16px; height: 16px; border-radius: 50%; transform: translate(-50%, 50%); }
+  .band .hz { font-size: 11px; }
+  .band.pre { border-right: 1px solid var(--hair, var(--border)); margin-right: 6px; padding-right: 6px; flex: 1.2; }
+  .eqhead { display: flex; align-items: center; gap: 10px; padding: 12px 14px 8px; }
+  .meter { display: flex; gap: 3px; }
+  .meter span { width: 6px; height: 12px; border-radius: 2px; background: var(--track); }
+  .meter span.on { background: var(--success); }
+
+  /* Before: section-coloured uppercase labels over a 35% line */
+  .before .grp[class*="sec-"] { color: var(--sc); --grp-line: color-mix(in srgb, var(--sc) 35%, transparent); }
+  .before .content { --clamp-before: 920px; }
+  .before .band .v, .before .band .hz { font-family: "JetBrains Mono", monospace; color: var(--dim-text); }
+  .before .band .vt .k { background: var(--text); width: 22px; height: 12px; border-radius: 4px; }
+  .before .eqcard { padding-bottom: 4px; }
+  .before .readout { width: 44px; text-align: right; }
+
+  /* After */
+  .after .content { --clamp: 720px; }
+  .after .band .v { color: var(--dim-text); }
+  .after .band .hz { color: var(--text-tertiary); font-weight: 500; }
+  .after .band .vt .k { background: #fff; box-shadow: 0 0 0 .5px rgba(0,0,0,.12), 0 1px 3px rgba(0,0,0,.35); }
+  .after .readout { width: 40px; text-align: right; }
+  .after .eqhead + .eq { border-top: 0; }
+  .after .sec-label { display: none; }
+
+  /* The settings card (screen "card") */
+  .veil { position: absolute; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; }
+  .scard { width: 1040px; max-width: calc(100% - 48px); height: 720px; max-height: calc(100% - 48px); display: grid; grid-template-columns: var(--sc-side) minmax(0, 1fr); overflow: hidden; }
+  .scard .cside { display: flex; flex-direction: column; min-height: 0; }
+  .scard .cmain { display: flex; flex-direction: column; min-height: 0; }
+  .scard .chead { display: flex; align-items: center; gap: 10px; flex: none; }
+  .scard .cbody { flex: 1; overflow: auto; }
+  .cnav { display: flex; gap: 12px; align-items: flex-start; }
+  .cnav .ct { display: block; }
+  .swatches { display: flex; gap: 8px; }
+  .swatches span { width: 18px; height: 18px; border-radius: 50%; background: var(--c); }
+  .swatches span.sel { box-shadow: 0 0 0 2px var(--card), 0 0 0 4px var(--text); }
+  .before .veil { background: var(--veil); }
+  .before .scard { --sc-side: 280px; background: var(--bg); border-radius: 15px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 7%, transparent), 0 24px 60px color-mix(in srgb, var(--shadow) 55%, transparent); }
+  .before .cside { padding: 22px 14px; }
+  .before .cside .heading { margin: 0 4px 16px; font-size: 0.92em; font-weight: 600; letter-spacing: 2.5px; color: var(--dim-text); }
+  .before .cside .search { width: auto; margin-bottom: 12px; border-radius: var(--r-small); }
+  .before .cnav { padding: 10px 14px; border-radius: 6px; }
+  .before .cnav > i { margin-top: 2px; color: var(--dim-text); }
+  .before .cnav .ct { font-weight: 600; color: color-mix(in srgb, var(--text) 82%, transparent); }
+  .before .cnav .cs { font-size: 0.86em; color: var(--dim-text); }
+  .before .cnav.active { background: color-mix(in srgb, var(--card) 90%, var(--accent)); }
+  .before .cnav.active > i { color: var(--accent); }
+  .before .cmain { background: var(--bg); }
+  .before .chead { min-height: 64px; padding: 0 18px 0 32px; }
+  .before .chead .ttl { font-size: 1.2em; font-weight: 600; flex: 1; }
+  .before .cbody { padding: 4px 32px 32px; }
+  .before .cbody .gtitle { display: none; }
+  .before .cnav .tile { display: none; }
+
+  .after .veil { background: color-mix(in srgb, var(--shadow) 55%, transparent); backdrop-filter: blur(3px) saturate(.8); }
+  [data-theme="light"] .after .veil { background: color-mix(in srgb, #000 22%, transparent); }
+  .after .scard { --sc-side: 240px; background: var(--popover); border-radius: var(--r-dialog); box-shadow: var(--lift-shadow); }
+  [data-theme="light"] .after .scard { background: var(--bg); }
+  .after .cside { padding: 16px 10px; background: var(--side-tint); }
+  .after .cside .heading { padding: 2px 8px 12px; }
+  .after .cside .search { width: auto; margin: 0 2px 12px; }
+  .after .cnav { padding: 7px 8px; border-radius: var(--r-small); gap: 10px; align-items: center; }
+  .after .cnav > i { display: none; }
+  .after .cnav .ct { font-weight: 500; }
+  .after .cnav .cs { font-size: 0.846em; color: var(--dim-text); margin-top: 1px; }
+  .after .cnav.active { background: var(--nav-active); }
+  .after .chead { height: 52px; padding: 0 12px 0 28px; }
+  .after .chead .ttl { flex: 1; }
+  .after .cbody { padding: 4px 28px 28px; }
+  .after .cbody .gtitle.first { margin-top: 4px; }
+  [data-theme="dark"] .after .scard .card { background: color-mix(in srgb, var(--text) 4%, var(--popover)); }
+  @media (max-width: 900px) {
+    body.after { --side-w: 56px; }
+    .after .nav span, .after .grp, .after .nav .cnt, .after .side .app-name { display: none; }
+    .after .nav { justify-content: center; padding: 0; }
+    .after .nav .tile { margin: 0; }
+    body.v-tinted .side-id { justify-content: center; padding: 0; }
+    body.v-tinted .side-id > :not(.app-ic) { display: none; }
+    .after .content { padding: 16px 16px 24px; }
+    .after .eq { padding: 4px 6px 14px; }
+    .after .vol .slider { width: 140px !important; }
+    .after .scard { --sc-side: 190px; }
+  }
+</style>
+</head>
+<body>
+<div class="win">
+  <header class="hdr">
+    <div class="hdr-id"><i data-i="sliders" class="app-ic"></i><span class="app-name">Settings</span><span class="app-sub"><span class="sep">/</span>Sound</span></div>
+    <div class="hdr-start"><span class="app-sub only-tinted">Sound</span></div>
+    <div class="hdr-center"></div>
+    <div class="hdr-end">
+      <div class="search"><i data-i="search"></i><span>Search settings</span><span class="key">Ctrl F</span></div>
+      <button class="ib only-after"><i data-i="file-text"></i></button>
+    </div>
+  </header>
+
+  <aside class="side">
+    <div class="side-id"><i data-i="sliders" class="app-ic"></i><span class="app-name grow">Settings</span><button class="ib"><i data-i="sidebar"></i></button></div>
+    <div class="side-scroll">
+      <a class="nav sec-home"><span class="tile only-after flex"><i data-i="home"></i></span><i data-i="home" class="only-before flex"></i><span>Home</span></a>
+      <div class="grp sec-con">Connections</div>
+      <a class="nav sec-con"><span class="tile only-after flex"><i data-i="wifi"></i></span><i data-i="wifi" class="only-before flex"></i><span>Wi-Fi</span><em class="cnt">Home-5G</em></a>
+      <a class="nav sec-con"><span class="tile only-after flex"><i data-i="bluetooth"></i></span><i data-i="bluetooth" class="only-before flex"></i><span>Bluetooth</span><em class="cnt">On</em></a>
+      <a class="nav sec-con"><span class="tile only-after flex"><i data-i="globe"></i></span><i data-i="globe" class="only-before flex"></i><span>Network</span></a>
+      <a class="nav sec-con"><span class="tile only-after flex"><i data-i="shield"></i></span><i data-i="shield" class="only-before flex"></i><span>VPN</span></a>
+      <div class="grp sec-hw">Hardware</div>
+      <a class="nav sec-hw"><span class="tile only-after flex"><i data-i="monitor"></i></span><i data-i="monitor" class="only-before flex"></i><span>Displays</span></a>
+      <a class="nav sec-hw active"><span class="tile only-after flex"><i data-i="volume"></i></span><i data-i="volume" class="only-before flex"></i><span>Sound</span></a>
+      <a class="nav sec-hw"><span class="tile only-after flex"><i data-i="battery"></i></span><i data-i="battery" class="only-before flex"></i><span>Power &amp; battery</span></a>
+      <a class="nav sec-hw"><span class="tile only-after flex"><i data-i="printer"></i></span><i data-i="printer" class="only-before flex"></i><span>Printers</span></a>
+      <div class="grp sec-per">Personalization</div>
+      <a class="nav sec-per"><span class="tile only-after flex"><i data-i="palette"></i></span><i data-i="palette" class="only-before flex"></i><span>Appearance</span></a>
+      <a class="nav sec-per"><span class="tile only-after flex"><i data-i="window"></i></span><i data-i="window" class="only-before flex"></i><span>Window style</span></a>
+      <a class="nav sec-per"><span class="tile only-after flex"><i data-i="bell"></i></span><i data-i="bell" class="only-before flex"></i><span>Bar &amp; notifications</span></a>
+      <a class="nav sec-per"><span class="tile only-after flex"><i data-i="moon"></i></span><i data-i="moon" class="only-before flex"></i><span>Night light</span></a>
+      <a class="nav sec-per"><span class="tile only-after flex"><i data-i="lock"></i></span><i data-i="lock" class="only-before flex"></i><span>Lock screen</span></a>
+      <div class="grp sec-in">Input</div>
+      <a class="nav sec-in"><span class="tile only-after flex"><i data-i="keyboard"></i></span><i data-i="keyboard" class="only-before flex"></i><span>Keyboard</span></a>
+      <a class="nav sec-in"><span class="tile only-after flex"><i data-i="mouse"></i></span><i data-i="mouse" class="only-before flex"></i><span>Mouse &amp; touchpad</span></a>
+      <div class="grp sec-sys">System</div>
+      <a class="nav sec-sys"><span class="tile only-after flex"><i data-i="users"></i></span><i data-i="users" class="only-before flex"></i><span>Users</span></a>
+      <a class="nav sec-sys"><span class="tile only-after flex"><i data-i="refresh"></i></span><i data-i="refresh" class="only-before flex"></i><span>Updates</span></a>
+    </div>
+  </aside>
+
+  <main class="page">
+    <div class="content">
+      <div class="clamp">
+        <div class="banner">
+          <i data-i="info"></i>
+          <div class="grow"><b style="font-weight:600">Sound isn't going through the equalizer.</b> <span style="color:var(--dim-text)">Another output was chosen as the default.</span></div>
+          <button class="btn">Use the equalizer</button>
+        </div>
+
+        <div class="gtitle">Output</div>
+        <div class="card">
+          <div class="opt"><div class="opt-text"><div class="t">Output device</div></div><span class="dd">Built-in Audio Analog Stereo<i data-i="chev-d"></i></span></div>
+          <div class="opt"><div class="opt-text"><div class="t">Volume</div></div>
+            <div class="vol"><div class="slider" style="width:200px"><div class="tr"><div class="fill" style="width:50%"></div></div><span class="kn" style="left:50%"></span></div><span class="readout">50%</span><button class="ib"><i data-i="volume"></i></button></div></div>
+          <div class="opt"><div class="opt-text"><div class="t">Maximum volume</div><div class="d">Let the volume go past 100%. The volume keys and the slider above follow this.</div></div>
+            <div class="vol"><div class="slider" style="width:200px"><div class="tr"><div class="fill" style="width:0%"></div></div><span class="kn" style="left:0%"></span></div><span class="readout">100%</span></div></div>
+        </div>
+
+        <div class="gtitle">Equalizer &amp; preamp<div class="note only-after">The preamp makes everything louder before it reaches the speakers. The nine bands shape the tone.</div></div>
+        <div class="card eqcard">
+          <div class="eqhead">
+            <span class="switch on"></span><span class="t" style="font-weight:500">Equalizer</span><span class="grow"></span>
+            <span class="dd">Custom<i data-i="chev-d"></i></span>
+            <button class="ib"><i data-i="download"></i></button>
+            <button class="btn only-before flex">Reset</button>
+            <button class="ib only-after"><i data-i="refresh"></i></button>
+          </div>
+          <div class="eq">
+            <div class="band pre"><span class="v">0</span><span class="vt"><span class="f" style="height:30%"></span><span class="k" style="bottom:30%"></span></span><span class="hz">Preamp</span></div>
+            <div class="band"><span class="v">+3.0</span><span class="vt"><span class="f" style="height:65%"></span><span class="k" style="bottom:65%"></span></span><span class="hz">31</span></div>
+            <div class="band"><span class="v">+3.0</span><span class="vt"><span class="f" style="height:65%"></span><span class="k" style="bottom:65%"></span></span><span class="hz">63</span></div>
+            <div class="band"><span class="v">−1.0</span><span class="vt"><span class="f" style="height:45%"></span><span class="k" style="bottom:45%"></span></span><span class="hz">125</span></div>
+            <div class="band"><span class="v">−1.0</span><span class="vt"><span class="f" style="height:45%"></span><span class="k" style="bottom:45%"></span></span><span class="hz">250</span></div>
+            <div class="band"><span class="v">0</span><span class="vt"><span class="f" style="height:50%"></span><span class="k" style="bottom:50%"></span></span><span class="hz">500</span></div>
+            <div class="band"><span class="v">+2.5</span><span class="vt"><span class="f" style="height:62%"></span><span class="k" style="bottom:62%"></span></span><span class="hz">1k</span></div>
+            <div class="band"><span class="v">0</span><span class="vt"><span class="f" style="height:50%"></span><span class="k" style="bottom:50%"></span></span><span class="hz">2k</span></div>
+            <div class="band"><span class="v">+5.0</span><span class="vt"><span class="f" style="height:75%"></span><span class="k" style="bottom:75%"></span></span><span class="hz">4k</span></div>
+            <div class="band"><span class="v">+6.5</span><span class="vt"><span class="f" style="height:82%"></span><span class="k" style="bottom:82%"></span></span><span class="hz">8k</span></div>
+          </div>
+        </div>
+
+        <div class="gtitle">Input</div>
+        <div class="card">
+          <div class="opt"><div class="opt-text"><div class="t">Input device</div></div><span class="dd">Blue Yeti Nano<i data-i="chev-d"></i></span></div>
+          <div class="opt"><div class="opt-text"><div class="t">Input level</div></div><span class="meter"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></div>
+          <div class="opt"><div class="opt-text"><div class="t">Noise suppression</div><div class="d">Filter out keyboard clicks and fan noise on calls.</div></div><span class="switch on"></span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="veil" data-scr="card">
+    <div class="scard">
+      <div class="cside">
+        <div class="heading only-before">SETTINGS</div>
+        <div class="heading t-head only-after">Settings</div>
+        <div class="search focus"><i data-i="search"></i><span>Search</span></div>
+        <a class="cnav active"><span class="tile only-after flex" style="--tc:var(--sw-violet)"><i data-i="palette"></i></span><i data-i="palette"></i><span><span class="ct">Appearance</span><span class="cs">Theme, accent, density</span></span></a>
+        <a class="cnav"><span class="tile only-after flex" style="--tc:var(--sw-coral)"><i data-i="keyboard"></i></span><i data-i="keyboard"></i><span><span class="ct">Keyboard</span><span class="cs">Every shortcut</span></span></a>
+        <a class="cnav"><span class="tile only-after flex" style="--tc:var(--sw-graphite)"><i data-i="info"></i></span><i data-i="info"></i><span><span class="ct">About</span><span class="cs">Version, licence, links</span></span></a>
+      </div>
+      <div class="cmain">
+        <div class="chead"><span class="ttl t-head">Appearance</span><button class="ib"><i data-i="file-text"></i></button><button class="ib"><i data-i="x"></i></button></div>
+        <div class="cbody">
+          <div class="gtitle first">Theme</div>
+          <div class="card">
+            <div class="opt"><div class="opt-text"><div class="t">Follow Omarchy</div><div class="d">Use the colours of the current Omarchy theme, live.</div></div><span class="switch on"></span></div>
+            <div class="opt" style="opacity:.55"><div class="opt-text"><div class="t">Theme</div><div class="d">Used when not following Omarchy.</div></div><span class="dd">Nyx Dark<i data-i="chev-d"></i></span></div>
+            <div class="opt"><div class="opt-text"><div class="t">Accent</div><div class="d">Theme default is blue.</div></div>
+              <span class="swatches"><span class="sel" style="--c:var(--sw-blue)"></span><span style="--c:var(--sw-violet)"></span><span style="--c:var(--sw-pink)"></span><span style="--c:var(--sw-red)"></span><span style="--c:var(--sw-coral)"></span><span style="--c:var(--sw-amber)"></span><span style="--c:var(--sw-green)"></span><span style="--c:var(--sw-teal)"></span><span style="--c:var(--sw-graphite)"></span></span></div>
+          </div>
+          <div class="gtitle">Layout</div>
+          <div class="card">
+            <div class="opt"><div class="opt-text"><div class="t">Density</div><div class="d">Every Nyx app follows this.</div></div><span class="seg"><button>Compact</button><button class="on">Balanced</button><button>Relaxed</button></span></div>
+            <div class="opt"><div class="opt-text"><div class="t">Text size</div></div><div class="vol"><div class="slider" style="width:160px"><div class="tr"><div class="fill" style="width:29%"></div></div><span class="kn" style="left:29%"></span></div><span class="readout">100%</span></div></div>
+            <div class="opt"><div class="opt-text"><div class="t">Open on</div><div class="d">What a new window shows first.</div></div><span class="seg"><button class="on">Home</button><button>Last view</button></span></div>
+            <div class="opt"><div class="opt-text"><div class="t">Reduce motion</div><div class="d">Turn off animations in every Nyx app.</div></div><span class="switch"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

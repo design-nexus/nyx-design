@@ -1,0 +1,12 @@
+.sn-t { display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: 12.5px; }
+.sn-t .n { width: 110px; flex: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sn-t b { width: 76px; flex: none; text-align: right; font-feature-settings: "tnum"; }
+.sn-t b.warn, .sn-big.warn { color: var(--warning); }
+.sn-t .lim { width: 42px; flex: none; color: var(--text-tertiary); font-size: 11.5px; }
+.sn-big { font-feature-settings: "tnum"; }
+.sn-t2 { display: flex; flex-direction: column; gap: 6px; padding: 4px 0; }
+.sn-t2 .r { display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; }
+.sn-t2 .n { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sn-t2 b { font-feature-settings: "tnum"; } .sn-t2 b.warn { color: var(--warning); }
+.sn-t2 .lim { color: var(--text-tertiary); font-size: 11.5px; }
+.sn-t2 .ap-mb { flex: 0 0 6px; }

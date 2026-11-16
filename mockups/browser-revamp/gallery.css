@@ -1,0 +1,13 @@
+/* On top of ../revamp/gallery.css: section groups in the tab row, the Overview's rows of four, the
+   surface tabs' rows of three, and one large shot for a surface that's the same in every layout. */
+.tabs { gap: 4px 14px; }
+.tabs .sgrp { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px; }
+.tabs .sl { font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-tertiary); margin-right: 4px; }
+.tabs a { padding: 4px 9px; }
+h2 .crumb { color: var(--text-tertiary); font-weight: 500; }
+.grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid.one { grid-template-columns: minmax(0, 960px); }
+p.note { color: var(--dim-text); margin-top: 4px; }
+@media (max-width: 1400px) { .grid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1100px) { .grid.three { grid-template-columns: 1fr; } }

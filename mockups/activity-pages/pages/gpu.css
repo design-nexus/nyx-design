@@ -1,0 +1,6 @@
+.gp-st { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px; color: var(--dim-text); background: color-mix(in srgb, var(--text) 8%, transparent); }
+.gp-st.on { color: var(--success); background: color-mix(in srgb, var(--success) 14%, transparent); }
+.gp-lanes { padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
+.gp-lane { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: center; }
+.gp-lane .lb { display: flex; justify-content: space-between; font-size: 12.5px; }
+.gp-lane .lb span { color: var(--dim-text); font-feature-settings: "tnum"; }

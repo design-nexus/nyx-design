@@ -1,0 +1,16 @@
+.mm-free { font-size: 12px; color: var(--success); }
+.mm-map { position: relative; height: 470px; border-radius: 12px; overflow: hidden; }
+.narrow .mm-map { height: 380px; }
+.mm-b { position: absolute; padding: 10px 12px; box-sizing: border-box; border: 2px solid var(--bg); border-radius: 10px; display: flex; flex-direction: column; gap: 2px;
+  background: color-mix(in srgb, var(--bc) 22%, var(--card)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bc) 40%, transparent); }
+.mm-b b { font-size: 14px; } .mm-b span { font-size: 12.5px; color: var(--dim-text); font-feature-settings: "tnum"; }
+.mm-b.sys { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--bc) 14%, var(--card)) 0 8px, color-mix(in srgb, var(--bc) 8%, var(--card)) 8px 16px); }
+.mm-b.tiny b { font-size: 11.5px; } .mm-b.tiny span { font-size: 11px; }
+.mm-cap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dim-text); }
+.mm-cap i { width: 14px; height: 14px; }
+.mm-c { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 12px; }
+.narrow .mm-c { grid-template-columns: 1fr; }
+.mm-state { display: flex; align-items: center; gap: 20px; padding: 16px 18px; }
+.mm-state .tx { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.mm-state .tx b { font-size: 18px; } .mm-state .tx span { font-size: 12.5px; color: var(--dim-text); }
+.mm-s { font-size: 12px; color: var(--dim-text); }
