@@ -180,6 +180,7 @@ var snapshot = {
     "home": "#a6e3a1",
     "lyra": "#f5c2e7",
     "mail": "#f5c2e7",
+    "messages": "#94e2d5",
     "music": "#f5c2e7",
     "notes": "#f9e2af",
     "photos": "#fab387",
