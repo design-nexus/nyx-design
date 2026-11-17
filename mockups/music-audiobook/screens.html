@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" data-accent="pink" data-screens="home,music,now-playing,now-playing-music,radio,search,series,offline,empty,setup,signin,choose-libs,detail,detail-conflict,downloads,settings,settings-signin,podcasts-abs,a-800">
+<head>
+<meta charset="utf-8">
+<title>Screens — Music multi-media mockups</title>
+<link rel="stylesheet" href="../polish/tokens.css">
+<link rel="stylesheet" href="../polish/mock.css">
+<link rel="stylesheet" href="../polish/nyx-after.css">
+<link rel="stylesheet" href="abs.css">
+<script src="../polish/mock.js"></script>
+</head>
+<body>
+<script>
+  const q = new URLSearchParams(location.search);
+  if ((q.get("screen") || "") === "a-800") {
+    q.set("screen", "a");
+    q.set("w", "800");
+    history.replaceState(null, "", "?" + q.toString());
+    document.documentElement.dataset.screen = "a";
+  }
+</script>
+<script src="abs.js"></script>
+</body>
+</html>
